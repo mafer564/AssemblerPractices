@@ -1,0 +1,1158 @@
+MPASM  5.51                       BUENO-2.ASM   11-17-2016  13:10:43         PAGE  1
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00001 ;INSTITUTO POLITECNICO NACIONAL
+                      00002 ;CECYT9 JUAN DE DIOS BATIZ
+                      00003 ;
+                      00004 ;PRACTICA 5:"Entrada de Datos al Sistema (I.Operaciones Aritmeticas)" 
+                      00005 ;
+                      00006 ;GRUPO: 5IM2.   EQUIPO 09
+                      00007 ;
+                      00008 ;ARRIAGA VALONA ADOLFO ALEJANDRO
+                      00009 ;PEREZ JIMENEZ MADELIN FERNANDA
+                      00010 ;SERVIN NAHOMI THAIS
+                      00011 ;RANGEL MORALES OSCAR MAURICIO
+                      00012 ;
+                      00013 ;ESTE PROGRAMA REALIZA SUMAS Y RESTAS BINARIAS Y LAS PRESENTA EN UN DYSPLAY DE 7
+                      00014 ;SEGMENTOS DE FORMA HEXADECIMAL
+                      00015 ;-------------------------------------------------------------------------------------------------------
+                            ----------------------------------------------------------------------------
+                      00016         list p=16f877A;
+                      00017 ; BITS DE CONFIGURACION
+                      00018  ;#include "C:\Archivos de programa (x86)\Microchip\MPASM Suite\P16F877A.INC";
+                      00019 ;#include "C:\program files\microchip\mpasm suite\p16f877a.inc";
+                      00020 ;#include "C:\Program Files (x86)\Microchip\MPLABX\v3.40\mpasmx\p16f877a.inc";
+                      00021  #include "C:\Program Files (x86)\Microchip\MPASM Suite\P16F877A.inc";
+                      00001         LIST
+                      00002 
+                      00003 ;==========================================================================
+                      00004 ;  MPASM PIC16F877A processor include
+                      00005 ; 
+                      00006 ;  (c) Copyright 1999-2013 Microchip Technology, All rights reserved
+                      00007 ;==========================================================================
+                      00008 
+                      00566         LIST
+                      00022 ; BITS DE CONFIGURACION
+2007   3F31           00023         __config _XT_OSC & _WDT_OFF & _PWRTE_ON & _BODEN_OFF & _LVP_OFF & _CP_OFF;
+                      00024 ;-------------------------------------------------------------------------------------------------------
+                            --------------------------------------------
+                      00025 ;
+                      00026 ;frecuencia de oscilación (fosc) =4MHz
+                      00027 ;Ciclo de trabajo del PIC = (1/fosc)*4 = 1us
+                      00028 ;
+                      00029 ;VARIABLES
+  00000020            00030 x0              equ   0x20
+  00000021            00031 y0          equ   0x21
+  00000022            00032 r0              equ       0x22
+  00000023            00033 r1              equ       0x23
+  00000024            00034 respaldo    equ   0x24
+  00000025            00035 Contador1   equ   0x25
+  00000026            00036 Contador2   equ   0x26
+  00000027            00037 Contador3   equ   0x27
+  00000028            00038 resultado   equ   0x28
+  00000029            00039 subst       equ   0x29
+                      00040 
+                      00041 
+                      00042 ; LAS VARIABLES DE USUARIO COMIENZAN DESDE LA DIRECCION 20
+MPASM  5.51                       BUENO-2.ASM   11-17-2016  13:10:43         PAGE  2
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00043 ;-------------------------------------------------------------------------------------------------------
+                            --------------------------------------------
+                      00044 ;
+                      00045 ;CONSTANTES
+  00000040            00046 M    equ    .64;
+  00000040            00047 N    equ    .64;
+  00000080            00048 L    equ    .128;
+                      00049 ;-------------------------------------------------------------------------------------------------------
+                            --------------------------------------------
+                      00050 ; CONSTANTES DE CARACTERES EN SIETE SEGMENTOS
+  00000077            00051 Car_A       equ   b'01110111'; Caracter A en siete segmentos
+  0000007C            00052 Car_b       equ   b'01111100'; Caracter b en siete segmentos
+  00000039            00053 Car_C       equ   b'00111001'; Caracter C en siete segmentos
+  00000058            00054 Car_cc      equ   b'01011000'; Caracter c en siete segmentos
+  0000005E            00055 Car_d       equ   b'01011110'; Caracter d en siete segmentos
+  00000079            00056 Car_E       equ   b'01111001'; Caracter E en siete segmentos
+  00000071            00057 Car_F       equ   b'01110001'; Caracter F en siete segmentos
+  0000007D            00058 Car_G       equ   b'01111101'; Caracter G en siete segmentos
+  0000006F            00059 Car_gg      equ   b'01101111'; Caracter g en siete segmentos
+  00000076            00060 Car_H       equ   b'01110110'; Caracter H en siete segmentos
+  00000074            00061 Car_hh      equ   b'01110100'; Caracter h en siete segmentos
+  00000010            00062 Car_i       equ   b'00010000'; Caracter i en siete segmentos
+  0000001E            00063 Car_J       equ   b'00011110'; Caracter J en siete segmentos
+  00000038            00064 Car_L       equ   b'00111000'; Caracter L en siete segmentos
+  00000054            00065 Car_n       equ   b'01010100'; Caracter n en siete segmentos
+  0000005C            00066 Car_o       equ   b'01011100'; Caracter o en siete segmentos
+  00000073            00067 Car_P       equ   b'01110011'; Caracter P en siete segmentos
+  00000067            00068 Car_q       equ   b'01100111'; Caracter q en siete segmentos
+  00000050            00069 Car_r       equ   b'01010000'; Caracter r en siete segmentos
+  0000006D            00070 Car_S       equ   b'01101101'; Caracter S en siete segmentos
+  00000078            00071 Car_t       equ   b'01111000'; Caracter t en siete segmentos
+  0000003E            00072 Car_U       equ   b'00111110'; Caracter U en siete segmentos
+  0000001C            00073 Car_uu      equ   b'00011100'; Caracter u en siete segmentos
+  0000006E            00074 Car_y       equ   b'01101110'; Caracter y en siete segemntos
+  0000003F            00075 Car_0       equ   b'00111111'; Caracter 0 en siete segmentos
+  00000006            00076 Car_1       equ   b'00000110'; Caracter 1 en siete segmentos
+  0000005B            00077 Car_2       equ   b'01011011'; Caracter 2 en siete segmentos
+  0000004F            00078 Car_3       equ   b'01001111'; Caracter 3 en siete segmentos
+  00000066            00079 Car_4       equ   b'01100110'; Caracter 4 en siete segmentos
+  0000006D            00080 Car_5       equ   b'01101101'; Caracter 5 en siete segmentos
+  0000007D            00081 Car_6       equ   b'01111101'; Caracter 6 en siete segmentos
+  00000007            00082 Car_7       equ   b'00000111'; Caracter 7 en siete segmentos
+  0000007F            00083 Car_8       equ   b'01111111'; Caracter 8 en siete segmentos
+  0000006F            00084 Car_9       equ   b'01101111'; Caracter 9 en siete segmentos
+  00000000            00085 Car_null    equ   b'00000000'; Caracter nulo (espacios)
+                      00086 ;-------------------------------------------------------------------------------------------------------
+                            --------------------------------------------
+                      00087 ;ASIGNACION DE LOS BITS DE LOS PUERTOS DE I/O
+                      00088 ; PUERTO A
+  00000000            00089 Sin_UsoRA0    equ    .0; //Sin uso RA0
+  00000001            00090 Sin_UsoRA1    equ    .1; //Sin uso RA1
+  00000002            00091 Sin_UsoRA2    equ    .2; //Sin uso RA2
+  00000003            00092 Sin_UsoRA3    equ    .3; //Sin uso RA3
+MPASM  5.51                       BUENO-2.ASM   11-17-2016  13:10:43         PAGE  3
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+  00000004            00093 Sin_UsoRA4    equ    .4; //Sin uso RA4 
+  00000005            00094 Sin_UsoRA5    equ    .5; //Sin uso RA5
+                      00095 
+  0000003F            00096 proga         equ    b'111111';Programación inicial del puerto A
+                      00097 ;Si al bit de RA0 se le pone como 1, se considera como entrada, y si tiene 0 es salida
+                      00098 ;
+                      00099 ; PUERTO B
+                      00100 ; Nos sirve para poder mandar el codigo de los caracteres a los displays
+  00000000            00101 Seg_a             equ    .0; //Segmento a del bus de segmentos
+  00000001            00102 Seg_b             equ    .1; //Segmento b del bus de segmentos
+  00000002            00103 Seg_c             equ    .2; //Segmento c del bus de segmentos
+  00000003            00104 Seg_d             equ    .3; //Segmento d del bus de segmentos
+  00000004            00105 Seg_e             equ    .4; //Segmento e del bus de segmentos
+  00000005            00106 Seg_f             equ    .5; //Segmento f del bus de segmentos
+  00000006            00107 Seg_g             equ    .6; //Segmento g del bus de segmentos
+  00000007            00108 Seg_dp            equ    .7; //Segmento dp del bus de segmentos
+                      00109 
+  00000000            00110 progb         equ    b'00000000';Programación inicial del puerto B
+                      00111 ;
+                      00112 ; PUERTO C
+                      00113 ; Sirve para mandar los pulsos de reloj a los registros
+  00000000            00114 Com_Disp0     equ    .0; //Bit que controla el común del display 0
+  00000001            00115 Com_Disp1     equ    .1; //Bit que controla el común del display 1
+  00000002            00116 Com_Disp2     equ    .2; //Bit que controla el común del display 2
+  00000003            00117 Com_Disp3     equ    .3; //Bit que controla el común del display 3
+  00000004            00118 Com_Disp4     equ    .4; //Bit que controla el común del display 4
+  00000005            00119 Com_Disp5     equ    .5; //Bit que controla el común del display 5
+  00000006            00120 Com_Disp6     equ    .6; //Bit que controla el común del display 6
+  00000007            00121 Com_Disp7     equ    .7; //Bit que controla el común del display 7
+                      00122 
+  00000000            00123 progc         equ    b'00000000';Programación inicial del puerto C como salidas
+                      00124 ;
+                      00125 ; PUERTO D
+  00000000            00126 bit0                    equ    .0; //Sin uso RD0
+  00000001            00127 bit1                    equ    .1; //Sin uso RD1
+  00000002            00128 bit2                    equ    .2; //Sin uso RD2
+  00000003            00129 bit3                    equ    .3; //Sin uso RD3
+  00000004            00130 Ingreso_dat     equ    .4; //Sin uso RD4
+  00000005            00131 Ope0                    equ    .5; //Sin uso RD5
+  00000006            00132 Ope1                    equ    .6; //Sin uso RD6
+  00000007            00133 Sin_UsoRD7      equ    .7; //Sin uso RD7
+                      00134 
+  000000FF            00135 progd         equ    b'11111111';Programación inicial del puerto D como entradas
+                      00136 ;
+                      00137 ; PUERTO E
+  00000000            00138 Sin_UsoRE0    equ    .0;
+  00000001            00139 Sin_UsoRE1    equ    .1;
+  00000002            00140 Sin_UsoRE2    equ    .2;
+                      00141 
+  00000007            00142 proge         equ    b'111';Programación inicial del puerto E como entradas
+                      00143 ;-------------------------------------------------------------------------------------------------------
+                            ----------------------------------
+                      00144 ;
+MPASM  5.51                       BUENO-2.ASM   11-17-2016  13:10:43         PAGE  4
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00145                  ;==================
+                      00146                  ;== VECTOR RESET ==
+                      00147                  ;==================
+0000                  00148                  org 0x0000; 
+0000   018A           00149 vec_reset        clrf PCLATH; Asegurará la pagina 0 de la memoria del programa
+0001   281A           00150                  goto prog_prin; Indica que vaya a la etiqueta prog_prin
+                      00151 ;-------------------------------------------------------------------------------------------------------
+                            ----------------------------------
+                      00152                  ;============================
+                      00153                  ;== VECTOR DE INTERRUPCION ==
+                      00154                  ;============================
+0004                  00155                  org  0x0004;
+0004   0000           00156 vec_int          nop;
+0005   0009           00157                  retfie;
+                      00158 ;-------------------------------------------------------------------------------------------------------
+                            ----------------------------------
+                      00159                  ;=========================
+                      00160                  ;== SUBRUTINA DE INICIO ==
+                      00161                  ;=========================
+0006   1683           00162 prog_ini         bsf   STATUS,RP0; 
+0007   3081           00163                  movlw  0x81; 
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0008   0081           00164                  movwf  OPTION_REG; 
+0009   303F           00165                  movlw  proga; 
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+000A   0085           00166                  movwf  TRISA;
+000B   3000           00167                          movlw  progb;
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+000C   0086           00168                  movwf  TRISB;
+000D   3000           00169                  movlw  progc;
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+000E   0087           00170                  movwf  TRISC;
+000F   30FF           00171                  movlw  progd;
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0010   0088           00172                  movwf  TRISD;
+0011   3007           00173                  movlw  proge;
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0012   0089           00174                  movwf  TRISE;
+0013   3006           00175                  movlw  0x06;
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0014   009F           00176                  movwf  ADCON1;
+0015   1283           00177                  bcf    STATUS,RP0; 
+                      00178 
+0016   0186           00179                  clrf   PORTB;
+0017   30FF           00180                  movlw  b'11111111';
+0018   0087           00181                  movwf  PORTC;
+                      00182 
+0019   0008           00183                  return;
+                      00184 ;-------------------------------------------------------------------------------------------------------
+                            ---------------------------------
+                      00185                  ;=======================
+                      00186                  ;== PROGRAMA PINCIPAL ==
+                      00187                  ;=======================
+MPASM  5.51                       BUENO-2.ASM   11-17-2016  13:10:43         PAGE  5
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+001A   2006           00188 prog_prin        call   prog_ini; Llamamos a la etiqueta prog_ini
+001B   1283           00189 ini              bcf    STATUS,RP0;
+001C   1303           00190                                 bcf     STATUS,RP1;
+001D   3000           00191                                 movlw     0x00;
+001E   00A2           00192                                 movwf     r0;
+001F   00A3           00193                                 movwf     r1;
+0020   1A08           00194 loop1           btfsc   PORTD,4;
+0021   2820           00195                                 goto    loop1;
+0022   0808           00196                                 movf    PORTD,W;
+0023   390F           00197                 andlw  0x0F;
+0024   00A0           00198                                 movwf   x0;
+0025   00A4           00199                 movwf  respaldo;
+0026   2085           00200                 call   prob_x0;
+0027   0822           00201 mostrar_x0      movf   r0,w;
+0028   0086           00202                                 movwf  PORTB;
+0029   1007           00203                                 bcf    PORTC,Com_Disp0;                  
+002A   205D           00204                 call   retardo;
+002B   1407           00205                                 bsf    PORTC,Com_Disp0;
+002C   3000           00206                 movlw  0x00;
+002D   00A4           00207                 movwf  respaldo;                 
+002E   1A08           00208 loop2           btfsc   PORTD,4;
+002F   282E           00209                                 goto    loop2;
+0030   0808           00210                                 movf    PORTD,W;
+0031   390F           00211                 andlw  0x0F;
+0032   00A1           00212                                 movwf   y0;
+0033   00A4           00213                                 movwf  respaldo;
+0034   208A           00214                 call   prob_y0;
+0035   0822           00215 mostrar_y0      movf   r0,w;
+0036   0086           00216                                 movwf  PORTB;
+0037   1007           00217                                 bcf    PORTC,Com_Disp0;                  
+0038   205D           00218                 call   retardo;
+0039   1407           00219                                 bsf    PORTC,Com_Disp0;
+003A   3000           00220                 movlw  0x00;
+003B   00A4           00221                 movwf  respaldo;
+003C   1A08           00222 loop3           btfsc   PORTD,4;
+003D   283C           00223                                 goto    loop3;
+003E   1B08           00224                 btfsc  PORTD,6;
+003F   2855           00225                 goto   resta;
+0040   0103           00226                 clrw
+0041   0720           00227                                 addwf  x0,W;
+0042   0721           00228                                 addwf  y0,W;
+0043   00A8           00229                                 movwf  resultado;
+0044   00A4           00230                 movwf  respaldo;
+0045   2080           00231                 call   enc_num;
+0046   2073           00232 retr            call   retardo3;
+0047   0822           00233 mostrar          movf   r0,w;
+0048   0086           00234                                  movwf  PORTB;
+0049   1007           00235                                  bcf    PORTC,Com_Disp0;
+004A   206A           00236                                 call   retardo2;
+004B   1407           00237                                 bsf    PORTC,Com_Disp0;
+004C   0823           00238                                 movf   r1,w;
+004D   0086           00239                         movwf  PORTB;
+004E   1087           00240                                 bcf    PORTC,Com_Disp1;
+MPASM  5.51                       BUENO-2.ASM   11-17-2016  13:10:43         PAGE  6
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+004F   206A           00241                                 call   retardo2;
+0050   1487           00242                                 bsf    PORTC,Com_Disp1;
+0051   1A08           00243                                 btfsc  PORTD,4;
+0052   2847           00244                                 goto   mostrar;
+0053   205D           00245                 call   retardo;
+0054   2820           00246                                 goto   loop1; 
+                      00247 ;-------------------------------------------------------------------------------------------------------
+                            ------------------------------------------------------------------------------------------------
+                      00248 
+                      00249                ;=========================
+                      00250                ;= Subrutina para restar =
+                      00251                ;=========================
+                      00252 
+0055   0821           00253 resta            movf   y0,w;
+0056   0220           00254                  subwf  x0,w;
+0057   1C03           00255                  btfss  STATUS,C;
+0058   28EA           00256                  goto   err2;
+0059   00A8           00257                  movwf  resultado;
+005A   00A4           00258                  movwf  respaldo;
+005B   2080           00259                  call   enc_num;
+005C   2846           00260                  goto   retr;
+                      00261 ;-------------------------------------------------------------------------------------------------------
+                            ------------------------------------------------------------------------------------------------
+                      00262 
+                      00263                ;======================================
+                      00264                ;= Subrutina de retardo de 2 segundos =
+                      00265                ;======================================
+                      00266 
+005D   3080           00267 retardo         movlw L
+005E   00A5           00268                 movwf Contador1;
+005F   3040           00269 loopc1              movlw M
+0060   00A6           00270                 movwf Contador2;
+0061   3040           00271 loopc2          movlw N
+0062   00A7           00272                 movwf Contador3;
+0063   0BA7           00273 loopc3          decfsz Contador3,f;
+0064   2863           00274                 goto loopc3
+0065   0BA6           00275                 decfsz Contador2,f;
+0066   2861           00276                 goto loopc2
+0067   0BA5           00277                 decfsz Contador1,f;
+0068   285F           00278                 goto loopc1;
+0069   0008           00279                 return;
+                      00280 
+                      00281 ;-------------------------------------------------------------------------------------------------------
+                            ------------------------------------------------------------------------------------------------
+                      00282 
+                      00283                  ;=============================================
+                      00284                  ;== Subrutina de retardo de 2 mili segundos ==
+                      00285                  ;=============================================
+                      00286                  ; PAGINA CERO
+                      00287  
+006A   3002           00288 retardo2         movlw .2;
+006B   00A7           00289                  movwf Contador3;
+006C   30FF           00290 Loop0a           movlw .255;
+MPASM  5.51                       BUENO-2.ASM   11-17-2016  13:10:43         PAGE  7
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+006D   00A6           00291                  movwf Contador2;
+006E   0BA6           00292 Loop0b           decfsz Contador2,f;
+006F   286E           00293                  goto Loop0b;
+0070   0BA7           00294                  decfsz Contador3,f;
+0071   286C           00295                  goto Loop0a;
+                      00296               
+0072   0008           00297                  return;
+                      00298 ;-------------------------------------------------------------------------------------------------------
+                            ------------------------------------------------------------------------------------------------
+                      00299 
+                      00300                ;========================
+                      00301                ;= Subrutina de retardo =
+                      00302                ;========================
+                      00303 
+0073   3005           00304 retardo3        movlw .5
+0074   00A5           00305                 movwf Contador1;
+0075   3064           00306 loopu1          movlw .100
+0076   00A6           00307                 movwf Contador2;
+0077   30FF           00308 loopu2          movlw .255
+0078   00A7           00309                 movwf Contador3;
+0079   0BA7           00310 loopu3          decfsz Contador3,f;
+007A   2879           00311                 goto loopu3
+007B   0BA6           00312                 decfsz Contador2,f;
+007C   2877           00313                 goto loopu2
+007D   0BA5           00314                 decfsz Contador1,f;
+007E   2875           00315                 goto loopu1;
+007F   0008           00316                 return;
+                      00317 
+                      00318 ;-------------------------------------------------------------------------------------------------------
+                            ------------------------------------------------------------------------------------------------
+                      00319 
+                      00320                ;===================================
+                      00321                ;= Subrutina para encontrar número =
+                      00322                ;===================================
+                      00323                 
+0080   300A           00324 enc_num         movlw .10;
+0081   0228           00325                 subwf resultado,w;
+0082   1803           00326                 btfsc STATUS,C;
+0083   20DC           00327                 call  dos_digitos;
+0084   288F           00328                 goto  find_num;
+0085   300A           00329 prob_x0         movlw .10;
+0086   0220           00330                 subwf x0,w;
+0087   1803           00331                 btfsc STATUS,C;
+0088   20DF           00332                 call  err1;
+0089   288F           00333                 goto  find_num;
+008A   300A           00334 prob_y0         movlw .10;
+008B   0221           00335                 subwf y0,w;
+008C   1803           00336                 btfsc STATUS,C;
+008D   20DF           00337                 call  err1;
+008E   288F           00338                 goto  find_num;
+008F   3000           00339 find_num        movlw .0;
+0090   0224           00340                         subwf respaldo,w;
+0091   1903           00341                         btfsc STATUS,Z;
+MPASM  5.51                       BUENO-2.ASM   11-17-2016  13:10:43         PAGE  8
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+0092   28F5           00342                         goto fue_cero;
+0093   3001           00343                 movlw .1;
+0094   0224           00344                         subwf respaldo,w;
+0095   1903           00345                         btfsc STATUS,Z;
+0096   28F8           00346                         goto fue_uno;
+0097   3002           00347                         movlw .2;
+0098   0224           00348                         subwf respaldo,w;
+0099   1903           00349                         btfsc STATUS,Z;
+009A   28FB           00350                         goto fue_dos;
+009B   3003           00351                 movlw .3;
+009C   0224           00352                         subwf respaldo,w;
+009D   1903           00353                         btfsc STATUS,Z;
+009E   28FE           00354                         goto fue_tres;
+009F   3004           00355                 movlw .4;
+00A0   0224           00356                         subwf respaldo,w;
+00A1   1903           00357                         btfsc STATUS,Z;
+00A2   2901           00358                         goto fue_cuatro;
+00A3   3005           00359                 movlw .5;
+00A4   0224           00360                 subwf respaldo,w;
+00A5   1903           00361                         btfsc STATUS,Z;
+00A6   2904           00362                         goto fue_cinco;
+00A7   3006           00363                 movlw .6;
+00A8   0224           00364                         subwf respaldo,w;
+00A9   1903           00365                 btfsc STATUS,Z;
+00AA   2907           00366                 goto fue_seis;
+00AB   3007           00367                 movlw .7;
+00AC   0224           00368                 subwf respaldo,w;
+00AD   1903           00369                 btfsc STATUS,Z;
+00AE   290A           00370                 goto fue_siete;
+00AF   3008           00371                 movlw .8;
+00B0   0224           00372                 subwf respaldo,w;
+00B1   1903           00373                 btfsc STATUS,Z;
+00B2   290D           00374                 goto fue_ocho;
+00B3   3009           00375                 movlw .9;
+00B4   0224           00376                 subwf respaldo,w;
+00B5   1903           00377                 btfsc STATUS,Z;
+00B6   2910           00378                 goto fue_nueve;
+00B7   300A           00379                 movlw .10;
+00B8   0224           00380                 subwf respaldo,w;
+00B9   1903           00381                 btfsc STATUS,Z;
+00BA   28F5           00382                 goto fue_cero;
+00BB   300B           00383                 movlw .11;
+00BC   0224           00384                 subwf respaldo,w;
+00BD   1903           00385                         btfsc STATUS,Z;
+00BE   28F8           00386                 goto fue_uno;
+00BF   300C           00387                 movlw .12;
+00C0   0224           00388                 subwf respaldo,w;
+00C1   1903           00389                 btfsc STATUS,Z;
+00C2   28FB           00390                         goto fue_dos;
+00C3   300D           00391                 movlw .13;
+00C4   0224           00392                 subwf respaldo,w;
+00C5   1903           00393                 btfsc STATUS,Z;
+00C6   28FE           00394                 goto fue_tres;
+MPASM  5.51                       BUENO-2.ASM   11-17-2016  13:10:43         PAGE  9
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+00C7   300E           00395                 movlw .14;
+00C8   0224           00396                 subwf respaldo,w;
+00C9   1903           00397                 btfsc STATUS,Z;
+00CA   2901           00398                 goto fue_cuatro;
+00CB   300F           00399                 movlw .15;
+00CC   0224           00400                 subwf respaldo,w;
+00CD   1903           00401                 btfsc STATUS,Z;
+00CE   2904           00402                 goto fue_cinco;
+00CF   3010           00403                 movlw .16;
+00D0   0224           00404                 subwf respaldo,w;
+00D1   1903           00405                 btfsc STATUS,Z;
+00D2   2907           00406                 goto fue_seis;
+00D3   3011           00407                 movlw .17;
+00D4   0224           00408                 subwf respaldo,w;
+00D5   1903           00409                 btfsc STATUS,Z;
+00D6   290A           00410                 goto fue_siete;
+00D7   3012           00411                 movlw .18;
+00D8   0224           00412                 subwf respaldo,w;
+00D9   1903           00413                 btfsc STATUS,Z;
+00DA   290D           00414                 goto fue_ocho;
+                      00415                 
+00DB   0008           00416                 return;
+                      00417 ;-------------------------------------------------------------------------------------------------------
+                            ------------------------------------------------------------------------------------------------
+                      00418                 
+                      00419                 ;======================================
+                      00420                 ;= Subrutina para números mayores a 9 =
+                      00421                 ;======================================
+                      00422                 
+00DC   3006           00423 dos_digitos     movlw Car_1;
+00DD   00A3           00424                         movwf r1;
+00DE   0008           00425                                 return;
+                      00426 ;-------------------------------------------------------------------------------------------------------
+                            ------------------------------------------------------------------------------------------------
+                      00427 
+                      00428                 ;=============================
+                      00429                 ;= Error de más de un dígito =
+                      00430                 ;=============================
+                      00431 
+00DF   303C           00432 err1             movlw .60;
+00E0   00A5           00433                  movwf Contador1;
+00E1   3079           00434 men_err          movlw Car_E;              E
+00E2   0086           00435                  movwf PORTB;
+00E3   1007           00436                  bcf PORTC, Com_Disp0;
+00E4   206A           00437                  call retardo2;
+00E5   1407           00438                  bsf PORTC, Com_Disp0;
+00E6   206A           00439                  call retardo2;
+00E7   0BA5           00440                  decfsz Contador1,f;
+00E8   28E1           00441                  goto men_err;
+                      00442                  
+00E9   281B           00443                  goto  ini;
+                      00444 
+                      00445 ;-------------------------------------------------------------------------------------------------------
+MPASM  5.51                       BUENO-2.ASM   11-17-2016  13:10:43         PAGE 10
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                            ------------------------------------------------------------------------------------------------
+                      00446 
+                      00447                 ;============================
+                      00448                 ;= Error de número negativo =
+                      00449                 ;============================
+                      00450 
+00EA   303C           00451 err2             movlw .60;
+00EB   00A5           00452                  movwf Contador1;
+00EC   3079           00453 men_err2         movlw Car_E;              E
+00ED   0086           00454                  movwf PORTB;
+00EE   1007           00455                  bcf PORTC, Com_Disp0;
+00EF   206A           00456                  call retardo2;
+00F0   1407           00457                  bsf PORTC, Com_Disp0;
+00F1   206A           00458                  call retardo2;
+00F2   0BA5           00459                  decfsz Contador1,f;
+00F3   28EC           00460                  goto men_err2;
+                      00461                  
+00F4   281B           00462                  goto  ini;
+                      00463 
+                      00464 ;-------------------------------------------------------------------------------------------------------
+                            ------------------------------------------------------------------------------------------------
+                      00465                 
+                      00466                 ;====================================
+                      00467                 ;= Subrutina de carga de caracteres =
+                      00468                 ;====================================
+                      00469                 
+00F5   303F           00470 fue_cero        movlw Car_0;
+00F6   00A2           00471                         movwf r0;
+00F7   2913           00472                         goto salte_conv;
+00F8   3006           00473 fue_uno         movlw Car_1;
+00F9   00A2           00474                         movwf r0;
+00FA   2913           00475                         goto salte_conv;
+00FB   305B           00476 fue_dos         movlw Car_2;
+00FC   00A2           00477                         movwf r0;
+00FD   2913           00478                         goto salte_conv;
+00FE   304F           00479 fue_tres        movlw Car_3;
+00FF   00A2           00480                         movwf r0;
+0100   2913           00481                         goto salte_conv;
+0101   3066           00482 fue_cuatro      movlw Car_4;
+0102   00A2           00483                         movwf r0;
+0103   2913           00484                         goto salte_conv;
+0104   306D           00485 fue_cinco       movlw Car_5;
+0105   00A2           00486                         movwf r0;
+0106   2913           00487                         goto salte_conv;
+0107   307D           00488 fue_seis        movlw Car_6;
+0108   00A2           00489                         movwf r0;
+0109   2913           00490                         goto salte_conv;
+010A   3007           00491 fue_siete       movlw Car_7;
+010B   00A2           00492                         movwf r0;
+010C   2913           00493                         goto salte_conv;
+010D   307F           00494 fue_ocho        movlw Car_8;
+010E   00A2           00495                         movwf r0;
+010F   2913           00496                         goto salte_conv;
+MPASM  5.51                       BUENO-2.ASM   11-17-2016  13:10:43         PAGE 11
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+0110   306F           00497 fue_nueve       movlw Car_9;
+0111   00A2           00498                         movwf r0;
+0112   2913           00499                         goto salte_conv;
+                      00500                 
+0113   0008           00501 salte_conv      return;
+                      00502                 
+                      00503                 end;
+MPASM  5.51                       BUENO-2.ASM   11-17-2016  13:10:43         PAGE 12
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+ACKDT                             00000005
+ACKEN                             00000004
+ACKSTAT                           00000006
+ADCON0                            0000001F
+ADCON1                            0000009F
+ADCS0                             00000006
+ADCS1                             00000007
+ADCS2                             00000006
+ADDEN                             00000003
+ADFM                              00000007
+ADIE                              00000006
+ADIF                              00000006
+ADON                              00000000
+ADRESH                            0000001E
+ADRESL                            0000009E
+BCLIE                             00000003
+BCLIF                             00000003
+BF                                00000000
+BRGH                              00000002
+C                                 00000000
+C1INV                             00000004
+C1OUT                             00000006
+C2INV                             00000005
+C2OUT                             00000007
+CCP1CON                           00000017
+CCP1IE                            00000002
+CCP1IF                            00000002
+CCP1M0                            00000000
+CCP1M1                            00000001
+CCP1M2                            00000002
+CCP1M3                            00000003
+CCP1X                             00000005
+CCP1Y                             00000004
+CCP2CON                           0000001D
+CCP2IE                            00000000
+CCP2IF                            00000000
+CCP2M0                            00000000
+CCP2M1                            00000001
+CCP2M2                            00000002
+CCP2M3                            00000003
+CCP2X                             00000005
+CCP2Y                             00000004
+CCPR1                             00000015
+CCPR1H                            00000016
+CCPR1L                            00000015
+CCPR2                             0000001B
+CCPR2H                            0000001C
+CCPR2L                            0000001B
+CHS0                              00000003
+CHS1                              00000004
+CHS2                              00000005
+CIS                               00000003
+CKE                               00000006
+MPASM  5.51                       BUENO-2.ASM   11-17-2016  13:10:43         PAGE 13
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+CKP                               00000004
+CM0                               00000000
+CM1                               00000001
+CM2                               00000002
+CMCON                             0000009C
+CMIE                              00000006
+CMIF                              00000006
+CREN                              00000004
+CSRC                              00000007
+CVR0                              00000000
+CVR1                              00000001
+CVR2                              00000002
+CVR3                              00000003
+CVRCON                            0000009D
+CVREN                             00000007
+CVROE                             00000006
+CVRR                              00000005
+Car_0                             0000003F
+Car_1                             00000006
+Car_2                             0000005B
+Car_3                             0000004F
+Car_4                             00000066
+Car_5                             0000006D
+Car_6                             0000007D
+Car_7                             00000007
+Car_8                             0000007F
+Car_9                             0000006F
+Car_A                             00000077
+Car_C                             00000039
+Car_E                             00000079
+Car_F                             00000071
+Car_G                             0000007D
+Car_H                             00000076
+Car_J                             0000001E
+Car_L                             00000038
+Car_P                             00000073
+Car_S                             0000006D
+Car_U                             0000003E
+Car_b                             0000007C
+Car_cc                            00000058
+Car_d                             0000005E
+Car_gg                            0000006F
+Car_hh                            00000074
+Car_i                             00000010
+Car_n                             00000054
+Car_null                          00000000
+Car_o                             0000005C
+Car_q                             00000067
+Car_r                             00000050
+Car_t                             00000078
+Car_uu                            0000001C
+Car_y                             0000006E
+Com_Disp0                         00000000
+MPASM  5.51                       BUENO-2.ASM   11-17-2016  13:10:43         PAGE 14
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+Com_Disp1                         00000001
+Com_Disp2                         00000002
+Com_Disp3                         00000003
+Com_Disp4                         00000004
+Com_Disp5                         00000005
+Com_Disp6                         00000006
+Com_Disp7                         00000007
+Contador1                         00000025
+Contador2                         00000026
+Contador3                         00000027
+D                                 00000005
+DATA_ADDRESS                      00000005
+DC                                00000001
+D_A                               00000005
+D_NOT_A                           00000005
+EEADR                             0000010D
+EEADRH                            0000010F
+EECON1                            0000018C
+EECON2                            0000018D
+EEDATA                            0000010C
+EEDATH                            0000010E
+EEIE                              00000004
+EEIF                              00000004
+EEPGD                             00000007
+F                                 00000001
+FERR                              00000002
+FSR                               00000004
+GCEN                              00000007
+GIE                               00000007
+GO                                00000002
+GO_DONE                           00000002
+GO_NOT_DONE                       00000002
+I2C_DATA                          00000005
+I2C_READ                          00000002
+I2C_START                         00000003
+I2C_STOP                          00000004
+IBF                               00000007
+IBOV                              00000005
+INDF                              00000000
+INTCON                            0000000B
+INTE                              00000004
+INTEDG                            00000006
+INTF                              00000001
+IRP                               00000007
+Ingreso_dat                       00000004
+L                                 00000080
+Loop0a                            0000006C
+Loop0b                            0000006E
+M                                 00000040
+N                                 00000040
+NOT_A                             00000005
+NOT_ADDRESS                       00000005
+NOT_BO                            00000000
+MPASM  5.51                       BUENO-2.ASM   11-17-2016  13:10:43         PAGE 15
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+NOT_BOR                           00000000
+NOT_DONE                          00000002
+NOT_PD                            00000003
+NOT_POR                           00000001
+NOT_RBPU                          00000007
+NOT_RC8                           00000006
+NOT_T1SYNC                        00000002
+NOT_TO                            00000004
+NOT_TX8                           00000006
+NOT_W                             00000002
+NOT_WRITE                         00000002
+OBF                               00000006
+OERR                              00000001
+OPTION_REG                        00000081
+Ope0                              00000005
+Ope1                              00000006
+P                                 00000004
+PCFG0                             00000000
+PCFG1                             00000001
+PCFG2                             00000002
+PCFG3                             00000003
+PCL                               00000002
+PCLATH                            0000000A
+PCON                              0000008E
+PEIE                              00000006
+PEN                               00000002
+PIE1                              0000008C
+PIE2                              0000008D
+PIR1                              0000000C
+PIR2                              0000000D
+PORTA                             00000005
+PORTB                             00000006
+PORTC                             00000007
+PORTD                             00000008
+PORTE                             00000009
+PR2                               00000092
+PS0                               00000000
+PS1                               00000001
+PS2                               00000002
+PSA                               00000003
+PSPIE                             00000007
+PSPIF                             00000007
+PSPMODE                           00000004
+R                                 00000002
+RA0                               00000000
+RA1                               00000001
+RA2                               00000002
+RA3                               00000003
+RA4                               00000004
+RA5                               00000005
+RB0                               00000000
+RB1                               00000001
+RB2                               00000002
+MPASM  5.51                       BUENO-2.ASM   11-17-2016  13:10:43         PAGE 16
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+RB3                               00000003
+RB4                               00000004
+RB5                               00000005
+RB6                               00000006
+RB7                               00000007
+RBIE                              00000003
+RBIF                              00000000
+RC0                               00000000
+RC1                               00000001
+RC2                               00000002
+RC3                               00000003
+RC4                               00000004
+RC5                               00000005
+RC6                               00000006
+RC7                               00000007
+RC8_9                             00000006
+RC9                               00000006
+RCD8                              00000000
+RCEN                              00000003
+RCIE                              00000005
+RCIF                              00000005
+RCREG                             0000001A
+RCSTA                             00000018
+RD                                00000000
+RD0                               00000000
+RD1                               00000001
+RD2                               00000002
+RD3                               00000003
+RD4                               00000004
+RD5                               00000005
+RD6                               00000006
+RD7                               00000007
+RE0                               00000000
+RE1                               00000001
+RE2                               00000002
+READ_WRITE                        00000002
+RP0                               00000005
+RP1                               00000006
+RSEN                              00000001
+RX9                               00000006
+RX9D                              00000000
+R_NOT_W                           00000002
+R_W                               00000002
+S                                 00000003
+SEN                               00000000
+SMP                               00000007
+SPBRG                             00000099
+SPEN                              00000007
+SREN                              00000005
+SSPADD                            00000093
+SSPBUF                            00000013
+SSPCON                            00000014
+SSPCON2                           00000091
+MPASM  5.51                       BUENO-2.ASM   11-17-2016  13:10:43         PAGE 17
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+SSPEN                             00000005
+SSPIE                             00000003
+SSPIF                             00000003
+SSPM0                             00000000
+SSPM1                             00000001
+SSPM2                             00000002
+SSPM3                             00000003
+SSPOV                             00000006
+SSPSTAT                           00000094
+STATUS                            00000003
+SYNC                              00000004
+Seg_a                             00000000
+Seg_b                             00000001
+Seg_c                             00000002
+Seg_d                             00000003
+Seg_dp                            00000007
+Seg_e                             00000004
+Seg_f                             00000005
+Seg_g                             00000006
+Sin_UsoRA0                        00000000
+Sin_UsoRA1                        00000001
+Sin_UsoRA2                        00000002
+Sin_UsoRA3                        00000003
+Sin_UsoRA4                        00000004
+Sin_UsoRA5                        00000005
+Sin_UsoRD7                        00000007
+Sin_UsoRE0                        00000000
+Sin_UsoRE1                        00000001
+Sin_UsoRE2                        00000002
+T0CS                              00000005
+T0IE                              00000005
+T0IF                              00000002
+T0SE                              00000004
+T1CKPS0                           00000004
+T1CKPS1                           00000005
+T1CON                             00000010
+T1INSYNC                          00000002
+T1OSCEN                           00000003
+T1SYNC                            00000002
+T2CKPS0                           00000000
+T2CKPS1                           00000001
+T2CON                             00000012
+TMR0                              00000001
+TMR0IE                            00000005
+TMR0IF                            00000002
+TMR1                              0000000E
+TMR1CS                            00000001
+TMR1H                             0000000F
+TMR1IE                            00000000
+TMR1IF                            00000000
+TMR1L                             0000000E
+TMR1ON                            00000000
+TMR2                              00000011
+MPASM  5.51                       BUENO-2.ASM   11-17-2016  13:10:43         PAGE 18
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+TMR2IE                            00000001
+TMR2IF                            00000001
+TMR2ON                            00000002
+TOUTPS0                           00000003
+TOUTPS1                           00000004
+TOUTPS2                           00000005
+TOUTPS3                           00000006
+TRISA                             00000085
+TRISA0                            00000000
+TRISA1                            00000001
+TRISA2                            00000002
+TRISA3                            00000003
+TRISA4                            00000004
+TRISA5                            00000005
+TRISB                             00000086
+TRISB0                            00000000
+TRISB1                            00000001
+TRISB2                            00000002
+TRISB3                            00000003
+TRISB4                            00000004
+TRISB5                            00000005
+TRISB6                            00000006
+TRISB7                            00000007
+TRISC                             00000087
+TRISC0                            00000000
+TRISC1                            00000001
+TRISC2                            00000002
+TRISC3                            00000003
+TRISC4                            00000004
+TRISC5                            00000005
+TRISC6                            00000006
+TRISC7                            00000007
+TRISD                             00000088
+TRISD0                            00000000
+TRISD1                            00000001
+TRISD2                            00000002
+TRISD3                            00000003
+TRISD4                            00000004
+TRISD5                            00000005
+TRISD6                            00000006
+TRISD7                            00000007
+TRISE                             00000089
+TRISE0                            00000000
+TRISE1                            00000001
+TRISE2                            00000002
+TRMT                              00000001
+TX8_9                             00000006
+TX9                               00000006
+TX9D                              00000000
+TXD8                              00000000
+TXEN                              00000005
+TXIE                              00000004
+TXIF                              00000004
+MPASM  5.51                       BUENO-2.ASM   11-17-2016  13:10:43         PAGE 19
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+TXREG                             00000019
+TXSTA                             00000098
+UA                                00000001
+W                                 00000000
+WCOL                              00000007
+WR                                00000001
+WREN                              00000002
+WRERR                             00000003
+Z                                 00000002
+_BODEN_OFF                        00003FBF
+_BODEN_ON                         00003FFF
+_BOREN_OFF                        00003FBF
+_BOREN_ON                         00003FFF
+_CONFIG                           00002007
+_CPD_OFF                          00003FFF
+_CPD_ON                           00003EFF
+_CP_ALL                           00001FFF
+_CP_OFF                           00003FFF
+_CP_ON                            00001FFF
+_DEBUG_OFF                        00003FFF
+_DEBUG_ON                         000037FF
+_DEVID1                           00002006
+_FOSC_EXTRC                       00003FFF
+_FOSC_HS                          00003FFE
+_FOSC_LP                          00003FFC
+_FOSC_XT                          00003FFD
+_HS_OSC                           00003FFE
+_IDLOC0                           00002000
+_IDLOC1                           00002001
+_IDLOC2                           00002002
+_IDLOC3                           00002003
+_LP_OSC                           00003FFC
+_LVP_OFF                          00003F7F
+_LVP_ON                           00003FFF
+_PWRTE_OFF                        00003FFF
+_PWRTE_ON                         00003FF7
+_RC_OSC                           00003FFF
+_WDTE_OFF                         00003FFB
+_WDTE_ON                          00003FFF
+_WDT_OFF                          00003FFB
+_WDT_ON                           00003FFF
+_WRT_1FOURTH                      00003BFF
+_WRT_256                          00003DFF
+_WRT_HALF                         000039FF
+_WRT_OFF                          00003FFF
+_XT_OSC                           00003FFD
+__16F877A                         00000001
+__DEBUG                           1
+bit0                              00000000
+bit1                              00000001
+bit2                              00000002
+bit3                              00000003
+dos_digitos                       000000DC
+MPASM  5.51                       BUENO-2.ASM   11-17-2016  13:10:43         PAGE 20
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+enc_num                           00000080
+err1                              000000DF
+err2                              000000EA
+find_num                          0000008F
+fue_cero                          000000F5
+fue_cinco                         00000104
+fue_cuatro                        00000101
+fue_dos                           000000FB
+fue_nueve                         00000110
+fue_ocho                          0000010D
+fue_seis                          00000107
+fue_siete                         0000010A
+fue_tres                          000000FE
+fue_uno                           000000F8
+ini                               0000001B
+loop1                             00000020
+loop2                             0000002E
+loop3                             0000003C
+loopc1                            0000005F
+loopc2                            00000061
+loopc3                            00000063
+loopu1                            00000075
+loopu2                            00000077
+loopu3                            00000079
+men_err                           000000E1
+men_err2                          000000EC
+mostrar                           00000047
+mostrar_x0                        00000027
+mostrar_y0                        00000035
+prob_x0                           00000085
+prob_y0                           0000008A
+prog_ini                          00000006
+prog_prin                         0000001A
+proga                             0000003F
+progb                             00000000
+progc                             00000000
+progd                             000000FF
+proge                             00000007
+r0                                00000022
+r1                                00000023
+respaldo                          00000024
+resta                             00000055
+resultado                         00000028
+retardo                           0000005D
+retardo2                          0000006A
+retardo3                          00000073
+retr                              00000046
+salte_conv                        00000113
+subst                             00000029
+vec_int                           00000004
+vec_reset                         00000000
+x0                                00000020
+y0                                00000021
+MPASM  5.51                       BUENO-2.ASM   11-17-2016  13:10:43         PAGE 21
+
+
+MEMORY USAGE MAP ('X' = Used,  '-' = Unused)
+
+
+0000 : XX--XXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0040 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0080 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+00C0 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0100 : XXXXXXXXXXXXXXXX XXXX------------ ---------------- ----------------
+2000 : -------X-------- ---------------- ---------------- ----------------
+
+All other memory blocks unused.
+
+Program Memory Words Used:   274
+Program Memory Words Free:  7918
+
+
+Errors   :     0
+Warnings :     0 reported,     0 suppressed
+Messages :     7 reported,     0 suppressed
+
+
