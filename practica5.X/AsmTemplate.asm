@@ -11,7 +11,7 @@
 ;4.- SERVIN PEREZ NAHOMI THAIS
 ;
 ;COMENTARIO DE LO QUE EL PROGRAMA EJECUTA : 
-;
+;Suma de numeros binarios de uno o mas digitos.
 ;---------------------------------------------------------------------------------------------------------------------------------------------------
 
  list P=16F877A;
@@ -31,9 +31,9 @@
 ;	
 ;Registros propios de estructura del programa
 ;variables.
-Contador1 equ 0x20; //
-Contador2 equ 0x21; //
-Contador3 equ 0x22; //
+suma equ 0x20; //
+num1 equ 0x21; //
+num2 equ 0x22; //
 ;------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ;
 ;Constantes.
@@ -42,32 +42,6 @@ N			equ			.255;
 L			equ			.255
 
 ;Constantes de caracteres en siete segmentos.
-Car_A		equ b'01110111'; Caracter A en siete segmentos.
-Car_b		equ b'01111100'; Caracter b en siete segmentos.
-Car_C		equ b'00111001'; Caracter C en siete segmentos.
-Car_d		equ b'01011110'; Caracter d en siete segmentos.
-Car_E		equ b'01111001'; Caracter E en siete segmentos.
-Car_F		equ b'01110001'; Caracter F en siete segmentos.
-Car_G		equ b'01111101'; Caracter G en siete segmentos.
-Car_gg		equ b'01110111'; Caracter A en siete segmentos.
-Car_H		equ b'01110100'; Caracter H en siete segmentos.
-Car_hh		equ b'00000100'; Caracter A en siete segmentos.
-Car_i		equ b'00000100'; Caracter i en siete segmentos.
-Car_J		equ b'00011110'; Caracter J en siete segmentos.
-Car_L		equ b'00111000'; Caracter L en siete segmentos.
-Car_n		equ b'01010100'; Caracter n en siete segmentos.
-Car_o		equ b'01011100'; Caracter o en siete segmentos.
-Car_P		equ b'01110011'; Caracter P en siete segmentos.
-Car_q		equ b'01100111'; Caracter q en siete segmentos.
-Car_r		equ b'01010000'; Caracter r en siete segmentos. 
-Car_S		equ b'01101101'; Caracter S en siete segmentos.
-Car_t		equ b'01111000'; Caracter t en siete segmentos.
-Car_U		equ b'01110111'; Caracter A en siete segmentos.
-Car_uu		equ b'00011100'; Caracter u en siete segmentos.
-Car_Y		equ b'01110111'; Caracter A en siete segmentos.
-Car_yy		equ b'01101110'; Caracter Y en siete segmentos.
-Car_Z		equ b'01011011'; Caracter Z en siete segmentos.
-Car_zz		equ b'01110111'; Caracter A en siete segmentos.
 Car_0		equ b'00111111';Caracter 0 en siete segmentos.
 Car_1		equ b'00000110';Caracter 0 en siete segmentos.
 Car_2		equ b'01011011';Caracter 0 en siete segmentos.
@@ -92,35 +66,35 @@ Sin_UsoRA5		equ .5; // Sin uso RA5.
 proga			equ	b'111111'; //Programacion inicial del puerto A.
 ;Puerto B.
 seg_a			equ	.0; // Salida para controlar el segmento a.
-seg_b			equ	.1; // Sin uso RB1.
-seg_c			equ	.2; // Sin uso RB2.						
-seg_d			equ	.3; // Sin uso RB3.	
-seg_e			equ	.4; // Sin uso RB4.
-seg_f			equ .5; // Sin uso RB5.
-seg_g			equ .6; // Sin uso RB6.
-seg_dp			equ .7; // Sin uso RB7
+seg_b			equ	.1; // Salida para controlar el segmento b.
+seg_c			equ	.2; // Salida para controlar el segmento c.						
+seg_d			equ	.3; // Salida para controlar el segmento d.	
+seg_e			equ	.4; // Salida para controlar el segmento e.
+seg_f			equ .5; // Salida para controlar el segmento f.
+seg_g			equ .6; // Salida para controlar el segmento g.
+seg_dp			equ .7; // Salida para controlar el segmento del punto decimal.
 
 progb			equ	b'00000000'; //Programacion inicial del puerto B.
 ;Puerto C.
-Bit0_numbin			equ	.0; // Sin uso RC0.
-Bit1_numbin			equ	.1; // Sin uso RC1.
-Bit2_numbin			equ	.2; // Sin uso RC2.						
-Bit3_numbin			equ	.3; // Sin uso RC3.	
+num_1				equ	.0; // Salida para controlar el numero 1.
+num_2				equ	.1; // Salida para controlar el numero 2.
+Suma				equ	.2; // Suma.						
+Sin_UsoRC3			equ	.3; // Sin uso RC3.	
 Sin_UsoRC4			equ	.4; // Sin uso RC4.
 Sin_UsoRC5			equ .5; // Sin uso RC5.
 Sin_UsoRC6			equ .6; // Sin uso RC6.
-PB_tecnum			equ .7; // Sin uso RC7.
+Sin_UsoRC7			equ .7; // Sin uso RC7.
 
 progc			equ	b'11111111'; //Programacion inicial del puerto C.
 ;Puerto D.
-Disp_1			equ	.0; // Salida para controlar el display 1.
-Disp_2			equ	.1; // Salida para controlar el display 2.
-Disp_3			equ	.2; // Salida para controlar el display 3.						
-Disp_4			equ	.3; // Salida para controlar el display 4.	
-Disp_5			equ	.4; // Salida para controlar el display 5.
-Disp_6			equ .5; // Salida para controlar el display 6.
-Disp_7			equ .6; // Salida para controlar el display 7.
-Disp_8			equ .7; // Salida para controlar el display 8.
+Disp_1				equ	.0; // Salida para controlar el display 1.
+Disp_2				equ	.1; // Salida para controlar el display 2.
+Sin_UsoRD2			equ	.2; // Sin uso R2.						
+Sin_UsoRD3			equ	.3; // Sin uso RD3.	
+Sin_UsoRD4			equ	.4; // Sin uso RD4.
+Sin_UsoRD5			equ .5; // Sin uso RD5.
+Sin_UsoRD6			equ .6; // Sin uso RD6.
+Sin_UsoRD7			equ .7; // Sin uso RD7.
 
 progd			equ	b'00000000'; //Programacion inicial del puerto D.
 
@@ -156,39 +130,64 @@ vec_int				nop;
 					;==============================
 					;=== Subrutina de inicio   ====
 					;==============================
-prog_ini			bsf status, rp0; selec. el bco. 1 de ram.
-					movlw 0x81;
-					movwf option_reg ^0x80
-					movlw proga;
-					movwf trisa ^0x80
-					movlw progb;
-					movwf trisb ^0x80
-					movlw progc;
-					movwf trisc ^0x80
-					movlw progd;
-					movwf trisd ^0x80
-					movlw proge;
-					movwf trise ^0x80
-					movlw 0x06;
-					movwf adcon1 ^0x80; conf. el pto. a como salidas i/o.
-					bcf status, rp0;
+;prog_ini			bsf status, rp0; selec. el bco. 1 de ram.
+					;movlw 0x81;
+					;movwf option_reg ^0x80
+					;movlw proga;
+					;movwf trisa ^0x80
+					;movlw progb;
+					;movwf trisb ^0x80
+					;movlw progc;
+					;movwf trisc ^0x80
+					;movlw progd;
+					;movwf trisd ^0x80
+					;movlw proge;
+					;movwf trise ^0x80
+					;movlw 0x06;
+					;movwf adcon1 ^0x80; conf. el pto. a como salidas i/o.
+					;bcf status, rp0;
 
-					clrf portb;
-					movlw 0xff;
-					movwf portc;
+					;clrf portb;
+					;movlw 0xff;
+					;movwf portc;
 
-					return;
+					;return;
+
+prog_ini                  bsf STATUS,RP0; selec. el bco. 1 de ram.
+                          movlw 0x81;
+                          movwf OPTION_REG ^0x80;
+                          movlw proga;
+                          movwf TRISA ^0x80;
+                          movlw progb;
+                          movwf TRISB ^0x80;
+                          movlw progc;
+                          movwf TRISC ^0x80;
+                          movlw progd;
+                          movwf TRISD ^0x80;
+                          movlw proge;
+                          movwf TRISE ^0x80;
+                          movwf 0x06;
+                          movwf ADCON1 ^0x80; conf. el pto. a como salida i/o.
+                          bcf STATUS,RP0;
+
+                          clrf PORTB;
+                          movlw b'11111111';
+                          movwf PORTC; 
+
+
+                          return;
+
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 					;=============================
 					;=== Programa principal   ====
 					;=============================
-prog_prin			call prog_ini;
+prog_prin                 call prog_ini;
 
-loop_prin			call lee_num:
-					call convbin_a_h7seg;
-					call muestra_numhex;
-
-					goto loop_prin;
+loop_prin                 call lee_num;
+                          call convbin_a_7seghex;
+                          call muestra_datos;
+          
+                          goto loop_prin;
 
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -196,90 +195,149 @@ loop_prin			call lee_num:
 					;=== Subrutina que lee el num. en bin   ====
 					;===========================================
 
-lee_num				movf	portc,w;
-					movwf	resp_num;
-					movlw	0x0f;
-					andwf	resp_num, f;
-esp_tec				btfsc	portd,PB_tecnum;
-					goto	esp_tec;
+lee_num                   movf PORTD,w;
+                          movwf suma;
+                          movlw 0x0f;
+                          andwf suma,f;
 
-					return;
+esp_tec                   btfsc PORTD,PB_tecnum;
+                          goto esp_tec;
+
+                          return;
 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 					;===================================================
 					;=== Subrutina que convierte el num bin a hex   ====
 					;===================================================
-convbin_a_h7seg		movlw .0;
-					subwf resp_num,w;
-					btfsc status, Z;
-					goto fue_0;
-					movlw .1;
-					subwf resp_num,w;
-					btfsc status,Z;
-					goto fue_1;
-					movlw .2;
-					subwf resp_num,w;
-					btfsc status,Z;
-					goto fue_2;
-					movlw .3;
-					subwf resp_num,w;
-					btfsc status,Z;
-					goto fue_3;
-					movlw .4;
-					subwf resp_num,w;
-					btfsc status,Z;
-					goto fue_4;
-					movlw .5;
-					subwf resp_num,w;
-					btfsc status,Z;
-					goto fue_5;
-					movlw .6;
-					subwf resp_num,w;
-					btfsc status,Z;
-					goto fue_6;
-					movlw .7;
-					subwf resp_num,w;
-					btfsc status,Z;
-					goto fue_7;
-					movlw .8;
-					subwf resp_num,w;
-					btfsc status,Z;
-					goto fue_8;
-					movlw .9;
-					subwf resp_num,w;
-					btfsc status,Z;
-					goto fue_9;
-					movlw .10;
-					subwf resp_num,w;
-					btfsc status,Z;
-					goto fue_10;
-					movlw .11;
-					subwf resp_num,w;
-					btfsc status,Z;
-					goto fue_11;
-					movlw .12;
-					subwf resp_num,w;
-					btfsc status,Z;
-					goto fue_12;
-					movlw .13;
-					subwf resp_num,w;
-					btfsc status,Z;
-					goto fue_13;
-					movlw .14;
-					subwf resp_num,w;
-					btfsc status,Z;
-					goto fue_14;
-					movlw .15;
-					subwf resp_num,w;
-					btfsc status,Z;
-					goto fue_15;
-					return;
+convbin_a_7seghex         movlw .0;
+                          subwf suma,w;
+                          btfsc STATUS,Z;
+                          goto fue_0;
+                          movlw .1;
+                          subwf suma,w;
+                          btfsc STATUS,Z;
+                          goto fue_1;
+                          movlw .2;
+                          subwf suma,w;
+                          btfsc STATUS,Z;
+                          goto fue_2;
+                          movlw .3;
+                          subwf suma,w;
+                          btfsc STATUS,Z;
+                          goto fue_3;
+                          movlw .4;
+                          subwf suma,w;
+                          btfsc STATUS,Z;
+                          goto fue_4;
+                          movlw .5;
+                          subwf suma,w;
+                          btfsc STATUS,Z;
+                          goto fue_5;
+                          movlw .6;
+                          subwf suma,w;
+                          btfsc STATUS,Z;
+                          goto fue_6;
+                          movlw .7;
+                          subwf suma,w;
+                          btfsc STATUS,Z;
+                          goto fue_7;
+                          movlw .8;
+                          subwf suma,w;
+                          btfsc STATUS,Z;
+                          goto fue_8;
+                          movlw .9;
+                          subwf suma,w;
+                          btfsc STATUS,Z;
+                          goto fue_9;
+                          movlw .10;
+                          subwf suma,w;
+                          btfsc STATUS,Z;
+                          goto fue_10;
+                          movlw .11;
+                          subwf suma,w;
+                          btfsc STATUS,Z;
+                          goto fue_11;
+                          movlw .12;
+                          subwf suma,w;
+                          btfsc STATUS,Z;
+                          goto fue_12;
+                          movlw .13;
+                          subwf suma,w;
+                          btfsc STATUS,Z;
+                          goto fue_13;
+                          movlw .14;
+                          subwf suma,w;
+                          btfsc STATUS,Z;
+                          goto fue_14;
+                          movlw .15;
+                          subwf suma,w;
+                          btfsc STATUS,Z;
+                          goto fue_15;
+                         
+fue_0                     movlw Car_0;
+                          movwf suma;
+                          goto salte_conv;
+fue_1                     movlw Car_1;
+                          movwf suma;
+                          goto salte_conv;
+fue_2                     movlw Car_2;
+                          movwf suma;
+                          goto salte_conv;
+fue_3                     movlw Car_3;
+                          movwf suma;
+                          goto salte_conv;
+fue_4                     movlw Car_4;
+                          movwf suma;
+                          goto salte_conv;
+fue_5                     movlw Car_5;
+                          movwf suma;
+                          goto salte_conv;
+fue_6                     movlw Car_6;
+                          movwf suma;
+                          goto salte_conv;
+fue_7                     movlw Car_7;
+                          movwf suma;
+                          goto salte_conv;
+fue_8                     movlw Car_8;
+                          movwf suma;
+                          goto salte_conv;
+fue_9                     movlw Car_9;
+                          movwf suma;
+                          goto salte_conv;
+fue_10                     movlw Car_A;
+                          movwf suma;
+                          goto salte_conv;
+fue_11                     movlw Car_b;
+                          movwf suma;
+                          goto salte_conv;
+fue_12                     movlw Car_C;
+                          movwf suma;
+                          goto salte_conv;
+fue_13                     movlw Car_d;
+                          movwf suma;
+                          goto salte_conv;
+fue_14                     movlw Car_E;
+                          movwf suma;
+                          goto salte_conv;
+fue_15                     movlw Car_F;
+                          movwf suma;
+                          goto salte_conv;
+
+                          movlw Car_null;
+                          movwf suma;
+                          goto salte_conv;
+
+salte_conv                return;
 
 					
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 					;===========================================
 					;=== Subrutina que muestra el n\FAmero   ====
 					;===========================================
-muestra_numhex		
+muestra_datos             movf suma;
+                          movwf PORTB;
+                          bcf PORTC, Com_Disp0;
+
+                          return;
 
 
