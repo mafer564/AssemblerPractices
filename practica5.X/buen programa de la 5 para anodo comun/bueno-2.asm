@@ -22,29 +22,19 @@
 ;Ciclo de trabajo del PIC = (1/fosc)*4 = 1us
 ;
 ;VARIABLES
-x0 			equ   0x20
-x1			equ   0x21
-x2			equ   0x22
-x3	        equ   0x20
-y0 			equ   0x23
-y1 			equ   0x24
-y2 			equ	  0x25
-y3          equ   0x26
-r0	        equ	  0x27
-r1 			equ   0x28
-r2 			equ   0x29
-r3          equ   0x30
-r4   		equ   0x31
-r5	        equ	  0x32
-respaldo    equ   0x33
-Contador1   equ   0x34
-Contador2   equ   0x35
-Contador3   equ   0x36
-resultado   equ   0x37
-subst       equ   0x38
-resp_num    equ   0x39
-resp_num1   equ   0x40
-resp_num2   equ   0x41
+x0	        equ   0x20
+y0          equ   0x21
+r0	        equ	  0x22
+r1	        equ	  0x23
+respaldo    equ   0x24
+Contador1   equ   0x25
+Contador2   equ   0x26
+Contador3   equ   0x27
+resultado   equ   0x28
+subst       equ   0x29
+resp_num    equ   0x30
+resp_num1   equ   0x31
+resp_num2   equ   0x32
 
 
 ; LAS VARIABLES DE USUARIO COMIENZAN DESDE LA DIRECCION 20
@@ -56,41 +46,41 @@ N    equ    .64;
 L    equ    .128;
 ;---------------------------------------------------------------------------------------------------------------------------------------------------
 ; CONSTANTES DE CARACTERES EN SIETE SEGMENTOS
-Car_A       equ   b'01110111'; Caracter A en siete segmentos
-Car_b       equ   b'01111100'; Caracter b en siete segmentos
-Car_C       equ   b'00111001'; Caracter C en siete segmentos
-Car_cc      equ   b'01011000'; Caracter c en siete segmentos
-Car_d       equ   b'01011110'; Caracter d en siete segmentos
-Car_E       equ   b'01111001'; Caracter E en siete segmentos
-Car_F       equ   b'01110001'; Caracter F en siete segmentos
-Car_G       equ   b'01111101'; Caracter G en siete segmentos
-Car_gg      equ   b'01101111'; Caracter g en siete segmentos
-Car_H       equ   b'01110110'; Caracter H en siete segmentos
-Car_hh      equ   b'01110100'; Caracter h en siete segmentos
-Car_i       equ   b'00010000'; Caracter i en siete segmentos
-Car_J       equ   b'00011110'; Caracter J en siete segmentos
-Car_L       equ   b'00111000'; Caracter L en siete segmentos
-Car_n       equ   b'01010100'; Caracter n en siete segmentos
-Car_o       equ   b'01011100'; Caracter o en siete segmentos
-Car_P       equ   b'01110011'; Caracter P en siete segmentos
-Car_q       equ   b'01100111'; Caracter q en siete segmentos
-Car_r       equ   b'01010000'; Caracter r en siete segmentos
-Car_S       equ   b'01101101'; Caracter S en siete segmentos
-Car_t       equ   b'01111000'; Caracter t en siete segmentos
-Car_U       equ   b'00111110'; Caracter U en siete segmentos
-Car_uu      equ   b'00011100'; Caracter u en siete segmentos
-Car_y       equ   b'01101110'; Caracter y en siete segemntos
-Car_0       equ   b'00111111'; Caracter 0 en siete segmentos
-Car_1       equ   b'00000110'; Caracter 1 en siete segmentos
-Car_2       equ   b'01011011'; Caracter 2 en siete segmentos
-Car_3       equ   b'01001111'; Caracter 3 en siete segmentos
-Car_4       equ   b'01100110'; Caracter 4 en siete segmentos
-Car_5       equ   b'01101101'; Caracter 5 en siete segmentos
-Car_6       equ   b'01111101'; Caracter 6 en siete segmentos
-Car_7       equ   b'00000111'; Caracter 7 en siete segmentos
-Car_8       equ   b'01111111'; Caracter 8 en siete segmentos
-Car_9       equ   b'01101111'; Caracter 9 en siete segmentos
-Car_null    equ   b'00000000'; Caracter nulo (espacios)
+Car_A       equ    b'10001000'; Caracter A en siete segmentos
+Car_b       equ    b'10000011'; Caracter b en siete segmentos
+Car_C       equ    b'11000110'; Caracter C en siete segmentos
+Car_cc      equ    b'10100111'; Caracter c en siete segmentos
+Car_d       equ    b'10100001'; Caracter d en siete segmentos
+Car_E       equ    b'10000110'; Caracter E en siete segmentos
+Car_F       equ    b'10001110'; Caracter F en siete segmentos
+Car_G       equ    b'10000010'; Caracter G en siete segmentos
+Car_gg      equ    b'10010000'; Caracter g en siete segmentos
+Car_H       equ    b'10001001'; Caracter H en siete segmentos
+Car_hh      equ    b'10001011'; Caracter h en siete segmentos
+Car_i       equ    b'11101111'; Caracter i en siete segmentos
+Car_J       equ    b'11100001'; Caracter J en siete segmentos
+Car_L       equ    b'11000111'; Caracter L en siete segmentos
+Car_n       equ    b'10101011'; Caracter n en siete segmentos
+Car_o       equ    b'10100011'; Caracter o en siete segmentos
+Car_P       equ    b'10001100'; Caracter P en siete segmentos
+Car_q       equ    b'10011000'; Caracter q en siete segmentos
+Car_r       equ    b'10101111'; Caracter r en siete segmentos
+Car_S       equ    b'10010010'; Caracter S en siete segmentos
+Car_t       equ    b'10000111'; Caracter t en siete segmentos
+Car_U       equ    b'11000001'; Caracter U en siete segmentos
+Car_uu      equ    b'11100011'; Caracter u en siete segmentos
+Car_y       equ    b'10010001'; Caracter y en siete segemntos
+Car_0       equ    b'11000000'; Caracter 0 en siete segmentos
+Car_1       equ    b'11111001'; Caracter 1 en siete segmentos
+Car_2       equ    b'10100100'; Caracter 2 en siete segmentos
+Car_3       equ    b'10110000';Caracter 3 en siete segmentos
+Car_4       equ    b'10011001'; Caracter 4 en siete segmentos
+Car_5       equ    b'10010010'; Caracter 5 en siete segmentos
+Car_6       equ    b'10000010'; Caracter 6 en siete segmentos
+Car_7       equ    b'11111000'; Caracter 7 en siete segmentos
+Car_8       equ    b'10000000'; Caracter 8 en siete segmentos
+Car_9       equ    b'10010000'; Caracter 9 en siete segmentos
+Car_null    equ    b'11111111'; Caracter nulo (espacios)
 ;---------------------------------------------------------------------------------------------------------------------------------------------------
 ;ASIGNACION DE LOS BITS DE LOS PUERTOS DE I/O
 ; PUERTO A

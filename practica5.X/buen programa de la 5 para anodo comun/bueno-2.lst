@@ -1,4 +1,4 @@
-MPASM  5.51                       BUENO-2.ASM   11-20-2016  13:13:54         PAGE  1
+MPASM  5.51                       BUENO-2.ASM   11-22-2016  8:47:48         PAGE  1
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -57,7 +57,7 @@ LOC  OBJECT CODE     LINE SOURCE TEXT
                       00040 ; LAS VARIABLES DE USUARIO COMIENZAN DESDE LA DIRECCION 20
                       00041 ;-------------------------------------------------------------------------------------------------------
                             --------------------------------------------
-MPASM  5.51                       BUENO-2.ASM   11-20-2016  13:13:54         PAGE  2
+MPASM  5.51                       BUENO-2.ASM   11-22-2016  8:47:48         PAGE  2
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -71,41 +71,41 @@ LOC  OBJECT CODE     LINE SOURCE TEXT
                       00047 ;-------------------------------------------------------------------------------------------------------
                             --------------------------------------------
                       00048 ; CONSTANTES DE CARACTERES EN SIETE SEGMENTOS
-  00000077            00049 Car_A       equ   b'01110111'; Caracter A en siete segmentos
-  0000007C            00050 Car_b       equ   b'01111100'; Caracter b en siete segmentos
-  00000039            00051 Car_C       equ   b'00111001'; Caracter C en siete segmentos
-  00000058            00052 Car_cc      equ   b'01011000'; Caracter c en siete segmentos
-  0000005E            00053 Car_d       equ   b'01011110'; Caracter d en siete segmentos
-  00000079            00054 Car_E       equ   b'01111001'; Caracter E en siete segmentos
-  00000071            00055 Car_F       equ   b'01110001'; Caracter F en siete segmentos
-  0000007D            00056 Car_G       equ   b'01111101'; Caracter G en siete segmentos
-  0000006F            00057 Car_gg      equ   b'01101111'; Caracter g en siete segmentos
-  00000076            00058 Car_H       equ   b'01110110'; Caracter H en siete segmentos
-  00000074            00059 Car_hh      equ   b'01110100'; Caracter h en siete segmentos
-  00000010            00060 Car_i       equ   b'00010000'; Caracter i en siete segmentos
-  0000001E            00061 Car_J       equ   b'00011110'; Caracter J en siete segmentos
-  00000038            00062 Car_L       equ   b'00111000'; Caracter L en siete segmentos
-  00000054            00063 Car_n       equ   b'01010100'; Caracter n en siete segmentos
-  0000005C            00064 Car_o       equ   b'01011100'; Caracter o en siete segmentos
-  00000073            00065 Car_P       equ   b'01110011'; Caracter P en siete segmentos
-  00000067            00066 Car_q       equ   b'01100111'; Caracter q en siete segmentos
-  00000050            00067 Car_r       equ   b'01010000'; Caracter r en siete segmentos
-  0000006D            00068 Car_S       equ   b'01101101'; Caracter S en siete segmentos
-  00000078            00069 Car_t       equ   b'01111000'; Caracter t en siete segmentos
-  0000003E            00070 Car_U       equ   b'00111110'; Caracter U en siete segmentos
-  0000001C            00071 Car_uu      equ   b'00011100'; Caracter u en siete segmentos
-  0000006E            00072 Car_y       equ   b'01101110'; Caracter y en siete segemntos
-  0000003F            00073 Car_0       equ   b'00111111'; Caracter 0 en siete segmentos
-  00000006            00074 Car_1       equ   b'00000110'; Caracter 1 en siete segmentos
-  0000005B            00075 Car_2       equ   b'01011011'; Caracter 2 en siete segmentos
-  0000004F            00076 Car_3       equ   b'01001111'; Caracter 3 en siete segmentos
-  00000066            00077 Car_4       equ   b'01100110'; Caracter 4 en siete segmentos
-  0000006D            00078 Car_5       equ   b'01101101'; Caracter 5 en siete segmentos
-  0000007D            00079 Car_6       equ   b'01111101'; Caracter 6 en siete segmentos
-  00000007            00080 Car_7       equ   b'00000111'; Caracter 7 en siete segmentos
-  0000007F            00081 Car_8       equ   b'01111111'; Caracter 8 en siete segmentos
-  0000006F            00082 Car_9       equ   b'01101111'; Caracter 9 en siete segmentos
-  00000000            00083 Car_null    equ   b'00000000'; Caracter nulo (espacios)
+  00000088            00049 Car_A       equ    b'10001000'; Caracter A en siete segmentos
+  00000083            00050 Car_b       equ    b'10000011'; Caracter b en siete segmentos
+  000000C6            00051 Car_C       equ    b'11000110'; Caracter C en siete segmentos
+  000000A7            00052 Car_cc      equ    b'10100111'; Caracter c en siete segmentos
+  000000A1            00053 Car_d       equ    b'10100001'; Caracter d en siete segmentos
+  00000086            00054 Car_E       equ    b'10000110'; Caracter E en siete segmentos
+  0000008E            00055 Car_F       equ    b'10001110'; Caracter F en siete segmentos
+  00000082            00056 Car_G       equ    b'10000010'; Caracter G en siete segmentos
+  00000090            00057 Car_gg      equ    b'10010000'; Caracter g en siete segmentos
+  00000089            00058 Car_H       equ    b'10001001'; Caracter H en siete segmentos
+  0000008B            00059 Car_hh      equ    b'10001011'; Caracter h en siete segmentos
+  000000EF            00060 Car_i       equ    b'11101111'; Caracter i en siete segmentos
+  000000E1            00061 Car_J       equ    b'11100001'; Caracter J en siete segmentos
+  000000C7            00062 Car_L       equ    b'11000111'; Caracter L en siete segmentos
+  000000AB            00063 Car_n       equ    b'10101011'; Caracter n en siete segmentos
+  000000A3            00064 Car_o       equ    b'10100011'; Caracter o en siete segmentos
+  0000008C            00065 Car_P       equ    b'10001100'; Caracter P en siete segmentos
+  00000098            00066 Car_q       equ    b'10011000'; Caracter q en siete segmentos
+  000000AF            00067 Car_r       equ    b'10101111'; Caracter r en siete segmentos
+  00000092            00068 Car_S       equ    b'10010010'; Caracter S en siete segmentos
+  00000087            00069 Car_t       equ    b'10000111'; Caracter t en siete segmentos
+  000000C1            00070 Car_U       equ    b'11000001'; Caracter U en siete segmentos
+  000000E3            00071 Car_uu      equ    b'11100011'; Caracter u en siete segmentos
+  00000091            00072 Car_y       equ    b'10010001'; Caracter y en siete segemntos
+  000000C0            00073 Car_0       equ    b'11000000'; Caracter 0 en siete segmentos
+  000000F9            00074 Car_1       equ    b'11111001'; Caracter 1 en siete segmentos
+  000000A4            00075 Car_2       equ    b'10100100'; Caracter 2 en siete segmentos
+  000000B0            00076 Car_3       equ    b'10110000';Caracter 3 en siete segmentos
+  00000099            00077 Car_4       equ    b'10011001'; Caracter 4 en siete segmentos
+  00000092            00078 Car_5       equ    b'10010010'; Caracter 5 en siete segmentos
+  00000082            00079 Car_6       equ    b'10000010'; Caracter 6 en siete segmentos
+  000000F8            00080 Car_7       equ    b'11111000'; Caracter 7 en siete segmentos
+  00000080            00081 Car_8       equ    b'10000000'; Caracter 8 en siete segmentos
+  00000090            00082 Car_9       equ    b'10010000'; Caracter 9 en siete segmentos
+  000000FF            00083 Car_null    equ    b'11111111'; Caracter nulo (espacios)
                       00084 ;-------------------------------------------------------------------------------------------------------
                             --------------------------------------------
                       00085 ;ASIGNACION DE LOS BITS DE LOS PUERTOS DE I/O
@@ -116,7 +116,7 @@ LOC  OBJECT CODE     LINE SOURCE TEXT
   00000003            00090 Sin_UsoRA3    equ    .3; //Sin uso RA3
   00000004            00091 Sin_UsoRA4    equ    .4; //Sin uso RA4 
   00000005            00092 Sin_UsoRA5    equ    .5; //Sin uso RA5
-MPASM  5.51                       BUENO-2.ASM   11-20-2016  13:13:54         PAGE  3
+MPASM  5.51                       BUENO-2.ASM   11-22-2016  8:47:48         PAGE  3
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -175,7 +175,7 @@ LOC  OBJECT CODE     LINE SOURCE TEXT
                             ----------------------------------
                       00143 ;
                       00144                  ;==================
-MPASM  5.51                       BUENO-2.ASM   11-20-2016  13:13:54         PAGE  4
+MPASM  5.51                       BUENO-2.ASM   11-22-2016  8:47:48         PAGE  4
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -234,7 +234,7 @@ Message[302]: Register in operand not in bank 0.  Ensure that bank bits are corr
                       00185                  ;== PROGRAMA PINCIPAL ==
                       00186                  ;=======================
 001A   2006           00187 prog_prin        call   prog_ini; Llamamos a la etiqueta prog_ini
-MPASM  5.51                       BUENO-2.ASM   11-20-2016  13:13:54         PAGE  5
+MPASM  5.51                       BUENO-2.ASM   11-22-2016  8:47:48         PAGE  5
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -293,7 +293,7 @@ LOC  OBJECT CODE     LINE SOURCE TEXT
 004D   1407           00238                                 bsf    PORTC,Com_Disp0;
 004E   0823           00239                                 movf   r1,w;
 004F   0086           00240                         movwf  PORTB;
-MPASM  5.51                       BUENO-2.ASM   11-20-2016  13:13:54         PAGE  6
+MPASM  5.51                       BUENO-2.ASM   11-22-2016  8:47:48         PAGE  6
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -352,7 +352,7 @@ LOC  OBJECT CODE     LINE SOURCE TEXT
                       00288  
 006C   3002           00289 retardo2         movlw .2;
 006D   00A7           00290                  movwf Contador3;
-MPASM  5.51                       BUENO-2.ASM   11-20-2016  13:13:54         PAGE  7
+MPASM  5.51                       BUENO-2.ASM   11-22-2016  8:47:48         PAGE  7
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -411,7 +411,7 @@ LOC  OBJECT CODE     LINE SOURCE TEXT
 0090   2891           00339                 goto  find_num;
 0091   3000           00340 find_num        movlw .0;
 0092   0224           00341                         subwf respaldo,w;
-MPASM  5.51                       BUENO-2.ASM   11-20-2016  13:13:54         PAGE  8
+MPASM  5.51                       BUENO-2.ASM   11-22-2016  8:47:48         PAGE  8
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -470,7 +470,7 @@ LOC  OBJECT CODE     LINE SOURCE TEXT
 00C5   300D           00392                 movlw .13;
 00C6   0224           00393                 subwf respaldo,w;
 00C7   1903           00394                 btfsc STATUS,Z;
-MPASM  5.51                       BUENO-2.ASM   11-20-2016  13:13:54         PAGE  9
+MPASM  5.51                       BUENO-2.ASM   11-22-2016  8:47:48         PAGE  9
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -506,7 +506,7 @@ LOC  OBJECT CODE     LINE SOURCE TEXT
                       00421                 ;= Subrutina para números mayores a 9 =
                       00422                 ;======================================
                       00423                 
-00DE   3006           00424 dos_digitos     movlw Car_1;
+00DE   30F9           00424 dos_digitos     movlw Car_1;
 00DF   00A3           00425                         movwf r1;
 00E0   0008           00426                                 return;
                       00427 ;-------------------------------------------------------------------------------------------------------
@@ -518,7 +518,7 @@ LOC  OBJECT CODE     LINE SOURCE TEXT
                       00432 
 00E1   303C           00433 err1             movlw .60;
 00E2   00A5           00434                  movwf Contador1;
-00E3   3079           00435 men_err          movlw Car_E;              E
+00E3   3086           00435 men_err          movlw Car_E;              E
 00E4   0086           00436                  movwf PORTB;
 00E5   1007           00437                  bcf PORTC, Com_Disp0;
 00E6   206C           00438                  call retardo2;
@@ -529,7 +529,7 @@ LOC  OBJECT CODE     LINE SOURCE TEXT
                       00443                  
 00EB   281B           00444                  goto  ini;
                       00445 
-MPASM  5.51                       BUENO-2.ASM   11-20-2016  13:13:54         PAGE 10
+MPASM  5.51                       BUENO-2.ASM   11-22-2016  8:47:48         PAGE 10
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -544,7 +544,7 @@ LOC  OBJECT CODE     LINE SOURCE TEXT
                       00451 
 00EC   303C           00452 err2             movlw .60;
 00ED   00A5           00453                  movwf Contador1;
-00EE   3079           00454 men_err2         movlw Car_E;              E
+00EE   3086           00454 men_err2         movlw Car_E;              E
 00EF   0086           00455                  movwf PORTB;
 00F0   1007           00456                  bcf PORTC, Com_Disp0;
 00F1   206C           00457                  call retardo2;
@@ -562,40 +562,40 @@ LOC  OBJECT CODE     LINE SOURCE TEXT
                       00468                 ;= Subrutina de carga de caracteres =
                       00469                 ;====================================
                       00470                 
-00F7   303F           00471 fue_cero        movlw Car_0;
+00F7   30C0           00471 fue_cero        movlw Car_0;
 00F8   00A2           00472                         movwf r0;
 00F9   2915           00473                         goto salte_conv;
-00FA   3006           00474 fue_uno         movlw Car_1;
+00FA   30F9           00474 fue_uno         movlw Car_1;
 00FB   00A2           00475                         movwf r0;
 00FC   2915           00476                         goto salte_conv;
-00FD   305B           00477 fue_dos         movlw Car_2;
+00FD   30A4           00477 fue_dos         movlw Car_2;
 00FE   00A2           00478                         movwf r0;
 00FF   2915           00479                         goto salte_conv;
-0100   304F           00480 fue_tres        movlw Car_3;
+0100   30B0           00480 fue_tres        movlw Car_3;
 0101   00A2           00481                         movwf r0;
 0102   2915           00482                         goto salte_conv;
-0103   3066           00483 fue_cuatro      movlw Car_4;
+0103   3099           00483 fue_cuatro      movlw Car_4;
 0104   00A2           00484                         movwf r0;
 0105   2915           00485                         goto salte_conv;
-0106   306D           00486 fue_cinco       movlw Car_5;
+0106   3092           00486 fue_cinco       movlw Car_5;
 0107   00A2           00487                         movwf r0;
 0108   2915           00488                         goto salte_conv;
-0109   307D           00489 fue_seis        movlw Car_6;
+0109   3082           00489 fue_seis        movlw Car_6;
 010A   00A2           00490                         movwf r0;
 010B   2915           00491                         goto salte_conv;
-010C   3007           00492 fue_siete       movlw Car_7;
+010C   30F8           00492 fue_siete       movlw Car_7;
 010D   00A2           00493                         movwf r0;
 010E   2915           00494                         goto salte_conv;
-010F   307F           00495 fue_ocho        movlw Car_8;
+010F   3080           00495 fue_ocho        movlw Car_8;
 0110   00A2           00496                         movwf r0;
-MPASM  5.51                       BUENO-2.ASM   11-20-2016  13:13:54         PAGE 11
+MPASM  5.51                       BUENO-2.ASM   11-22-2016  8:47:48         PAGE 11
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
 0111   2915           00497                         goto salte_conv;
-0112   306F           00498 fue_nueve       movlw Car_9;
+0112   3090           00498 fue_nueve       movlw Car_9;
 0113   00A2           00499                         movwf r0;
 0114   2915           00500                         goto salte_conv;
                       00501                 
@@ -647,7 +647,7 @@ LOC  OBJECT CODE     LINE SOURCE TEXT
 0124   0808           00542 lee_num2                        movf PORTD,w;
 0125   0084           00543                                         movwf Ingreso_dat;
 0126   300F           00544                                         movlw 0x0f;
-MPASM  5.51                       BUENO-2.ASM   11-20-2016  13:13:54         PAGE 12
+MPASM  5.51                       BUENO-2.ASM   11-22-2016  8:47:48         PAGE 12
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -662,7 +662,7 @@ LOC  OBJECT CODE     LINE SOURCE TEXT
                             ------------------------------------------------------------------------------------------------
                       00551                 
                       00552                 end;
-MPASM  5.51                       BUENO-2.ASM   11-20-2016  13:13:54         PAGE 13
+MPASM  5.51                       BUENO-2.ASM   11-22-2016  8:47:48         PAGE 13
 
 
 SYMBOL TABLE
@@ -721,7 +721,7 @@ CHS1                              00000004
 CHS2                              00000005
 CIS                               00000003
 CKE                               00000006
-MPASM  5.51                       BUENO-2.ASM   11-20-2016  13:13:54         PAGE 14
+MPASM  5.51                       BUENO-2.ASM   11-22-2016  8:47:48         PAGE 14
 
 
 SYMBOL TABLE
@@ -744,43 +744,43 @@ CVRCON                            0000009D
 CVREN                             00000007
 CVROE                             00000006
 CVRR                              00000005
-Car_0                             0000003F
-Car_1                             00000006
-Car_2                             0000005B
-Car_3                             0000004F
-Car_4                             00000066
-Car_5                             0000006D
-Car_6                             0000007D
-Car_7                             00000007
-Car_8                             0000007F
-Car_9                             0000006F
-Car_A                             00000077
-Car_C                             00000039
-Car_E                             00000079
-Car_F                             00000071
-Car_G                             0000007D
-Car_H                             00000076
-Car_J                             0000001E
-Car_L                             00000038
-Car_P                             00000073
-Car_S                             0000006D
-Car_U                             0000003E
-Car_b                             0000007C
-Car_cc                            00000058
-Car_d                             0000005E
-Car_gg                            0000006F
-Car_hh                            00000074
-Car_i                             00000010
-Car_n                             00000054
-Car_null                          00000000
-Car_o                             0000005C
-Car_q                             00000067
-Car_r                             00000050
-Car_t                             00000078
-Car_uu                            0000001C
-Car_y                             0000006E
+Car_0                             000000C0
+Car_1                             000000F9
+Car_2                             000000A4
+Car_3                             000000B0
+Car_4                             00000099
+Car_5                             00000092
+Car_6                             00000082
+Car_7                             000000F8
+Car_8                             00000080
+Car_9                             00000090
+Car_A                             00000088
+Car_C                             000000C6
+Car_E                             00000086
+Car_F                             0000008E
+Car_G                             00000082
+Car_H                             00000089
+Car_J                             000000E1
+Car_L                             000000C7
+Car_P                             0000008C
+Car_S                             00000092
+Car_U                             000000C1
+Car_b                             00000083
+Car_cc                            000000A7
+Car_d                             000000A1
+Car_gg                            00000090
+Car_hh                            0000008B
+Car_i                             000000EF
+Car_n                             000000AB
+Car_null                          000000FF
+Car_o                             000000A3
+Car_q                             00000098
+Car_r                             000000AF
+Car_t                             00000087
+Car_uu                            000000E3
+Car_y                             00000091
 Com_Disp0                         00000000
-MPASM  5.51                       BUENO-2.ASM   11-20-2016  13:13:54         PAGE 15
+MPASM  5.51                       BUENO-2.ASM   11-22-2016  8:47:48         PAGE 15
 
 
 SYMBOL TABLE
@@ -839,7 +839,7 @@ N                                 00000040
 NOT_A                             00000005
 NOT_ADDRESS                       00000005
 NOT_BO                            00000000
-MPASM  5.51                       BUENO-2.ASM   11-20-2016  13:13:54         PAGE 16
+MPASM  5.51                       BUENO-2.ASM   11-22-2016  8:47:48         PAGE 16
 
 
 SYMBOL TABLE
@@ -898,7 +898,7 @@ RA5                               00000005
 RB0                               00000000
 RB1                               00000001
 RB2                               00000002
-MPASM  5.51                       BUENO-2.ASM   11-20-2016  13:13:54         PAGE 17
+MPASM  5.51                       BUENO-2.ASM   11-22-2016  8:47:48         PAGE 17
 
 
 SYMBOL TABLE
@@ -957,7 +957,7 @@ SSPADD                            00000093
 SSPBUF                            00000013
 SSPCON                            00000014
 SSPCON2                           00000091
-MPASM  5.51                       BUENO-2.ASM   11-20-2016  13:13:54         PAGE 18
+MPASM  5.51                       BUENO-2.ASM   11-22-2016  8:47:48         PAGE 18
 
 
 SYMBOL TABLE
@@ -1016,7 +1016,7 @@ TMR1IF                            00000000
 TMR1L                             0000000E
 TMR1ON                            00000000
 TMR2                              00000011
-MPASM  5.51                       BUENO-2.ASM   11-20-2016  13:13:54         PAGE 19
+MPASM  5.51                       BUENO-2.ASM   11-22-2016  8:47:48         PAGE 19
 
 
 SYMBOL TABLE
@@ -1075,7 +1075,7 @@ TXD8                              00000000
 TXEN                              00000005
 TXIE                              00000004
 TXIF                              00000004
-MPASM  5.51                       BUENO-2.ASM   11-20-2016  13:13:54         PAGE 20
+MPASM  5.51                       BUENO-2.ASM   11-22-2016  8:47:48         PAGE 20
 
 
 SYMBOL TABLE
@@ -1134,7 +1134,7 @@ bit1                              00000001
 bit2                              00000002
 bit3                              00000003
 dos_digitos                       000000DE
-MPASM  5.51                       BUENO-2.ASM   11-20-2016  13:13:54         PAGE 21
+MPASM  5.51                       BUENO-2.ASM   11-22-2016  8:47:48         PAGE 21
 
 
 SYMBOL TABLE
@@ -1193,7 +1193,7 @@ respaldo                          00000024
 resta                             00000057
 resultado                         00000028
 retardo                           0000005F
-MPASM  5.51                       BUENO-2.ASM   11-20-2016  13:13:54         PAGE 22
+MPASM  5.51                       BUENO-2.ASM   11-22-2016  8:47:48         PAGE 22
 
 
 SYMBOL TABLE
