@@ -444,10 +444,39 @@ err1             movlw .60;
                  movwf Contador1;
 men_err          movlw Car_E;              E
                  movwf PORTB;
+                 bcf PORTC, Com_Disp4;
+                 call retardo2;
+                 bsf PORTC, Com_Disp4;
+                 call retardo2;
+                 
+                 movlw Car_r;              R
+                 movwf PORTB;
+                 bcf PORTC, Com_Disp3;
+                 call retardo2;
+                 bsf PORTC, Com_Disp3;
+                 call retardo2;
+
+                 movlw Car_r;              R
+                 movwf PORTB;
+                 bcf PORTC, Com_Disp2;
+                 call retardo2;
+                 bsf PORTC, Com_Disp2;
+                 call retardo2;
+
+                 movlw Car_o;              O
+                 movwf PORTB;
+                 bcf PORTC, Com_Disp1;
+                 call retardo2;
+                 bsf PORTC, Com_Disp1;
+                 call retardo2;
+
+                 movlw Car_r;              R
+                 movwf PORTB;
                  bcf PORTC, Com_Disp0;
                  call retardo2;
                  bsf PORTC, Com_Disp0;
                  call retardo2;
+
                  decfsz Contador1,f;
                  goto men_err;
                  
@@ -463,10 +492,39 @@ err2             movlw .60;
                  movwf Contador1;
 men_err2         movlw Car_E;              E
                  movwf PORTB;
+                 bcf PORTC, Com_Disp4;
+                 call retardo2;
+                 bsf PORTC, Com_Disp4;
+                 call retardo2;
+
+                 movlw Car_r;              R
+                 movwf PORTB;
+                 bcf PORTC, Com_Disp3;
+                 call retardo2;
+                 bsf PORTC, Com_Disp3;
+                 call retardo2;
+
+                 movlw Car_r;              R
+                 movwf PORTB;
+                 bcf PORTC, Com_Disp2;
+                 call retardo2;
+                 bsf PORTC, Com_Disp2;
+                 call retardo2;
+
+                 movlw Car_o;              O
+                 movwf PORTB;
+                 bcf PORTC, Com_Disp1;
+                 call retardo2;
+                 bsf PORTC, Com_Disp1;
+                 call retardo2;
+
+                 movlw Car_r;              R
+                 movwf PORTB;
                  bcf PORTC, Com_Disp0;
                  call retardo2;
                  bsf PORTC, Com_Disp0;
                  call retardo2;
+
                  decfsz Contador1,f;
                  goto men_err2;
                  
