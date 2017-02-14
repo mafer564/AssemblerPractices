@@ -1,0 +1,134 @@
+MPLINK 4.49, Linker
+Linker Map File - Created Tue Nov 22 08:47:54 2016
+
+                                 Section Info
+                  Section       Type    Address   Location Size(Bytes)
+                ---------  ---------  ---------  ---------  ---------
+                   .org_0       code   0x000000    program   0x000000
+                   .org_1       code   0x000000    program   0x000004
+                   .org_2       code   0x000004    program   0x00024e
+   .config_2007_BUENO-2.O       code   0x002007    program   0x000002
+
+
+
+                              Program Memory Usage 
+                               Start         End      
+                           ---------   ---------      
+                            0x000000    0x000001      
+                            0x000004    0x00012a      
+                            0x002007    0x002007      
+            298 out of 8454 program addresses used, program memory utilization is 3%
+
+
+
+                              Symbols - Sorted by Name
+                     Name    Address   Location    Storage File                     
+                ---------  ---------  ---------  --------- ---------                
+                   Loop0a   0x00006e    program     static C:\Users\LENOVO\Documents\cecyt 9\5to semestre\microprocesadores\practica 5\buen programa de la 5 para anodo comun\bueno-2.asm
+                   Loop0b   0x000070    program     static C:\Users\LENOVO\Documents\cecyt 9\5to semestre\microprocesadores\practica 5\buen programa de la 5 para anodo comun\bueno-2.asm
+              dos_digitos   0x0000de    program     static C:\Users\LENOVO\Documents\cecyt 9\5to semestre\microprocesadores\practica 5\buen programa de la 5 para anodo comun\bueno-2.asm
+                  enc_num   0x000082    program     static C:\Users\LENOVO\Documents\cecyt 9\5to semestre\microprocesadores\practica 5\buen programa de la 5 para anodo comun\bueno-2.asm
+                     err1   0x0000e1    program     static C:\Users\LENOVO\Documents\cecyt 9\5to semestre\microprocesadores\practica 5\buen programa de la 5 para anodo comun\bueno-2.asm
+                     err2   0x0000ec    program     static C:\Users\LENOVO\Documents\cecyt 9\5to semestre\microprocesadores\practica 5\buen programa de la 5 para anodo comun\bueno-2.asm
+                  esp_tec   0x00011a    program     static C:\Users\LENOVO\Documents\cecyt 9\5to semestre\microprocesadores\practica 5\buen programa de la 5 para anodo comun\bueno-2.asm
+                 esp_tec1   0x000121    program     static C:\Users\LENOVO\Documents\cecyt 9\5to semestre\microprocesadores\practica 5\buen programa de la 5 para anodo comun\bueno-2.asm
+                 esp_tec2   0x000128    program     static C:\Users\LENOVO\Documents\cecyt 9\5to semestre\microprocesadores\practica 5\buen programa de la 5 para anodo comun\bueno-2.asm
+                 find_num   0x000091    program     static C:\Users\LENOVO\Documents\cecyt 9\5to semestre\microprocesadores\practica 5\buen programa de la 5 para anodo comun\bueno-2.asm
+                 fue_cero   0x0000f7    program     static C:\Users\LENOVO\Documents\cecyt 9\5to semestre\microprocesadores\practica 5\buen programa de la 5 para anodo comun\bueno-2.asm
+                fue_cinco   0x000106    program     static C:\Users\LENOVO\Documents\cecyt 9\5to semestre\microprocesadores\practica 5\buen programa de la 5 para anodo comun\bueno-2.asm
+               fue_cuatro   0x000103    program     static C:\Users\LENOVO\Documents\cecyt 9\5to semestre\microprocesadores\practica 5\buen programa de la 5 para anodo comun\bueno-2.asm
+                  fue_dos   0x0000fd    program     static C:\Users\LENOVO\Documents\cecyt 9\5to semestre\microprocesadores\practica 5\buen programa de la 5 para anodo comun\bueno-2.asm
+                fue_nueve   0x000112    program     static C:\Users\LENOVO\Documents\cecyt 9\5to semestre\microprocesadores\practica 5\buen programa de la 5 para anodo comun\bueno-2.asm
+                 fue_ocho   0x00010f    program     static C:\Users\LENOVO\Documents\cecyt 9\5to semestre\microprocesadores\practica 5\buen programa de la 5 para anodo comun\bueno-2.asm
+                 fue_seis   0x000109    program     static C:\Users\LENOVO\Documents\cecyt 9\5to semestre\microprocesadores\practica 5\buen programa de la 5 para anodo comun\bueno-2.asm
+                fue_siete   0x00010c    program     static C:\Users\LENOVO\Documents\cecyt 9\5to semestre\microprocesadores\practica 5\buen programa de la 5 para anodo comun\bueno-2.asm
+                 fue_tres   0x000100    program     static C:\Users\LENOVO\Documents\cecyt 9\5to semestre\microprocesadores\practica 5\buen programa de la 5 para anodo comun\bueno-2.asm
+                  fue_uno   0x0000fa    program     static C:\Users\LENOVO\Documents\cecyt 9\5to semestre\microprocesadores\practica 5\buen programa de la 5 para anodo comun\bueno-2.asm
+                      ini   0x00001b    program     static C:\Users\LENOVO\Documents\cecyt 9\5to semestre\microprocesadores\practica 5\buen programa de la 5 para anodo comun\bueno-2.asm
+                  lee_num   0x000116    program     static C:\Users\LENOVO\Documents\cecyt 9\5to semestre\microprocesadores\practica 5\buen programa de la 5 para anodo comun\bueno-2.asm
+                 lee_num1   0x00011d    program     static C:\Users\LENOVO\Documents\cecyt 9\5to semestre\microprocesadores\practica 5\buen programa de la 5 para anodo comun\bueno-2.asm
+                 lee_num2   0x000124    program     static C:\Users\LENOVO\Documents\cecyt 9\5to semestre\microprocesadores\practica 5\buen programa de la 5 para anodo comun\bueno-2.asm
+                    loop1   0x000020    program     static C:\Users\LENOVO\Documents\cecyt 9\5to semestre\microprocesadores\practica 5\buen programa de la 5 para anodo comun\bueno-2.asm
+                    loop2   0x00002f    program     static C:\Users\LENOVO\Documents\cecyt 9\5to semestre\microprocesadores\practica 5\buen programa de la 5 para anodo comun\bueno-2.asm
+                    loop3   0x00003e    program     static C:\Users\LENOVO\Documents\cecyt 9\5to semestre\microprocesadores\practica 5\buen programa de la 5 para anodo comun\bueno-2.asm
+                   loopc1   0x000061    program     static C:\Users\LENOVO\Documents\cecyt 9\5to semestre\microprocesadores\practica 5\buen programa de la 5 para anodo comun\bueno-2.asm
+                   loopc2   0x000063    program     static C:\Users\LENOVO\Documents\cecyt 9\5to semestre\microprocesadores\practica 5\buen programa de la 5 para anodo comun\bueno-2.asm
+                   loopc3   0x000065    program     static C:\Users\LENOVO\Documents\cecyt 9\5to semestre\microprocesadores\practica 5\buen programa de la 5 para anodo comun\bueno-2.asm
+                   loopu1   0x000077    program     static C:\Users\LENOVO\Documents\cecyt 9\5to semestre\microprocesadores\practica 5\buen programa de la 5 para anodo comun\bueno-2.asm
+                   loopu2   0x000079    program     static C:\Users\LENOVO\Documents\cecyt 9\5to semestre\microprocesadores\practica 5\buen programa de la 5 para anodo comun\bueno-2.asm
+                   loopu3   0x00007b    program     static C:\Users\LENOVO\Documents\cecyt 9\5to semestre\microprocesadores\practica 5\buen programa de la 5 para anodo comun\bueno-2.asm
+                  men_err   0x0000e3    program     static C:\Users\LENOVO\Documents\cecyt 9\5to semestre\microprocesadores\practica 5\buen programa de la 5 para anodo comun\bueno-2.asm
+                 men_err2   0x0000ee    program     static C:\Users\LENOVO\Documents\cecyt 9\5to semestre\microprocesadores\practica 5\buen programa de la 5 para anodo comun\bueno-2.asm
+                  mostrar   0x000049    program     static C:\Users\LENOVO\Documents\cecyt 9\5to semestre\microprocesadores\practica 5\buen programa de la 5 para anodo comun\bueno-2.asm
+               mostrar_x0   0x000028    program     static C:\Users\LENOVO\Documents\cecyt 9\5to semestre\microprocesadores\practica 5\buen programa de la 5 para anodo comun\bueno-2.asm
+               mostrar_y0   0x000037    program     static C:\Users\LENOVO\Documents\cecyt 9\5to semestre\microprocesadores\practica 5\buen programa de la 5 para anodo comun\bueno-2.asm
+                  prob_x0   0x000087    program     static C:\Users\LENOVO\Documents\cecyt 9\5to semestre\microprocesadores\practica 5\buen programa de la 5 para anodo comun\bueno-2.asm
+                  prob_y0   0x00008c    program     static C:\Users\LENOVO\Documents\cecyt 9\5to semestre\microprocesadores\practica 5\buen programa de la 5 para anodo comun\bueno-2.asm
+                 prog_ini   0x000006    program     static C:\Users\LENOVO\Documents\cecyt 9\5to semestre\microprocesadores\practica 5\buen programa de la 5 para anodo comun\bueno-2.asm
+                prog_prin   0x00001a    program     static C:\Users\LENOVO\Documents\cecyt 9\5to semestre\microprocesadores\practica 5\buen programa de la 5 para anodo comun\bueno-2.asm
+                    resta   0x000057    program     static C:\Users\LENOVO\Documents\cecyt 9\5to semestre\microprocesadores\practica 5\buen programa de la 5 para anodo comun\bueno-2.asm
+                  retardo   0x00005f    program     static C:\Users\LENOVO\Documents\cecyt 9\5to semestre\microprocesadores\practica 5\buen programa de la 5 para anodo comun\bueno-2.asm
+                 retardo2   0x00006c    program     static C:\Users\LENOVO\Documents\cecyt 9\5to semestre\microprocesadores\practica 5\buen programa de la 5 para anodo comun\bueno-2.asm
+                 retardo3   0x000075    program     static C:\Users\LENOVO\Documents\cecyt 9\5to semestre\microprocesadores\practica 5\buen programa de la 5 para anodo comun\bueno-2.asm
+                     retr   0x000048    program     static C:\Users\LENOVO\Documents\cecyt 9\5to semestre\microprocesadores\practica 5\buen programa de la 5 para anodo comun\bueno-2.asm
+               salte_conv   0x000115    program     static C:\Users\LENOVO\Documents\cecyt 9\5to semestre\microprocesadores\practica 5\buen programa de la 5 para anodo comun\bueno-2.asm
+                  vec_int   0x000004    program     static C:\Users\LENOVO\Documents\cecyt 9\5to semestre\microprocesadores\practica 5\buen programa de la 5 para anodo comun\bueno-2.asm
+                vec_reset   0x000000    program     static C:\Users\LENOVO\Documents\cecyt 9\5to semestre\microprocesadores\practica 5\buen programa de la 5 para anodo comun\bueno-2.asm
+
+
+
+                              Symbols - Sorted by Address
+                     Name    Address   Location    Storage File                     
+                ---------  ---------  ---------  --------- ---------                
+                vec_reset   0x000000    program     static C:\Users\LENOVO\Documents\cecyt 9\5to semestre\microprocesadores\practica 5\buen programa de la 5 para anodo comun\bueno-2.asm
+                  vec_int   0x000004    program     static C:\Users\LENOVO\Documents\cecyt 9\5to semestre\microprocesadores\practica 5\buen programa de la 5 para anodo comun\bueno-2.asm
+                 prog_ini   0x000006    program     static C:\Users\LENOVO\Documents\cecyt 9\5to semestre\microprocesadores\practica 5\buen programa de la 5 para anodo comun\bueno-2.asm
+                prog_prin   0x00001a    program     static C:\Users\LENOVO\Documents\cecyt 9\5to semestre\microprocesadores\practica 5\buen programa de la 5 para anodo comun\bueno-2.asm
+                      ini   0x00001b    program     static C:\Users\LENOVO\Documents\cecyt 9\5to semestre\microprocesadores\practica 5\buen programa de la 5 para anodo comun\bueno-2.asm
+                    loop1   0x000020    program     static C:\Users\LENOVO\Documents\cecyt 9\5to semestre\microprocesadores\practica 5\buen programa de la 5 para anodo comun\bueno-2.asm
+               mostrar_x0   0x000028    program     static C:\Users\LENOVO\Documents\cecyt 9\5to semestre\microprocesadores\practica 5\buen programa de la 5 para anodo comun\bueno-2.asm
+                    loop2   0x00002f    program     static C:\Users\LENOVO\Documents\cecyt 9\5to semestre\microprocesadores\practica 5\buen programa de la 5 para anodo comun\bueno-2.asm
+               mostrar_y0   0x000037    program     static C:\Users\LENOVO\Documents\cecyt 9\5to semestre\microprocesadores\practica 5\buen programa de la 5 para anodo comun\bueno-2.asm
+                    loop3   0x00003e    program     static C:\Users\LENOVO\Documents\cecyt 9\5to semestre\microprocesadores\practica 5\buen programa de la 5 para anodo comun\bueno-2.asm
+                     retr   0x000048    program     static C:\Users\LENOVO\Documents\cecyt 9\5to semestre\microprocesadores\practica 5\buen programa de la 5 para anodo comun\bueno-2.asm
+                  mostrar   0x000049    program     static C:\Users\LENOVO\Documents\cecyt 9\5to semestre\microprocesadores\practica 5\buen programa de la 5 para anodo comun\bueno-2.asm
+                    resta   0x000057    program     static C:\Users\LENOVO\Documents\cecyt 9\5to semestre\microprocesadores\practica 5\buen programa de la 5 para anodo comun\bueno-2.asm
+                  retardo   0x00005f    program     static C:\Users\LENOVO\Documents\cecyt 9\5to semestre\microprocesadores\practica 5\buen programa de la 5 para anodo comun\bueno-2.asm
+                   loopc1   0x000061    program     static C:\Users\LENOVO\Documents\cecyt 9\5to semestre\microprocesadores\practica 5\buen programa de la 5 para anodo comun\bueno-2.asm
+                   loopc2   0x000063    program     static C:\Users\LENOVO\Documents\cecyt 9\5to semestre\microprocesadores\practica 5\buen programa de la 5 para anodo comun\bueno-2.asm
+                   loopc3   0x000065    program     static C:\Users\LENOVO\Documents\cecyt 9\5to semestre\microprocesadores\practica 5\buen programa de la 5 para anodo comun\bueno-2.asm
+                 retardo2   0x00006c    program     static C:\Users\LENOVO\Documents\cecyt 9\5to semestre\microprocesadores\practica 5\buen programa de la 5 para anodo comun\bueno-2.asm
+                   Loop0a   0x00006e    program     static C:\Users\LENOVO\Documents\cecyt 9\5to semestre\microprocesadores\practica 5\buen programa de la 5 para anodo comun\bueno-2.asm
+                   Loop0b   0x000070    program     static C:\Users\LENOVO\Documents\cecyt 9\5to semestre\microprocesadores\practica 5\buen programa de la 5 para anodo comun\bueno-2.asm
+                 retardo3   0x000075    program     static C:\Users\LENOVO\Documents\cecyt 9\5to semestre\microprocesadores\practica 5\buen programa de la 5 para anodo comun\bueno-2.asm
+                   loopu1   0x000077    program     static C:\Users\LENOVO\Documents\cecyt 9\5to semestre\microprocesadores\practica 5\buen programa de la 5 para anodo comun\bueno-2.asm
+                   loopu2   0x000079    program     static C:\Users\LENOVO\Documents\cecyt 9\5to semestre\microprocesadores\practica 5\buen programa de la 5 para anodo comun\bueno-2.asm
+                   loopu3   0x00007b    program     static C:\Users\LENOVO\Documents\cecyt 9\5to semestre\microprocesadores\practica 5\buen programa de la 5 para anodo comun\bueno-2.asm
+                  enc_num   0x000082    program     static C:\Users\LENOVO\Documents\cecyt 9\5to semestre\microprocesadores\practica 5\buen programa de la 5 para anodo comun\bueno-2.asm
+                  prob_x0   0x000087    program     static C:\Users\LENOVO\Documents\cecyt 9\5to semestre\microprocesadores\practica 5\buen programa de la 5 para anodo comun\bueno-2.asm
+                  prob_y0   0x00008c    program     static C:\Users\LENOVO\Documents\cecyt 9\5to semestre\microprocesadores\practica 5\buen programa de la 5 para anodo comun\bueno-2.asm
+                 find_num   0x000091    program     static C:\Users\LENOVO\Documents\cecyt 9\5to semestre\microprocesadores\practica 5\buen programa de la 5 para anodo comun\bueno-2.asm
+              dos_digitos   0x0000de    program     static C:\Users\LENOVO\Documents\cecyt 9\5to semestre\microprocesadores\practica 5\buen programa de la 5 para anodo comun\bueno-2.asm
+                     err1   0x0000e1    program     static C:\Users\LENOVO\Documents\cecyt 9\5to semestre\microprocesadores\practica 5\buen programa de la 5 para anodo comun\bueno-2.asm
+                  men_err   0x0000e3    program     static C:\Users\LENOVO\Documents\cecyt 9\5to semestre\microprocesadores\practica 5\buen programa de la 5 para anodo comun\bueno-2.asm
+                     err2   0x0000ec    program     static C:\Users\LENOVO\Documents\cecyt 9\5to semestre\microprocesadores\practica 5\buen programa de la 5 para anodo comun\bueno-2.asm
+                 men_err2   0x0000ee    program     static C:\Users\LENOVO\Documents\cecyt 9\5to semestre\microprocesadores\practica 5\buen programa de la 5 para anodo comun\bueno-2.asm
+                 fue_cero   0x0000f7    program     static C:\Users\LENOVO\Documents\cecyt 9\5to semestre\microprocesadores\practica 5\buen programa de la 5 para anodo comun\bueno-2.asm
+                  fue_uno   0x0000fa    program     static C:\Users\LENOVO\Documents\cecyt 9\5to semestre\microprocesadores\practica 5\buen programa de la 5 para anodo comun\bueno-2.asm
+                  fue_dos   0x0000fd    program     static C:\Users\LENOVO\Documents\cecyt 9\5to semestre\microprocesadores\practica 5\buen programa de la 5 para anodo comun\bueno-2.asm
+                 fue_tres   0x000100    program     static C:\Users\LENOVO\Documents\cecyt 9\5to semestre\microprocesadores\practica 5\buen programa de la 5 para anodo comun\bueno-2.asm
+               fue_cuatro   0x000103    program     static C:\Users\LENOVO\Documents\cecyt 9\5to semestre\microprocesadores\practica 5\buen programa de la 5 para anodo comun\bueno-2.asm
+                fue_cinco   0x000106    program     static C:\Users\LENOVO\Documents\cecyt 9\5to semestre\microprocesadores\practica 5\buen programa de la 5 para anodo comun\bueno-2.asm
+                 fue_seis   0x000109    program     static C:\Users\LENOVO\Documents\cecyt 9\5to semestre\microprocesadores\practica 5\buen programa de la 5 para anodo comun\bueno-2.asm
+                fue_siete   0x00010c    program     static C:\Users\LENOVO\Documents\cecyt 9\5to semestre\microprocesadores\practica 5\buen programa de la 5 para anodo comun\bueno-2.asm
+                 fue_ocho   0x00010f    program     static C:\Users\LENOVO\Documents\cecyt 9\5to semestre\microprocesadores\practica 5\buen programa de la 5 para anodo comun\bueno-2.asm
+                fue_nueve   0x000112    program     static C:\Users\LENOVO\Documents\cecyt 9\5to semestre\microprocesadores\practica 5\buen programa de la 5 para anodo comun\bueno-2.asm
+               salte_conv   0x000115    program     static C:\Users\LENOVO\Documents\cecyt 9\5to semestre\microprocesadores\practica 5\buen programa de la 5 para anodo comun\bueno-2.asm
+                  lee_num   0x000116    program     static C:\Users\LENOVO\Documents\cecyt 9\5to semestre\microprocesadores\practica 5\buen programa de la 5 para anodo comun\bueno-2.asm
+                  esp_tec   0x00011a    program     static C:\Users\LENOVO\Documents\cecyt 9\5to semestre\microprocesadores\practica 5\buen programa de la 5 para anodo comun\bueno-2.asm
+                 lee_num1   0x00011d    program     static C:\Users\LENOVO\Documents\cecyt 9\5to semestre\microprocesadores\practica 5\buen programa de la 5 para anodo comun\bueno-2.asm
+                 esp_tec1   0x000121    program     static C:\Users\LENOVO\Documents\cecyt 9\5to semestre\microprocesadores\practica 5\buen programa de la 5 para anodo comun\bueno-2.asm
+                 lee_num2   0x000124    program     static C:\Users\LENOVO\Documents\cecyt 9\5to semestre\microprocesadores\practica 5\buen programa de la 5 para anodo comun\bueno-2.asm
+                 esp_tec2   0x000128    program     static C:\Users\LENOVO\Documents\cecyt 9\5to semestre\microprocesadores\practica 5\buen programa de la 5 para anodo comun\bueno-2.asm
+
+

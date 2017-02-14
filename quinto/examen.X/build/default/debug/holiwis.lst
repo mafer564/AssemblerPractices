@@ -1,0 +1,1088 @@
+MPASM 5.68  /HOME/MADELIN/MPLABXPROJECTS/EXA   10-20-2016  2:27:08         PAGE  1
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00001 ;INSTITUTO POLITECNICO NACIONAL
+                      00002 ;CECYT 9 "JUAN DE DIOS BATIZ"
+                      00003 ;
+                      00004 ;Holi, este es el programiuxi 
+                      00005 ;
+                      00006 ;GRUPO: 5IM2. EQUIPO 9;
+                      00007 ;INTEGRANTES:
+                      00008 ;1.-ARRIAGA VALONA ADOLFO ALEJANDRO 
+                      00009 ;2.-PEREZ JIMENEZ MADELIN FERNANDA
+                      00010 ;3.- RANGEL MORALES OSCAR MAURICIO
+                      00011 ;4.- SERVIN PEREZ NAHOMI THAIS
+                      00012 ;
+                      00013 ;COMENTARIO DE LO QUE EL PROGRAMA EJECUTA : 
+                      00014 ;
+                      00015 ;-------------------------------------------------------------------------------------------------------
+                            --------------------------------------------
+                      00016 
+Warning[215]: Processor superseded by command line.  Verify processor symbol.
+                      00017  list P=16F877A;
+Error[105]  : Cannot open file (Include File "c:\opt\microchip\mplabcomm\v3.20.01\lib\p16f877a.inc" not found)
+                      00018 #include "c:\opt\microchip\mplabcomm\v3.20.01\lib\p16f877a.inc";
+                      00019  ;#include "C:\Program Files (x86)\Microchip\MPASM Suite\P16F877A.inc";
+                      00020 ;bits de configuracion.
+Error[113]  : Symbol not previously defined (_XT_OSC)
+Error[113]  : Symbol not previously defined (_WDT_OFF)
+Error[113]  : Symbol not previously defined (_PWRT_ON)
+Error[113]  : Symbol not previously defined (_BODEN_OFF)
+Error[113]  : Symbol not previously defined (_)
+Error[113]  : Symbol not previously defined (LVP_OFF)
+Error[112]  : Missing operator
+Error[126]  : Argument out of range (not a valid config register address)
+Error[126]  : Argument out of range (not a valid config register address)
+                      00021  __config _XT_OSC & _WDT_OFF & _PWRT_ON & _BODEN_OFF &_ LVP_OFF & _CP_OFF;
+                      00022 ;-------------------------------------------------------------------------------------------------------
+                            ------------------------------------------------
+                      00023 ;
+                      00024 ;fosc = 4 Mhz
+                      00025 ;ciclo de trabajo del PIC = (1/fosc)*4 = 1us.
+                      00026 ;t int =(256-R)*(P)*((1/3579545)*4) = 1.0012 ms ; //tiempo de interrupcion.
+                      00027 ;R= 249, p= 874Hz.
+                      00028 ;-------------------------------------------------------------------------------------------------------
+                            -----------------------------------------------------
+                      00029 ;
+                      00030 ; REGISTROS DE PROPOCITO GENERAL BANCO 0 DE MEMORIA RAM.
+                      00031 ;       
+                      00032 ;Registros propios de estructura del programa
+                      00033 ;variables.
+  00000020            00034 Contador1 equ 0x20; //
+  00000021            00035 Contador2 equ 0x21; //
+  00000022            00036 Contador3 equ 0x22; //
+                      00037 ;-------------------------------------------------------------------------------------------------------
+                            -----------------------------------------------------------
+                      00038 ;
+MPASM 5.68  /HOME/MADELIN/MPLABXPROJECTS/EXA   10-20-2016  2:27:08         PAGE  2
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00039 ;Constantes.
+  00000008            00040 M                       equ                       .8;
+  000000FF            00041 N                       equ                     .255;
+  000000FF            00042 L                       equ                     .255
+                      00043 
+                      00044 ;Constantes de caracteres en siete segmentos.
+  000000A1            00045 Car_d           equ b'10100001'; Caracter d en siete segmentos que enciende con 0 y se apaga con 1 por q
+                            ue #anodocomun.
+  00000086            00046 Car_E           equ b'10000110'; Caracter E en siete segmentos que enciende con 0 y se apaga con 1 por q
+                            ue #anodocomun.
+  000000E1            00047 Car_J           equ b'11100001'; Caracter J en siete segmentos.
+  000000A3            00048 Car_o           equ b'10100011'; Caracter o en siete segmentos que enciende con 0 y se apaga con 1 por q
+                            ue #anodocomun.
+  00000092            00049 Car_S           equ b'10010010'; Caracter S en siete segmentos que enciende con 0 y se apaga con 1 por q
+                            ue #anodocomun.
+  000000E3            00050 Car_uu          equ b'11100011'; Caracter u en siete segmentos que enciende con 0 y se apaga con 1 por q
+                            ue #anodocomun.
+  000000FF            00051 Car_null        equ b'11111111'; Caracter nulo en siete segmentos que enciende con 0 y se apaga con 1 po
+                            r que #anodocomun.
+                      00052 
+                      00053 ;-------------------------------------------------------------------------------------------------------
+                            --------------------------------------------------------------------
+                      00054 ;
+                      00055 ;Asignacion de los bits de los puertos de I/O.
+                      00056 ;Puerto A.
+  00000000            00057 Sin_UsoRA0              equ     .0; // Sin uso RA0.
+  00000001            00058 Sin_UsoRA1              equ     .1; // Sin uso RA1.
+  00000002            00059 Sin_UsoRA2              equ     .2; // Sin uso RA2.
+  00000003            00060 Sin_UsoRA3              equ     .3; // Sin uso RA3.
+  00000004            00061 Sin_UsoRA4              equ     .4; // Sin uso RA4.
+  00000005            00062 Sin_UsoRA5              equ     .5; // Sin uso RA5.
+                      00063 
+  0000003F            00064 proga                   equ     b'111111'; //Programacion inicial del puerto A.
+                      00065 ;Puerto B.
+  00000000            00066 seg_a                   equ     .0; // Salida para controlar el segmento a.
+  00000001            00067 seg_b                   equ     .1; // Salida para controlar el segmento b.
+  00000002            00068 seg_c                   equ     .2; // Salida para controlar el segmento c.                             
+                                            
+  00000003            00069 seg_d                   equ     .3; // Salida para controlar el segmento d.     
+  00000004            00070 seg_e                   equ     .4; // Salida para controlar el segmento e.
+  00000005            00071 seg_f                   equ     .5; // Salida para controlar el segmento f.
+  00000006            00072 seg_g                   equ     .6; // Salida para controlar el segmento g.
+  00000007            00073 seg_dp                  equ     .7; // Segmento dep del bus de segmentos.
+                      00074 
+  00000000            00075 progb                   equ     b'00000000'; //Programacion inicial del puerto B.
+                      00076 ;Puerto C.
+  00000000            00077 Com_Disp0                       equ     .0; // Bit que controla el display 0.
+  00000001            00078 Com_Disp1                       equ     .1; // Bit que controla el display 1.
+  00000002            00079 Com_Disp2                       equ     .2; // Bit que controla el display 2.                           
+                                            
+  00000003            00080 Com_Disp3                       equ     .3; // Bit que controla el display 3.   
+  00000004            00081 Sin_UsoRC4                      equ     .4; // Sin uso RC4.
+  00000005            00082 Sin_UsoRC5                      equ     .5; // Sin uso RC5.
+MPASM 5.68  /HOME/MADELIN/MPLABXPROJECTS/EXA   10-20-2016  2:27:08         PAGE  3
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+  00000006            00083 Sin_UsoRC6                      equ     .6; // Sin uso RC6.
+  00000007            00084 Sin_UsoRC7                      equ     .7; // Sin uso RC7.
+                      00085 
+  00000000            00086 progc                   equ     b'00000000'; //Programacion inicial del puerto C.
+                      00087 ;Puerto D.
+  00000000            00088 Sin_UsoRD0              equ     .0; // Sin uso RD0.
+  00000001            00089 Sin_UsoRD1              equ     .1; // Sin uso RD1.
+  00000002            00090 Sin_UsoRD2              equ     .2; // Sin uso RD2.
+  00000003            00091 Sin_UsoRD3              equ     .3; // Sin uso RD3.     
+  00000004            00092 Sin_UsoRD4              equ     .4; // Sin uso RD4.
+  00000005            00093 Sin_UsoRD5              equ     .5; // Sin uso RD5.
+  00000006            00094 Sin_UsoRD6              equ     .6; // Sin uso RD6.
+  00000007            00095 Sin_UsoRD7              equ     .7; // Sin uso RD7.
+                      00096 
+  000000FF            00097 progd                   equ     b'11111111'; //Programacion inicial del puerto D.
+                      00098 
+                      00099 ;Puerto E.
+  00000000            00100 Sin_UsoRE0              equ                     .0; // Sin Uso RE0.
+  00000001            00101 Sin_UsoRE1              equ                     .1; // Sin Uso RE1.
+  00000002            00102 Sin_UsoRE2              equ                     .2; // Sin Uso RE2.
+                      00103 
+  00000007            00104 proge                   equ     b'111';// Programacion inicial del puerto E.
+                      00105 
+                      00106 ;-------------------------------------------------------------------------------------------------------
+                            ------------------------------------------------------------------------------------------------
+                      00107 
+                      00108 
+                      00109                                         ;=====================
+                      00110                                         ;=== Vector reset ====
+                      00111                                         ;=====================
+                      00112                                         org 0x0000;
+Error[113]  : Symbol not previously defined (pclath)
+0000   0180           00113 vec_reset                               clrf pclath; Asegura la pagina cero de la mem. de prog.
+0001   2???           00114                                         goto prog_prin;
+                      00115 ;-------------------------------------------------------------------------------------------------------
+                            ------------------------------------------------------------------------------------------
+                      00116 
+                      00117 
+                      00118                                         ;==============================
+                      00119                                         ;=== Vector de interrupcion====
+                      00120                                         ;==============================
+                      00121                                         org 0x0004;
+0004   0000           00122 vec_int                                 nop;
+                      00123 
+                      00124 
+0005   0009           00125                                         retfie;
+                      00126 ;-------------------------------------------------------------------------------------------------------
+                            ------------------------------------------------------------------------------------------------
+                      00127 
+                      00128                                         ;==============================
+                      00129                                         ;=== Subrutina de inicio   ====
+                      00130                                         ;==============================
+Error[113]  : Symbol not previously defined (status)
+MPASM 5.68  /HOME/MADELIN/MPLABXPROJECTS/EXA   10-20-2016  2:27:08         PAGE  4
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+Error[113]  : Symbol not previously defined (rp0)
+0006   1400           00131 prog_ini                                bsf status, rp0; selec. el bco. 1 de ram.
+0007   3081           00132                                         movlw 0x81;
+Error[113]  : Symbol not previously defined (option_reg)
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0008   0080           00133                                         movwf option_reg ^0x80
+0009   303F           00134                                         movlw proga;
+Error[113]  : Symbol not previously defined (trisa)
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+000A   0080           00135                                         movwf trisa ^0x80
+000B   3000           00136                                         movlw progb;
+Error[113]  : Symbol not previously defined (trisb)
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+000C   0080           00137                                         movwf trisb ^0x80
+000D   3000           00138                                         movlw progc;
+Error[113]  : Symbol not previously defined (trisc)
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+000E   0080           00139                                         movwf trisc ^0x80
+000F   30FF           00140                                         movlw progd;
+Error[113]  : Symbol not previously defined (trisd)
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0010   0080           00141                                         movwf trisd ^0x80
+0011   3007           00142                                         movlw proge;
+Error[113]  : Symbol not previously defined (trise)
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0012   0080           00143                                         movwf trise ^0x80
+0013   3006           00144                                         movlw 0x06;
+Error[113]  : Symbol not previously defined (adcon1)
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0014   0080           00145                                         movwf adcon1 ^0x80; conf. el pto. a como salidas i/o.
+Error[113]  : Symbol not previously defined (status)
+Error[113]  : Symbol not previously defined (rp0)
+0015   1000           00146                                         bcf status, rp0;
+                      00147 
+Error[113]  : Symbol not previously defined (portb)
+0016   0180           00148                                         clrf portb;
+0017   30FF           00149                                         movlw b'11111111';
+Error[113]  : Symbol not previously defined (portc)
+0018   0080           00150                                         movwf portc;
+                      00151 
+0019   0008           00152                                         return;
+                      00153 ;-------------------------------------------------------------------------------------------------------
+                            ------------------------------------------------------------------------------------------------
+                      00154 
+                      00155                                         ;==============================
+                      00156                                         ;=== Programa Principal    ====
+                      00157                                         ;==============================
+001A   2???           00158 prog_prin                               call prog_ini;
+                      00159                                         
+001B   3006           00160 loop_prin                               movlw .6;
+001C   00A0           00161                                         movwf Contador1;
+                      00162                                         
+001D   30FF           00163 men1                                    movlw Car_null;
+MPASM 5.68  /HOME/MADELIN/MPLABXPROJECTS/EXA   10-20-2016  2:27:08         PAGE  5
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+Error[113]  : Symbol not previously defined (portb)
+001E   0080           00164                                         movwf portb;
+Error[113]  : Symbol not previously defined (portc)
+001F   1180           00165                                         bcf portc,Com_Disp3;  
+Error[113]  : Symbol not previously defined (retardo)
+0020   2000           00166                                         call retardo; 
+Error[113]  : Symbol not previously defined (portc)
+0021   1580           00167                                         bsf portc,Com_Disp3;
+Error[113]  : Symbol not previously defined (retardo)
+0022   2000           00168                                         call retardo;
+                      00169                                         
+0023   30FF           00170                                         movlw Car_null;
+Error[113]  : Symbol not previously defined (portb)
+0024   0080           00171                                         movwf portb;
+Error[113]  : Symbol not previously defined (portc)
+0025   1100           00172                                         bcf portc,Com_Disp2;  
+Error[113]  : Symbol not previously defined (retardo)
+0026   2000           00173                                         call retardo; 
+Error[113]  : Symbol not previously defined (portc)
+0027   1500           00174                                         bsf portc,Com_Disp2;
+Error[113]  : Symbol not previously defined (retardo)
+0028   2000           00175                                         call retardo;
+                      00176                                         
+0029   30FF           00177                                         movlw Car_null;
+Error[113]  : Symbol not previously defined (portb)
+002A   0080           00178                                         movwf portb;
+Error[113]  : Symbol not previously defined (portc)
+002B   1080           00179                                         bcf portc,Com_Disp1; 
+Error[113]  : Symbol not previously defined (retardo)
+002C   2000           00180                                         call retardo; 
+Error[113]  : Symbol not previously defined (portc)
+002D   1480           00181                                         bsf portc,Com_Disp1;
+Error[113]  : Symbol not previously defined (retardo)
+002E   2000           00182                                         call retardo;
+                      00183                                         
+002F   30E1           00184                                         movlw Car_J;
+Error[113]  : Symbol not previously defined (portb)
+0030   0080           00185                                         movwf portb;
+Error[113]  : Symbol not previously defined (portc)
+0031   1000           00186                                         bcf portc,Com_Disp0;  J
+Error[113]  : Symbol not previously defined (retardo)
+0032   2000           00187                                         call retardo; 
+Error[113]  : Symbol not previously defined (portc)
+0033   1400           00188                                         bsf portc,Com_Disp0;
+Error[113]  : Symbol not previously defined (retardo)
+0034   2000           00189                                         call retardo; 
+Error[113]  : Symbol not previously defined (Contador)
+0035   0B80           00190                                         decfsz Contador,f;
+0036   2???           00191                                         goto men1;  
+                      00192                                         
+0037   3006           00193                                         movlw .6;
+0038   00A0           00194                                         movwf Contador1;                
+0039   30FF           00195 men2                                    movlw Car_null;
+MPASM 5.68  /HOME/MADELIN/MPLABXPROJECTS/EXA   10-20-2016  2:27:08         PAGE  6
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+Error[113]  : Symbol not previously defined (portb)
+003A   0080           00196                                         movwf portb;
+Error[113]  : Symbol not previously defined (portc)
+003B   1180           00197                                         bcf portc,Com_Disp3;  
+Error[113]  : Symbol not previously defined (retardo)
+003C   2000           00198                                         call retardo;;
+Error[113]  : Symbol not previously defined (portc)
+003D   1580           00199                                         bsf portc,Com_Disp3;
+Error[113]  : Symbol not previously defined (retardo)
+003E   2000           00200                                         call retardo;
+                      00201                                         
+003F   30FF           00202                                         movlw Car_null;
+Error[113]  : Symbol not previously defined (portb)
+0040   0080           00203                                         movwf portb;
+Error[113]  : Symbol not previously defined (portc)
+0041   1100           00204                                         bcf portc,Com_Disp2; 
+Error[113]  : Symbol not previously defined (retardo)
+0042   2000           00205                                         call retardo;
+Error[113]  : Symbol not previously defined (portc)
+0043   1500           00206                                         bsf portc,Com_Disp2;
+Error[113]  : Symbol not previously defined (retardo)
+0044   2000           00207                                         call retardo;
+                      00208                                         
+0045   30E1           00209                                         movlw Car_J;
+Error[113]  : Symbol not previously defined (portb)
+0046   0080           00210                                         movwf portb;
+Error[113]  : Symbol not previously defined (portc)
+0047   1080           00211                                         bcf portc,Com_Disp1;  J
+Error[113]  : Symbol not previously defined (retardo)
+0048   2000           00212                                         call retardo;
+Error[113]  : Symbol not previously defined (portc)
+0049   1480           00213                                         bsf portc,Com_Disp1;
+Error[113]  : Symbol not previously defined (retardo)
+004A   2000           00214                                         call retardo;
+                      00215                                         
+004B   30A3           00216                                         movlw Car_o;
+Error[113]  : Symbol not previously defined (portb)
+004C   0080           00217                                         movwf portb;
+Error[113]  : Symbol not previously defined (portc)
+004D   1000           00218                                         bcf portc,Com_Disp0;  o
+Error[113]  : Symbol not previously defined (retardo)
+004E   2000           00219                                         call retardo;
+Error[113]  : Symbol not previously defined (portc)
+004F   1400           00220                                         bsf portc,Com_Disp0;
+Error[113]  : Symbol not previously defined (retardo)
+0050   2000           00221                                         call retardo;
+Error[113]  : Symbol not previously defined (Contador)
+0051   0B80           00222                                         decfsz Contador,f;
+0052   2???           00223                                         goto men2;  
+                      00224                                         
+0053   3006           00225                                         movlw .6;
+0054   00A0           00226                                         movwf Contador1;                
+0055   30FF           00227 men3                                    movlw Car_null;
+MPASM 5.68  /HOME/MADELIN/MPLABXPROJECTS/EXA   10-20-2016  2:27:08         PAGE  7
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+Error[113]  : Symbol not previously defined (portb)
+0056   0080           00228                                         movwf portb;
+Error[113]  : Symbol not previously defined (portc)
+0057   1180           00229                                         bcf portc,Com_Disp3;  
+Error[113]  : Symbol not previously defined (retardo)
+0058   2000           00230                                         call retardo;
+Error[113]  : Symbol not previously defined (portc)
+0059   1580           00231                                         bsf portc,Com_Disp3;
+Error[113]  : Symbol not previously defined (retardo)
+005A   2000           00232                                         call retardo;
+                      00233                                         
+005B   30E1           00234                                         movlw Car_J;
+Error[113]  : Symbol not previously defined (portb)
+005C   0080           00235                                         movwf portb;
+Error[113]  : Symbol not previously defined (portc)
+005D   1100           00236                                         bcf portc,Com_Disp2;  J
+Error[113]  : Symbol not previously defined (retardo)
+005E   2000           00237                                         call retardo;
+Error[113]  : Symbol not previously defined (portc)
+005F   1500           00238                                         bsf portc,Com_Disp2;
+Error[113]  : Symbol not previously defined (retardo)
+0060   2000           00239                                         call retardo;
+                      00240                                         
+0061   30A3           00241                                         movlw Car_o;
+Error[113]  : Symbol not previously defined (portb)
+0062   0080           00242                                         movwf portb;
+Error[113]  : Symbol not previously defined (portc)
+0063   1080           00243                                         bcf portc,Com_Disp1;  o
+Error[113]  : Symbol not previously defined (retardo)
+0064   2000           00244                                         call retardo;
+Error[113]  : Symbol not previously defined (portc)
+0065   1480           00245                                         bsf portc,Com_Disp1;
+Error[113]  : Symbol not previously defined (retardo)
+0066   2000           00246                                         call retardo;
+                      00247                                         
+0067   3092           00248                                         movlw Car_S;
+Error[113]  : Symbol not previously defined (portb)
+0068   0080           00249                                         movwf portb;
+Error[113]  : Symbol not previously defined (portc)
+0069   1000           00250                                         bcf portc,Com_Disp0;  s
+Error[113]  : Symbol not previously defined (retardo)
+006A   2000           00251                                         call retardo;
+Error[113]  : Symbol not previously defined (portc)
+006B   1400           00252                                         bsf portc,Com_Disp0;
+Error[113]  : Symbol not previously defined (retardo)
+006C   2000           00253                                         call retardo;
+Error[113]  : Symbol not previously defined (Contador)
+006D   0B80           00254                                         decfsz Contador,f;
+006E   2???           00255                                         goto men3
+                      00256                                         
+006F   3006           00257                                         movlw .6;
+0070   00A0           00258                                         movwf Contador1;
+0071   30E1           00259 men4                                    movlw Car_J;
+MPASM 5.68  /HOME/MADELIN/MPLABXPROJECTS/EXA   10-20-2016  2:27:08         PAGE  8
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+Error[113]  : Symbol not previously defined (portb)
+0072   0080           00260                                         movwf portb;
+Error[113]  : Symbol not previously defined (portc)
+0073   1180           00261                                         bcf portc,Com_Disp3;  J
+Error[113]  : Symbol not previously defined (retardo)
+0074   2000           00262                                         call retardo;
+Error[113]  : Symbol not previously defined (portc)
+0075   1580           00263                                         bsf portc,Com_Disp3;
+Error[113]  : Symbol not previously defined (retardo)
+0076   2000           00264                                         call retardo;
+                      00265                                 
+0077   30A3           00266                                         movlw Car_o;
+Error[113]  : Symbol not previously defined (portb)
+0078   0080           00267                                         movwf portb;
+Error[113]  : Symbol not previously defined (portc)
+0079   1100           00268                                         bcf portc,Com_Disp2;  o
+Error[113]  : Symbol not previously defined (retardo)
+007A   2000           00269                                         call retardo;
+Error[113]  : Symbol not previously defined (portc)
+007B   1500           00270                                         bsf portc,Com_Disp2;
+Error[113]  : Symbol not previously defined (retardo)
+007C   2000           00271                                         call retardo;
+                      00272                                         
+007D   3092           00273                                         movlw Car_S;
+Error[113]  : Symbol not previously defined (portb)
+007E   0080           00274                                         movwf portb;
+Error[113]  : Symbol not previously defined (portc)
+007F   1080           00275                                         bcf portc,Com_Disp1;  S
+Error[113]  : Symbol not previously defined (retardo)
+0080   2000           00276                                         call retardo;
+Error[113]  : Symbol not previously defined (portc)
+0081   1480           00277                                         bsf portc,Com_Disp1;
+Error[113]  : Symbol not previously defined (retardo)
+0082   2000           00278                                         call retardo;
+                      00279                                         
+0083   3086           00280                                         movlw Car_E;
+Error[113]  : Symbol not previously defined (portb)
+0084   0080           00281                                         movwf portb;
+Error[113]  : Symbol not previously defined (portc)
+0085   1000           00282                                         bcf portc,Com_Disp0;  e
+Error[113]  : Symbol not previously defined (retardo)
+0086   2000           00283                                         call retardo;
+Error[113]  : Symbol not previously defined (portc)
+0087   1400           00284                                         bsf portc,Com_Disp0;
+Error[113]  : Symbol not previously defined (retardo)
+0088   2000           00285                                         call retardo;
+Error[113]  : Symbol not previously defined (Contador)
+0089   0B80           00286                                         decfsz Contador,f;
+008A   2???           00287                                         goto men4
+                      00288                                         
+008B   3006           00289                                         movlw .6;
+008C   00A0           00290                                         movwf Contador1;
+008D   30A3           00291 men5                                    movlw Car_o;
+MPASM 5.68  /HOME/MADELIN/MPLABXPROJECTS/EXA   10-20-2016  2:27:08         PAGE  9
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+Error[113]  : Symbol not previously defined (portb)
+008E   0080           00292                                         movwf portb;
+Error[113]  : Symbol not previously defined (portc)
+008F   1180           00293                                         bcf portc,Com_Disp3;  o
+Error[113]  : Symbol not previously defined (retardo)
+0090   2000           00294                                         call retardo;
+Error[113]  : Symbol not previously defined (portc)
+0091   1580           00295                                         bsf portc,Com_Disp3;
+Error[113]  : Symbol not previously defined (retardo)
+0092   2000           00296                                         call retardo;
+                      00297                                         
+0093   3092           00298                                         movlw Car_S;
+Error[113]  : Symbol not previously defined (portb)
+0094   0080           00299                                         movwf portb;
+Error[113]  : Symbol not previously defined (portc)
+0095   1100           00300                                         bcf portc,Com_Disp2;  s
+Error[113]  : Symbol not previously defined (retardo)
+0096   2000           00301                                         call retardo;
+Error[113]  : Symbol not previously defined (portc)
+0097   1500           00302                                         bsf portc,Com_Disp2;
+Error[113]  : Symbol not previously defined (retardo)
+0098   2000           00303                                         call retardo;
+                      00304                                         
+0099   3086           00305                                         movlw Car_E;
+Error[113]  : Symbol not previously defined (portb)
+009A   0080           00306                                         movwf portb;
+Error[113]  : Symbol not previously defined (portc)
+009B   1080           00307                                         bcf portc,Com_Disp1;  e
+Error[113]  : Symbol not previously defined (retardo)
+009C   2000           00308                                         call retardo;
+Error[113]  : Symbol not previously defined (portc)
+009D   1480           00309                                         bsf portc,Com_Disp1;
+Error[113]  : Symbol not previously defined (retardo)
+009E   2000           00310                                         call retardo;
+                      00311                                         
+009F   30FF           00312                                         movlw Car_null;
+Error[113]  : Symbol not previously defined (portb)
+00A0   0080           00313                                         movwf portb;
+Error[113]  : Symbol not previously defined (portc)
+00A1   1000           00314                                         bcf portc,Com_Disp0;  
+Error[113]  : Symbol not previously defined (retardo)
+00A2   2000           00315                                         call retardo;
+Error[113]  : Symbol not previously defined (portc)
+00A3   1400           00316                                         bsf portc,Com_Disp0;
+Error[113]  : Symbol not previously defined (retardo)
+00A4   2000           00317                                         call retardo;
+Error[113]  : Symbol not previously defined (Contador)
+00A5   0B80           00318                                         decfsz Contador,f;
+00A6   2???           00319                                         goto men5
+                      00320         
+00A7   3006           00321                                         movlw .6;
+00A8   00A0           00322                                         movwf Contador1;
+00A9   3092           00323 men6                                    movlw Car_S;
+MPASM 5.68  /HOME/MADELIN/MPLABXPROJECTS/EXA   10-20-2016  2:27:08         PAGE 10
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+Error[113]  : Symbol not previously defined (portb)
+00AA   0080           00324                                         movwf portb;
+Error[113]  : Symbol not previously defined (portc)
+00AB   1180           00325                                         bcf portc,Com_Disp3;  s
+Error[113]  : Symbol not previously defined (retardo)
+00AC   2000           00326                                         call retardo;
+Error[113]  : Symbol not previously defined (portc)
+00AD   1580           00327                                         bsf portc,Com_Disp3;
+Error[113]  : Symbol not previously defined (retardo)
+00AE   2000           00328                                         call retardo;
+                      00329                                         
+00AF   3086           00330                                         movlw Car_E;
+Error[113]  : Symbol not previously defined (portb)
+00B0   0080           00331                                         movwf portb;
+Error[113]  : Symbol not previously defined (portc)
+00B1   1100           00332                                         bcf portc,Com_Disp2;  e
+Error[113]  : Symbol not previously defined (retardo)
+00B2   2000           00333                                         call retardo;
+Error[113]  : Symbol not previously defined (portc)
+00B3   1500           00334                                         bsf portc,Com_Disp2;
+Error[113]  : Symbol not previously defined (retardo)
+00B4   2000           00335                                         call retardo;
+                      00336                                         
+00B5   30FF           00337                                         movlw Car_null;
+Error[113]  : Symbol not previously defined (portb)
+00B6   0080           00338                                         movwf portb;
+Error[113]  : Symbol not previously defined (portc)
+00B7   1080           00339                                         bcf portc,Com_Disp1;  
+Error[113]  : Symbol not previously defined (retardo)
+00B8   2000           00340                                         call retardo;
+Error[113]  : Symbol not previously defined (portc)
+00B9   1480           00341                                         bsf portc,Com_Disp1;
+Error[113]  : Symbol not previously defined (retardo)
+00BA   2000           00342                                         call retardo;
+                      00343                                         
+00BB   30A1           00344                                         movlw Car_d;
+Error[113]  : Symbol not previously defined (portb)
+00BC   0080           00345                                         movwf portb;
+Error[113]  : Symbol not previously defined (portc)
+00BD   1000           00346                                         bcf portc,Com_Disp0;  d
+Error[113]  : Symbol not previously defined (retardo)
+00BE   2000           00347                                         call retardo;
+Error[113]  : Symbol not previously defined (portc)
+00BF   1400           00348                                         bsf portc,Com_Disp0;
+Error[113]  : Symbol not previously defined (retardo)
+00C0   2000           00349                                         call retardo;
+Error[113]  : Symbol not previously defined (Contador)
+00C1   0B80           00350                                         decfsz Contador,f;
+00C2   2???           00351                                         goto men6;
+                      00352                                         
+00C3   3006           00353                                         movlw .6;
+00C4   00A0           00354                                         movwf Contador1;
+00C5   3086           00355 men7                                    movlw Car_E;
+MPASM 5.68  /HOME/MADELIN/MPLABXPROJECTS/EXA   10-20-2016  2:27:08         PAGE 11
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+Error[113]  : Symbol not previously defined (portb)
+00C6   0080           00356                                         movwf portb;
+Error[113]  : Symbol not previously defined (portc)
+00C7   1180           00357                                         bcf portc,Com_Disp3;  e
+Error[113]  : Symbol not previously defined (retardo)
+00C8   2000           00358                                         call retardo;
+Error[113]  : Symbol not previously defined (portc)
+00C9   1580           00359                                         bsf portc,Com_Disp3;
+Error[113]  : Symbol not previously defined (retardo)
+00CA   2000           00360                                         call retardo;
+                      00361                                         
+00CB   30FF           00362                                         movlw Car_null;
+Error[113]  : Symbol not previously defined (portb)
+00CC   0080           00363                                         movwf portb;
+Error[113]  : Symbol not previously defined (portc)
+00CD   1100           00364                                         bcf portc,Com_Disp2;  
+Error[113]  : Symbol not previously defined (retardo)
+00CE   2000           00365                                         call retardo;
+Error[113]  : Symbol not previously defined (portc)
+00CF   1500           00366                                         bsf portc,Com_Disp2;
+Error[113]  : Symbol not previously defined (retardo)
+00D0   2000           00367                                         call retardo;
+                      00368                                         
+00D1   30A1           00369                                         movlw Car_d;
+Error[113]  : Symbol not previously defined (portb)
+00D2   0080           00370                                         movwf portb;
+Error[113]  : Symbol not previously defined (portc)
+00D3   1080           00371                                         bcf portc,Com_Disp1;  d
+Error[113]  : Symbol not previously defined (retardo)
+00D4   2000           00372                                         call retardo;
+Error[113]  : Symbol not previously defined (portc)
+00D5   1480           00373                                         bsf portc,Com_Disp1;
+Error[113]  : Symbol not previously defined (retardo)
+00D6   2000           00374                                         call retardo;
+                      00375                                         
+00D7   3086           00376                                         movlw Car_E;
+Error[113]  : Symbol not previously defined (portb)
+00D8   0080           00377                                         movwf portb;
+Error[113]  : Symbol not previously defined (portc)
+00D9   1000           00378                                         bcf portc,Com_Disp0;  e
+Error[113]  : Symbol not previously defined (retardo)
+00DA   2000           00379                                         call retardo;
+Error[113]  : Symbol not previously defined (portc)
+00DB   1400           00380                                         bsf portc,Com_Disp0;
+Error[113]  : Symbol not previously defined (retardo)
+00DC   2000           00381                                         call retardo;
+00DD   0BA0           00382                                         decfsz Contador1,f;
+00DE   2???           00383                                         goto men7;
+                      00384                                         
+00DF   3006           00385                                         movlw .6;
+00E0   00A0           00386                                         movwf Contador1;
+00E1   30FF           00387 men8                                    movlw Car_null;
+Error[113]  : Symbol not previously defined (portb)
+MPASM 5.68  /HOME/MADELIN/MPLABXPROJECTS/EXA   10-20-2016  2:27:08         PAGE 12
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+00E2   0080           00388                                         movwf portb;
+Error[113]  : Symbol not previously defined (portc)
+00E3   1180           00389                                         bcf portc,Com_Disp3;  
+Error[113]  : Symbol not previously defined (retardo)
+00E4   2000           00390                                         call retardo;
+Error[113]  : Symbol not previously defined (portc)
+00E5   1580           00391                                         bsf portc,Com_Disp3;
+Error[113]  : Symbol not previously defined (retardo)
+00E6   2000           00392                                         call retardo;
+                      00393                                         
+00E7   30A1           00394                                         movlw Car_d;
+Error[113]  : Symbol not previously defined (portb)
+00E8   0080           00395                                         movwf portb;
+Error[113]  : Symbol not previously defined (portc)
+00E9   1100           00396                                         bcf portc,Com_Disp2;  d
+Error[113]  : Symbol not previously defined (retardo)
+00EA   2000           00397                                         call retardo;
+Error[113]  : Symbol not previously defined (portc)
+00EB   1500           00398                                         bsf portc,Com_Disp2;
+Error[113]  : Symbol not previously defined (retardo)
+00EC   2000           00399                                         call retardo;
+                      00400                                 
+00ED   3086           00401                                         movlw Car_E;
+Error[113]  : Symbol not previously defined (portb)
+00EE   0080           00402                                         movwf portb;
+Error[113]  : Symbol not previously defined (portc)
+00EF   1080           00403                                         bcf portc,Com_Disp1;  e
+Error[113]  : Symbol not previously defined (retardo)
+00F0   2000           00404                                         call retardo;
+Error[113]  : Symbol not previously defined (portc)
+00F1   1480           00405                                         bsf portc,Com_Disp1;
+Error[113]  : Symbol not previously defined (retardo)
+00F2   2000           00406                                         call retardo;
+                      00407                                         
+00F3   30FF           00408                                         movlw Car_null;
+Error[113]  : Symbol not previously defined (portb)
+00F4   0080           00409                                         movwf portb;
+Error[113]  : Symbol not previously defined (portc)
+00F5   1000           00410                                         bcf portc,Com_Disp0;  
+Error[113]  : Symbol not previously defined (retardo)
+00F6   2000           00411                                         call retardo;
+Error[113]  : Symbol not previously defined (portc)
+00F7   1400           00412                                         bsf portc,Com_Disp0;
+Error[113]  : Symbol not previously defined (retardo)
+00F8   2000           00413                                         call retardo;
+Error[113]  : Symbol not previously defined (Contador)
+00F9   0B80           00414                                         decfsz Contador,f;
+00FA   2???           00415                                         goto men8;
+                      00416                                         
+00FB   3006           00417                                         movlw .6;
+00FC   00A0           00418                                         movwf Contador1; 
+00FD   30A1           00419 men9                                    movlw Car_d;
+Error[113]  : Symbol not previously defined (portb)
+MPASM 5.68  /HOME/MADELIN/MPLABXPROJECTS/EXA   10-20-2016  2:27:08         PAGE 13
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+00FE   0080           00420                                         movwf portb;
+Error[113]  : Symbol not previously defined (portc)
+00FF   1180           00421                                         bcf portc,Com_Disp3;  d
+Error[113]  : Symbol not previously defined (retardo)
+0100   2000           00422                                         call retardo;
+Error[113]  : Symbol not previously defined (portc)
+0101   1580           00423                                         bsf portc,Com_Disp3;
+Error[113]  : Symbol not previously defined (retardo)
+0102   2000           00424                                         call retardo; 
+                      00425                                         
+0103   3086           00426                                         movlw Car_E;
+Error[113]  : Symbol not previously defined (portb)
+0104   0080           00427                                         movwf portb;
+Error[113]  : Symbol not previously defined (portc)
+0105   1100           00428                                         bcf portc,Com_Disp2;  e
+Error[113]  : Symbol not previously defined (retardo)
+0106   2000           00429                                         call retardo;
+Error[113]  : Symbol not previously defined (portc)
+0107   1500           00430                                         bsf portc,Com_Disp2;
+Error[113]  : Symbol not previously defined (retardo)
+0108   2000           00431                                         call retardo;
+                      00432                                         
+0109   30FF           00433                                         movlw Car_null;
+Error[113]  : Symbol not previously defined (portb)
+010A   0080           00434                                         movwf portb;
+Error[113]  : Symbol not previously defined (portc)
+010B   1080           00435                                         bcf portc,Com_Disp1;  
+Error[113]  : Symbol not previously defined (retardo)
+010C   2000           00436                                         call retardo;
+Error[113]  : Symbol not previously defined (portc)
+010D   1480           00437                                         bsf portc,Com_Disp1;
+Error[113]  : Symbol not previously defined (retardo)
+010E   2000           00438                                         call retardo;
+                      00439                                         
+010F   30E1           00440                                         movlw Car_J;
+Error[113]  : Symbol not previously defined (portb)
+0110   0080           00441                                         movwf portb;
+Error[113]  : Symbol not previously defined (portc)
+0111   1000           00442                                         bcf portc,Com_Disp0;  J
+Error[113]  : Symbol not previously defined (retardo)
+0112   2000           00443                                         call retardo;
+Error[113]  : Symbol not previously defined (portc)
+0113   1400           00444                                         bsf portc,Com_Disp0;
+Error[113]  : Symbol not previously defined (retardo)
+0114   2000           00445                                         call retardo;
+Error[113]  : Symbol not previously defined (Contador)
+0115   0B80           00446                                         decfsz Contador, f;
+0116   2???           00447                                         goto men9;
+                      00448                                         
+0117   3006           00449                                         movlw .6;
+0118   00A0           00450                                         movwf Contador1;
+0119   3086           00451 men10                                   movlw Car_E ;
+Error[113]  : Symbol not previously defined (portb)
+MPASM 5.68  /HOME/MADELIN/MPLABXPROJECTS/EXA   10-20-2016  2:27:08         PAGE 14
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+011A   0080           00452                                         movwf portb;
+Error[113]  : Symbol not previously defined (portc)
+011B   1180           00453                                         bcf portc,Com_Disp3;  E
+Error[113]  : Symbol not previously defined (retardo)
+011C   2000           00454                                         call retardo;
+Error[113]  : Symbol not previously defined (portc)
+011D   1580           00455                                         bsf portc,Com_Disp3;
+Error[113]  : Symbol not previously defined (retardo)
+011E   2000           00456                                         call retardo;
+                      00457                                         
+011F   30FF           00458                                         movlw Car_null;
+Error[113]  : Symbol not previously defined (portb)
+0120   0080           00459                                         movwf portb;
+Error[113]  : Symbol not previously defined (portc)
+0121   1100           00460                                         bcf portc,Com_Disp2;  
+Error[113]  : Symbol not previously defined (retardo)
+0122   2000           00461                                         call retardo;
+Error[113]  : Symbol not previously defined (portc)
+0123   1500           00462                                         bsf portc,Com_Disp2;
+Error[113]  : Symbol not previously defined (retardo)
+0124   2000           00463                                         call retardo;
+                      00464                                         
+0125   30E1           00465                                         movlw Car_J;
+Error[113]  : Symbol not previously defined (portb)
+0126   0080           00466                                         movwf portb;
+Error[113]  : Symbol not previously defined (portc)
+0127   1080           00467                                         bcf portc,Com_Disp1;  J
+Error[113]  : Symbol not previously defined (retardo)
+0128   2000           00468                                         call retardo;
+Error[113]  : Symbol not previously defined (portc)
+0129   1480           00469                                         bsf portc,Com_Disp1;
+Error[113]  : Symbol not previously defined (retardo)
+012A   2000           00470                                         call retardo;
+                      00471                                         
+012B   3086           00472                                         movlw Car_E;
+Error[113]  : Symbol not previously defined (portb)
+012C   0080           00473                                         movwf portb;
+Error[113]  : Symbol not previously defined (portc)
+012D   1000           00474                                         bcf portc,Com_Disp0;  e
+Error[113]  : Symbol not previously defined (retardo)
+012E   2000           00475                                         call retardo;
+Error[113]  : Symbol not previously defined (portc)
+012F   1400           00476                                         bsf portc,Com_Disp0;
+Error[113]  : Symbol not previously defined (retardo)
+0130   2000           00477                                         call retardo;
+0131   0BA0           00478                                         decfsz Contador1,f;
+0132   2???           00479                                         goto men10;
+                      00480                                         
+0133   3006           00481                                         movlw .6;
+0134   00A0           00482                                         movwf Contador1;
+0135   30FF           00483 men11                                   movlw Car_null;
+Error[113]  : Symbol not previously defined (portb)
+0136   0080           00484                                         movwf portb;
+MPASM 5.68  /HOME/MADELIN/MPLABXPROJECTS/EXA   10-20-2016  2:27:08         PAGE 15
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+Error[113]  : Symbol not previously defined (portc)
+0137   1180           00485                                         bcf portc,Com_Disp3;  
+Error[113]  : Symbol not previously defined (retardo)
+0138   2000           00486                                         call retardo;
+Error[113]  : Symbol not previously defined (portc)
+0139   1580           00487                                         bsf portc,Com_Disp3;
+Error[113]  : Symbol not previously defined (retardo)
+013A   2000           00488                                         call retardo;
+                      00489                                         
+013B   30E1           00490                                         movlw Car_J;
+Error[113]  : Symbol not previously defined (portb)
+013C   0080           00491                                         movwf portb;
+Error[113]  : Symbol not previously defined (portc)
+013D   1100           00492                                         bcf portc,Com_Disp2;  J
+Error[113]  : Symbol not previously defined (retardo)
+013E   2000           00493                                         call retardo;
+Error[113]  : Symbol not previously defined (portc)
+013F   1500           00494                                         bsf portc,Com_Disp2;
+Error[113]  : Symbol not previously defined (retardo)
+0140   2000           00495                                         call retardo;
+                      00496                                         
+0141   3086           00497                                         movlw Car_E;
+Error[113]  : Symbol not previously defined (portb)
+0142   0080           00498                                         movwf portb;
+Error[113]  : Symbol not previously defined (portc)
+0143   1080           00499                                         bcf portc,Com_Disp1;  e
+Error[113]  : Symbol not previously defined (retardo)
+0144   2000           00500                                         call retardo;
+Error[113]  : Symbol not previously defined (portc)
+0145   1480           00501                                         bsf portc,Com_Disp1;
+Error[113]  : Symbol not previously defined (retardo)
+0146   2000           00502                                         call retardo;
+                      00503                                         
+0147   3092           00504                                         movlw Car_S;
+Error[113]  : Symbol not previously defined (portb)
+0148   0080           00505                                         movwf portb;
+Error[113]  : Symbol not previously defined (portc)
+0149   1000           00506                                         bcf portc,Com_Disp0;  s
+Error[113]  : Symbol not previously defined (retardo)
+014A   2000           00507                                         call retardo;
+Error[113]  : Symbol not previously defined (portc)
+014B   1400           00508                                         bsf portc,Com_Disp0;
+Error[113]  : Symbol not previously defined (Contador)
+014C   0B80           00509                                         decfsz Contador,f ;
+014D   2???           00510                                         goto men11;
+                      00511                                         
+014E   3006           00512                                         movlw .6;
+014F   00A0           00513                                         movwf Contador1;
+0150   30E1           00514 men12                                   movlw Car_J;
+Error[113]  : Symbol not previously defined (portb)
+0151   0080           00515                                         movwf portb;
+Error[113]  : Symbol not previously defined (portc)
+0152   1180           00516                                         bcf portc,Com_Disp3;  J
+MPASM 5.68  /HOME/MADELIN/MPLABXPROJECTS/EXA   10-20-2016  2:27:08         PAGE 16
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+Error[113]  : Symbol not previously defined (retardo)
+0153   2000           00517                                         call retardo;
+Error[113]  : Symbol not previously defined (portc)
+0154   1580           00518                                         bsf portc,Com_Disp3;
+Error[113]  : Symbol not previously defined (retardo)
+0155   2000           00519                                         call retardo;
+                      00520                                         
+0156   3086           00521                                         movlw Car_E;
+Error[113]  : Symbol not previously defined (portb)
+0157   0080           00522                                         movwf portb;
+Error[113]  : Symbol not previously defined (portc)
+0158   1100           00523                                         bcf portc,Com_Disp2;  e
+Error[113]  : Symbol not previously defined (retardo)
+0159   2000           00524                                         call retardo;
+Error[113]  : Symbol not previously defined (portc)
+015A   1500           00525                                         bsf portc,Com_Disp2;
+Error[113]  : Symbol not previously defined (retardo)
+015B   2000           00526                                         call retardo;
+                      00527                                         
+015C   3092           00528                                         movlw Car_S;
+Error[113]  : Symbol not previously defined (portb)
+015D   0080           00529                                         movwf portb;
+Error[113]  : Symbol not previously defined (portc)
+015E   1080           00530                                         bcf portc,Com_Disp1;  s
+Error[113]  : Symbol not previously defined (retardo)
+015F   2000           00531                                         call retardo;
+Error[113]  : Symbol not previously defined (portc)
+0160   1480           00532                                         bsf portc,Com_Disp1;
+Error[113]  : Symbol not previously defined (retardo)
+0161   2000           00533                                         call retardo;
+                      00534                                         
+0162   30E3           00535                                         movlw Car_uu;
+Error[113]  : Symbol not previously defined (portb)
+0163   0080           00536                                         movwf portb;
+Error[113]  : Symbol not previously defined (portc)
+0164   1000           00537                                         bcf portc,Com_Disp0;  u
+Error[113]  : Symbol not previously defined (retardo)
+0165   2000           00538                                         call retardo;
+Error[113]  : Symbol not previously defined (portc)
+0166   1400           00539                                         bsf portc,Com_Disp0;
+Error[113]  : Symbol not previously defined (retardo)
+0167   2000           00540                                         call retardo;
+Error[113]  : Symbol not previously defined (Contador)
+0168   0B80           00541                                         decfsz Contador,f;
+0169   2???           00542                                         goto men12;
+                      00543                                         
+016A   3006           00544                                         movlw .6;
+016B   00A0           00545                                         movwf Contador1;
+016C   3086           00546 men13                                   movlw Car_E;
+Error[113]  : Symbol not previously defined (portb)
+016D   0080           00547                                         movwf portb;
+Error[113]  : Symbol not previously defined (portc)
+016E   1180           00548                                         bcf portc,Com_Disp3;  e
+MPASM 5.68  /HOME/MADELIN/MPLABXPROJECTS/EXA   10-20-2016  2:27:08         PAGE 17
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+Error[113]  : Symbol not previously defined (retardo)
+016F   2000           00549                                         call retardo;
+Error[113]  : Symbol not previously defined (portc)
+0170   1580           00550                                         bsf portc,Com_Disp3;
+Error[113]  : Symbol not previously defined (retardo)
+0171   2000           00551                                         call retardo;
+                      00552                                         
+0172   3092           00553                                         movlw Car_S;
+Error[113]  : Symbol not previously defined (portb)
+0173   0080           00554                                         movwf portb;
+Error[113]  : Symbol not previously defined (portc)
+0174   1100           00555                                         bcf portc,Com_Disp2;  s
+Error[113]  : Symbol not previously defined (retardo)
+0175   2000           00556                                         call retardo;
+Error[113]  : Symbol not previously defined (portc)
+0176   1500           00557                                         bsf portc,Com_Disp2;
+Error[113]  : Symbol not previously defined (retardo)
+0177   2000           00558                                         call retardo;
+                      00559                                         
+0178   30E3           00560                                         movlw Car_uu;
+Error[113]  : Symbol not previously defined (portb)
+0179   0080           00561                                         movwf portb;
+Error[113]  : Symbol not previously defined (portc)
+017A   1080           00562                                         bcf portc,Com_Disp1;  u
+Error[113]  : Symbol not previously defined (retardo)
+017B   2000           00563                                         call retardo;
+Error[113]  : Symbol not previously defined (portc)
+017C   1480           00564                                         bsf portc,Com_Disp1;
+Error[113]  : Symbol not previously defined (retardo)
+017D   2000           00565                                         call retardo;
+                      00566                                         
+017E   3092           00567                                         movlw Car_S;
+Error[113]  : Symbol not previously defined (portb)
+017F   0080           00568                                         movwf portb;
+Error[113]  : Symbol not previously defined (portc)
+0180   1180           00569                                         bcf portc,Com_Disp3;  s
+Error[113]  : Symbol not previously defined (retardo)
+0181   2000           00570                                         call retardo;
+Error[113]  : Symbol not previously defined (portc)
+0182   1580           00571                                         bsf portc,Com_Disp3;
+Error[113]  : Symbol not previously defined (retardo)
+0183   2000           00572                                         call retardo;
+0184   0BA0           00573                                         decfsz Contador1,f;
+0185   2???           00574                                         goto men13
+                      00575                                         
+                      00576 
+                      00577 
+Error[129]  : Expected (END)
+MPASM 5.68  /HOME/MADELIN/MPLABXPROJECTS/EXA   10-20-2016  2:27:08         PAGE 18
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+Car_E                             00000086
+Car_J                             000000E1
+Car_S                             00000092
+Car_d                             000000A1
+Car_null                          000000FF
+Car_o                             000000A3
+Car_uu                            000000E3
+Com_Disp0                         00000000
+Com_Disp1                         00000001
+Com_Disp2                         00000002
+Com_Disp3                         00000003
+Contador1                         00000020
+Contador2                         00000021
+Contador3                         00000022
+L                                 000000FF
+M                                 00000008
+N                                 000000FF
+Sin_UsoRA0                        00000000
+Sin_UsoRA1                        00000001
+Sin_UsoRA2                        00000002
+Sin_UsoRA3                        00000003
+Sin_UsoRA4                        00000004
+Sin_UsoRA5                        00000005
+Sin_UsoRC4                        00000004
+Sin_UsoRC5                        00000005
+Sin_UsoRC6                        00000006
+Sin_UsoRC7                        00000007
+Sin_UsoRD0                        00000000
+Sin_UsoRD1                        00000001
+Sin_UsoRD2                        00000002
+Sin_UsoRD3                        00000003
+Sin_UsoRD4                        00000004
+Sin_UsoRD5                        00000005
+Sin_UsoRD6                        00000006
+Sin_UsoRD7                        00000007
+Sin_UsoRE0                        00000000
+Sin_UsoRE1                        00000001
+Sin_UsoRE2                        00000002
+__16F887                          00000001
+__DEBUG                           
+__MPLAB_DEBUGGER_SIMULATOR        1
+loop_prin                         0000001B
+men1                              0000001D
+men10                             00000119
+men11                             00000135
+men12                             00000150
+men13                             0000016C
+men2                              00000039
+men3                              00000055
+men4                              00000071
+men5                              0000008D
+men6                              000000A9
+men7                              000000C5
+MPASM 5.68  /HOME/MADELIN/MPLABXPROJECTS/EXA   10-20-2016  2:27:08         PAGE 19
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+men8                              000000E1
+men9                              000000FD
+prog_ini                          00000006
+prog_prin                         0000001A
+proga                             0000003F
+progb                             00000000
+progc                             00000000
+progd                             000000FF
+proge                             00000007
+seg_a                             00000000
+seg_b                             00000001
+seg_c                             00000002
+seg_d                             00000003
+seg_dp                            00000007
+seg_e                             00000004
+seg_f                             00000005
+seg_g                             00000006
+vec_int                           00000004
+vec_reset                         00000000
+
+Errors   :   294
+Warnings :     1 reported,     0 suppressed
+Messages :     7 reported,     0 suppressed
+
+
