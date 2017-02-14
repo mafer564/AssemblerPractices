@@ -23,8 +23,8 @@
 ;
 ;VARIABLES
 
-Contador1   equ   0x20
-Contador2   equ   0x21
+Contador1   equ   0x20;
+Contador2   equ   0x21;
 
 ; LAS VARIABLES DE USUARIO COMIENZAN DESDE LA DIRECCION 20
 ;---------------------------------------------------------------------------------------------------------------------------------------------------
