@@ -9,7 +9,6 @@
 ;INTEGRANTES:
 ;
 ;DESCRIPCION DE LA PRACTICA: Inicilizar una lcd y mostrar un mensaje.
-;
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
  list p=16f877A;
 ; BITS DE CONFIGURACION
@@ -19,15 +18,13 @@
 	__config _XT_OSC & _WDT_OFF & _PWRTE_ON & _BODEN_OFF & _LVP_OFF & _CP_OFF;
 ;---------------------------------------------------------------------------------------------------------------------------------------------------
 ;
-;frecuencia de oscilación (fosc) =4MHz
+;frecuencia de oscilaciÃ³n (fosc) =4MHz
 ;Ciclo de trabajo del PIC = (1/fosc)*4 = 1us
 ;
 ;VARIABLES
 
-Contador1   equ   0x20
-Contador2   equ   0x21
-
-
+Contador1   equ   0x20;
+Contador2   equ   0x21;
 
 ; LAS VARIABLES DE USUARIO COMIENZAN DESDE LA DIRECCION 20
 ;---------------------------------------------------------------------------------------------------------------------------------------------------
@@ -47,7 +44,7 @@ Sin_UsoRA3    equ    .3; //Sin uso RA3
 Sin_UsoRA4    equ    .4; //Sin uso RA4 
 Sin_UsoRA5    equ    .5; //Sin uso RA5
 
-proga         equ    b'111111';Programación inicial del puerto A
+proga         equ    b'111111';ProgramaciÃ³n inicial del puerto A
 ;Si al bit de RA0 se le pone como 1, se considera como entrada, y si tiene 0 es salida
 ;
 ; PUERTO B
@@ -61,20 +58,20 @@ LCD_D5            equ    .5; //Bit 5 de la lcd
 LCD_D6            equ    .6; //Bit 6 de la lcd
 LCD_D7            equ    .7; //Bit 7 de la lcd
 
-progb         equ    b'00000000';Programación inicial del puerto B
+progb         equ    b'00000000';ProgramaciÃ³n inicial del puerto B
 ;
 ; PUERTO C
 ; Sirve para mandar los pulsos de reloj a los registros
-RS_LCD        equ    .0; //Bit que controla el común del display 0
-Enable_LCD    equ    .1; //Bit que controla el común del display 1
-Luz_LCD       equ    .2; //Bit que controla el común del display 2
-clk_pto3      equ    .3; //Bit que controla el común del display 3
-clk_pto4      equ    .4; //Bit que controla el común del display 4
-clk_pto5      equ    .5; //Bit que controla el común del display 5
-clk_pto6      equ    .6; //Bit que controla el común del display 6
-clk_pto7      equ    .7; //Bit que controla el común del display 7
+RS_LCD        equ    .0; //Bit que controla el comÃºn del display 0
+Enable_LCD    equ    .1; //Bit que controla el comÃºn del display 1
+Luz_LCD       equ    .2; //Bit que controla el comÃºn del display 2
+clk_pto3      equ    .3; //Bit que controla el comÃºn del display 3
+clk_pto4      equ    .4; //Bit que controla el comÃºn del display 4
+clk_pto5      equ    .5; //Bit que controla el comÃºn del display 5
+clk_pto6      equ    .6; //Bit que controla el comÃºn del display 6
+clk_pto7      equ    .7; //Bit que controla el comÃºn del display 7
 
-progc         equ    b'11111111';Programación inicial del puerto C
+progc         equ    b'11111111';ProgramaciÃ³n inicial del puerto C
 ;
 ; PUERTO D
 Sin_UsoRD0     equ    .0; //Sin uso RD0
@@ -87,21 +84,21 @@ Sin_UsoRD6     equ    .6; //Sin uso RD6
 Sin_UsoRD7     equ    .7; //Sin uso RD7
 
 
-progd         equ    b'11111111';Programación inicial del puerto D como entradas
+progd         equ    b'11111111';ProgramaciÃ³n inicial del puerto D como entradas
 ;
 ; PUERTO E
 Sin_UsoRE0    equ    .0;
 Sin_UsoRE1    equ    .1;
 Sin_UsoRE2    equ    .2;
 
-proge         equ    b'111';Programación inicial del puerto E como entradas
+proge         equ    b'111';ProgramaciÃ³n inicial del puerto E como entradas
 ;-----------------------------------------------------------------------------------------------------------------------------------------
 ;
                  ;==================
                  ;== VECTOR RESET ==
                  ;==================
                  org 0x0000; 
-vec_reset        clrf PCLATH; Asegurará la pagina 0 de la memoria del programa
+vec_reset        clrf PCLATH; AsegurarÃ¡ la pagina 0 de la memoria del programa
                  goto prog_prin; Indica que vaya a la etiqueta prog_prin
 ;-----------------------------------------------------------------------------------------------------------------------------------------
                  ;============================
