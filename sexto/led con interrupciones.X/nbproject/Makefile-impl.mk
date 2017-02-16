@@ -24,7 +24,7 @@ CLEAN_SUBPROJECTS=${CLEAN_SUBPROJECTS_${SUBPROJECTS}}
 
 
 # Project Name
-PROJECTNAME=MPLABXProjects
+PROJECTNAME=led con interrupciones.X
 
 # Active Configuration
 DEFAULTCONF=default
