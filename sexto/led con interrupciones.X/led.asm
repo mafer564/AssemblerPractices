@@ -8,7 +8,7 @@
 ;
 ;INTEGRANTES:
 ;
-;DESCRIPCION DE LA PRACTICA: 
+;DESCRIPCION DE LA PRACTICA: Prender y apagar un led con una interrupcion de 1 segundo.
 ;
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
  list p=16f877A;
