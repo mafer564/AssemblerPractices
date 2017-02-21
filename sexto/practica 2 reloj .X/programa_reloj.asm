@@ -1,213 +1,319 @@
-
 ;INSTITUTO POLITECNICO NACIONAL
-;CECYT9 JUAN DE DIOS BATIZ
+;CECYT 9 "JUAN DE DIOS BATIZ"
 ;
-;PRACTICA 2:"Prender led usando interrupciones" 
+;PRACTICA 1
+;RELOJ DE TIEMPO REAL CON INTERRUPCIONES. 
 ;
-;GRUPO: 6IM2.   EQUIPO 
+;GRUPO: 6IM2  EQUIPO:
 ;
 ;INTEGRANTES:
 ;
-;DESCRIPCION DE LA PRACTICA: 
-;
-;-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
- list p=16f877A;
-; BITS DE CONFIGURACION
- ;#include "C:\Archivos de programa (x86)\Microchip\MPASM Suite\P16F877A.INC"
- #include "C:\Program Files (x86)\Microchip\MPASM Suite\P16F877A.inc";
-; BITS DE CONFIGURACION
-	__config _XT_OSC & _WDT_OFF & _PWRTE_ON & _BODEN_OFF & _LVP_OFF & _CP_OFF;
-;---------------------------------------------------------------------------------------------------------------------------------------------------
-;
-;frecuencia de oscilación (fosc) =4MHz
-;Ciclo de trabajo del PIC = (1/fosc)*4 = 1us
-;t int= (256-R)*(P)*(1/4000000)= 1ms // Tiempo de interrupcion
-;R=131, p=8
-;frec int= 1/t int= 1KHz
-;DEFINIR VARIABLES EN RAM
+;COMENTARIO DE LO QUE EL PROGRAMA EJECUTARA: 
 
-resp_w	      equ   0x20;
-resp_status   equ   0x21;
-resp_pclath   equ   0x22;
-res_fsr       equ   0x23;
-presc_1       equ   0x24;
-presc_2	      equ   0x25;
-banderas      equ   0x26;
-; LAS VARIABLES DE USUARIO COMIENZAN DESDE LA DIRECCION 20
-;---------------------------------------------------------------------------------------------------------------------------------------------------
-;
-;DEFINIR CONSTANTES
-; Codigo de caracteres alfanumericos en 7 segmentos. 
-M	    equ    .2;
-N	    equ    .2;
-L	    equ    .2;
-num_itera   equ    .10;
-decenas	    equ    0x35;
-;cod. de los caracteres en 7 segmentos.
-Car_A	    equ   b'01110111';
-Car_B	    equ	  0xc7;
-Car_0	    equ   0x3f;
-Car_1	    equ   0x06;
-;---------------------------------------------------------------------------------------------------------------------------------------------------
+ LIST P=16F877A;
 
-;ASIGNACION DE LOS BITS DE LOS PUERTOS DE I/O
-; PUERTO A
-Sin_UsoRA0    equ    .0; //Sin uso RA0
-Sin_UsoRA1    equ    .1; //Sin uso RA1
-Sin_UsoRA2    equ    .2; //Sin uso RA2
-Sin_UsoRA3    equ    .3; //Sin uso RA3
-Sin_UsoRA4    equ    .4; //Sin uso RA4 
-Sin_UsoRA5    equ    .5; //Sin uso RA5
+;#INCLUDE "C:\ARCHIVOS DE PROGRAMA\MICROCHIP\MPASM SUITE\P16F877A.INC";
+#INCLUDE "C:\PROGRAM FILES (X86)\MICROCHIP\MPASM SUITE\P16F877A.INC";
 
-proga         equ    b'111111';Programación inicial del puerto A
-;Si al bit de RA0 se le pone como 1, se considera como entrada, y si tiene 0 es salida
-;
-; PUERTO B
-; Nos sirve para poder mandar el codigo de los caracteres a los displays
-LCD_D0            equ    .0; //Bit 0 de la lcd
-LCD_D1            equ    .1; //Bit 1 de la lcd
-LCD_D2            equ    .2; //Bit 2 de la lcd
-LCD_D3            equ    .3; //Bit 3 de la lcd
-LCD_D4            equ    .4; //Bit 4 de la lcd
-LCD_D5            equ    .5; //Bit 5 de la lcd
-LCD_D6            equ    .6; //Bit 6 de la lcd
-LCD_D7            equ    .7; //Bit 7 de la lcd
+;BITS DE CPONFIGURACIÓN
 
-progb         equ    b'00000000';Programación inicial del puerto B
-;
-; PUERTO C
-; Sirve para mandar los pulsos de reloj a los registros
-RS_LCD        equ    .0; //Bit que controla el común del display 0
-Enable_LCD    equ    .1; //Bit que controla el común del display 1
-Luz_LCD       equ    .2; //Bit que controla el común del display 2
-clk_pto3      equ    .3; //Bit que controla el común del display 3
-clk_pto4      equ    .4; //Bit que controla el común del display 4
-clk_pto5      equ    .5; //Bit que controla el común del display 5
-clk_pto6      equ    .6; //Bit que controla el común del display 6
-clk_pto7      equ    .7; //Bit que controla el común del display 7
+  __CONFIG _XT_OSC & _WDT_OFF & _PWRTE_ON & _BODEN_OFF & _LVP_OFF & _CP_OFF;
 
-progc         equ    b'11111111';Programación inicial del puerto C
-;
-; PUERTO D
-Sin_UsoRD0     equ    .0; //Sin uso RD0
-Sin_UsoRD1     equ    .1; //Sin uso RD1
-Sin_UsoRD2     equ    .2; //Sin uso RD2
-Sin_UsoRD3     equ    .3; //Sin uso RD3
-Sin_UsoRD4     equ    .4; //Sin uso RD4
-Sin_UsoRD5     equ    .5; //Sin uso RD5
-Sin_UsoRD6     equ    .6; //Sin uso RD6
-Sin_UsoRD7     equ    .7; //Sin uso RD7
+;FOSC=4MHZ
+;CICLO DE TRABAJO DEL PIC=(1/FOSC)*4=1US.
+;T INT= (256-R)*(P)*(1/4000000)*4)= 1MS ;//TIEMPO DE INTERRUPCION.
+;R=131    P=8.
+;FREC INT = 1/T INT= 1 KHZ.
 
+;REGISTROS DE PROPOSITO GENERAL BANCO  0 DE MEMORIA RAM.
 
-progd         equ    b'11111111';Programación inicial del puerto D como entradas
-;
-; PUERTO E
-Sin_UsoRE0    equ    .0;
-Sin_UsoRE1    equ    .1;
-Led_Rojo      equ    .2;
+;VARIABLES.
 
-proge         equ    b'011';Programación inicial del puerto E como entradas
-;-----------------------------------------------------------------------------------------------------------------------------------------
-;		    ==  Banderas del registro banderas. ==
-band_int	equ	.0;
-sin_bd1		equ	.1;
-sin_bd2		equ	.2;
-sin_bd3		equ	.3;
-sin_bd4		equ	.4;
-sin_bd5		equ	.5;
-sin_bd6		equ	.6;
-sin_bd7		equ	.7;
-	 
-;-----------------------------------------------------------------------------------------------------------------------------------------
-;
-                 ;==================
-                 ;== VECTOR RESET ==
-                 ;==================
-                 org 0x0000; 
-vec_reset        clrf PCLATH; Asegurará la pagina 0 de la memoria del programa
-                 goto prog_prin; Indica que vaya a la etiqueta prog_prin
-;-----------------------------------------------------------------------------------------------------------------------------------------
-                 
-;-----------------------------------------------------------------------------------------------------------------------------------------
-		 ;=================================
-		 ;== SUBRUTINA DE INTERRUPCIONES ==
-		 ;=================================
-		 org 0x0004;
-vec_int		movwf resp_w;
-		movf status,w;
-		movwf resp_status;
-		clrf status;
-		movf pclath,w;
-		movwf res_pclath;
-		clrf pclath;
-		movf fsr,w;
-		movwf res_fsr;
+W_TEMP		EQU 0X20;
+STATUS_TEMP	EQU 0X21;
+PCLATH_TEMP	EQU 0X22;
+FSR_TEMP	EQU 0X23;
+
+PRESC_1		EQU 0X24;
+PRESC_2		EQU 0X25;
+BANDERAS	EQU 0X26;
+
+D_HORAS		EQU 0X27;
+U_HORAS		EQU 0X28;
+D_MINUTOS	EQU 0X29;
+U_MINUTOS	EQU 0X30;
+D_SEGUNDOS	EQU	0X31;
+U_SEGUNDOS	EQU 0X32;
+
+CONT_MILIS	EQU 0X33;
+
+;CONSTANTES
+
+;ASIGNACIÓIN DE LOS BITS DE LOS PUERTOS DE I/O.
+;PUERTO A.
+SIN_USORA0       EQU          .0; // SIN USORA0.
+SIN_USORA1       EQU          .1; // SIN USORA1.
+SIN_USORA2       EQU          .2; // SIN USORA2.
+SIN_USORA3       EQU          .3; // SIN USORA3.
+SIN_USORA4       EQU          .4; // SIN USORA4.
+SIN_USORA5       EQU          .5; // SIN USORA5.
+
+PROGA            EQU    B'00000000'; //PROGRAMACIÓN INICIAL DEL PUERTO A.
+
+;PUERTO B.
+D0_LCD            EQU           .0;//SALIDA PARA CONTROLAR.
+D1_LCD            EQU           .1;//SALIDA PARA CONTROLAR.
+D2_LCD            EQU           .2;//SALIDA PARA CONTROLAR.
+D3_LCD            EQU           .3;//SALIDA PARA CONTROLAR.
+D4_LCD            EQU           .4;//SALIDA PARA CONTROLAR.
+D5_LCD            EQU           .5;//SALIDA PARA CONTROLAR.
+D6_LCD            EQU           .6;//SALIDA PARA CONTROLAR.
+D7_LCD            EQU           .7;//SALIDA PARA CONTROLAR.
+
+PROGB            EQU   B'00000000'; //PROGRAMACIÓN INICIAL DEL PUERTO B.
+
+;PUERTO C.
+RS_LCD           EQU          .0; // SEÑAL DE CONTROL (COMANDO/DATOS).
+ENABLE_LCD       EQU          .1; // SEÑAL DE INGRESO DE INFORMACION.
+LUZ_LCD          EQU          .2; // SIN USORC2.
+SIN_USORC3       EQU          .3; // SIN USORC3.
+SIN_USORC4       EQU          .4; // SIN USORC4.
+SIN_USORC5       EQU          .5; // SIN USORC5.
+SIN_USORC6       EQU          .6; // SIN USORC6.
+SIN_USORC7       EQU          .7; // SIN USORC7.
+
+PROGC            EQU    B'11111000'; //PROGRAMACIÓN INICIAL DEL PUERTO C.
+
+;PUERTO D.
+SIN_USORD0		 EQU		  .0; // SIN USORD0.
+SIN_USORD1		 EQU		  .1; // SIN USORD1.
+SIN_USORD2       EQU          .2; // SIN USORD2.
+SIN_USORD3       EQU          .3; // SIN USORD3.
+SIN_USORD4       EQU          .4; // SIN USORD4.
+SIN_USORD5       EQU          .5; // SIN USORD5.
+SIN_USORD6       EQU          .6; // SIN USORD6.
+SIN_USORD7       EQU          .7; // SIN USORD7.  
+
+PROGD            EQU    B'00000000'; //PROGRAMACIÓN INICIAL DEL PUERTO D.
+
+;PUERTO E.
+
+SIN_USORE0       EQU          .0; // SIN USORE0.
+SIN_USORE1       EQU          .1; // SIN USORE1.
+SIN_USORE2       EQU          .2; // SIN USORE2.
+
+PROGE            EQU     B'111';  //PROGRMACIÓN INICIAL DEL PUERTO E.
+
+;BANDERAS
+
+BAN_INT			 EQU		  .0;
+SIN_USOB1		 EQU		  .1;
+SIN_USOB2		 EQU		  .2;
+SIN_USOB3		 EQU		  .3;
+SIN_USOB4		 EQU		  .4;
+SIN_USOB5		 EQU		  .5;
+SIN_USOB6		 EQU		  .6;
+SIN_USOB7		 EQU		  .7;
+
+;== VECTOR RESET ==
+
+		            ORG 0X0000;
+VEC_RESET           CLRF PCLATH;
+                    GOTO PROG_PRIN;
+
+;== VECTOR INTERRUPCION ==
+
+                    ORG 0X0004;
+VEC_INT             MOVWF W_TEMP;	
+
+					MOVF STATUS,W;
+					MOVWF STATUS_TEMP;	
+					CLRF STATUS;
+
+					MOVF PCLATH,W;
+					MOVWF PCLATH_TEMP;	
+					CLRF PCLATH;
 		
-		btfsc intcon,t0if;
-		call rutina_int;
-		
-sal_int		movlw .131;
-		movwf tmr0;
-		
-		movf res_fsr,w;
-		movwf fsr;
-		movf res_pclath,w;
-		movwf pclath;
-		movf resp_status,w;
-		movwf status;
-		movf resp_w,w;
-		
-		retfie;
-;-----------------------------------------------------------------------------------------------------------------------------------------
-                 ;================================
-                 ;== Subrutina de interrupciones==
-                 ;================================
-rutina_int       incf   presc_1,f; 
-                 
-		 movlw .100; 
-                 xorwf presc_1,w;
-		 btfsc status,z;
-		 goto sig_int;
-		 goto sal_rutint;
-		 
-sig_int		clrf presc_1;
-		incf presc_2,f;
-		movlw .5;
-		xorwf presc_2,f;
-		btfss status,z;
-		goto sal_rutint;
-		clrf presc_1;
-		clrf presc_2;
-		
-sal_rutext       bsf banderas,ban_int;
-		
-sal_rutint	bcf intcon,t0if;
-		return;
-		 
-               
-;----------------------------------------------------------------------------------------------------------------------------------------
-                 ;=======================
-                 ;== PROGRAMA PINCIPAL ==
-                 ;=======================
-		 
-prog_prin        call prog_ini;
-		 
-esp_int		nop;
-		btfss banderas, band_int;
-		goto esp_int;
-		bcf banderas,band_int;
-		
-		btfss porte, Led_Rojo;
-		goto sec_led;
-		bcf porte,Led_Rojo; Prende el led.
-		goto esp_int;
-		
-sec_led		bsf porte, Led_Rojo; Apaga el led.
-		goto esp_int;
-		 
-;-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+					MOVF FSR,W;
+					MOVWF FSR_TEMP;
 
-		end;
+					BTFSC INTCON,T0IF;
+					CALL RUTINA_INT; 
 
+SAL_INT				MOVLW .131; 
+					MOVWF TMR0;
+					
+					MOVF FSR_TEMP,W;
+					MOVWF FSR;
+					
+					MOVF PCLATH_TEMP,W;
+					MOVWF PCLATH;
 
+					MOVF STATUS_TEMP,W;
+					MOVWF STATUS;
+
+					RETFIE;
+
+;== INTERRUPCION ==
+
+RUTINA_INT			INCF CONT_MILIS,F;
+					INCF PRESC_1,F;
+		
+					MOVLW .100; 
+					XORWF PRESC_1,W; 
+					BTFSC STATUS,Z; 
+					GOTO SIG_INT; 
+					GOTO SAL_RUTINT; 
+					
+SIG_INT				CLRF PRESC_1;
+					INCF PRESC_2,F;
+					MOVLW .10;
+					XORWF PRESC_2,W;
+					BTFSS STATUS,Z;
+					GOTO SAL_RUTINT;
+					CLRF PRESC_1;
+					CLRF PRESC_2;
+		
+SAL_RUTEXT			BSF BANDERAS,BAN_INT;
+
+SAL_RUTINT			BCF INTCON,T0IF; 
+					
+					RETURN;
+					
+;== INICIO ==      
+
+PROG_INI			BSF STATUS,RP0; 
+				
+					MOVLW 0X82; 
+					MOVWF OPTION_REG ^0X80; 
+
+                    MOVLW PROGA;
+					MOVWF TRISA ^0X80;
+
+                    MOVLW PROGB;
+					MOVWF TRISB ^0X80;
+
+                    MOVLW PROGC;
+					MOVWF TRISC ^0X80;
+
+                    MOVLW PROGD;
+					MOVWF TRISD ^0X80;
+
+                    MOVLW PROGE;
+					MOVWF TRISE ^0X80;
+
+                    MOVLW 0X06;
+					MOVWF ADCON1 ^0X80;
+
+					BCF STATUS,RP0; 
+	
+					MOVLW .131; 
+					MOVWF TMR0 ^0X00;
+
+					MOVLW 0XA0;
+					MOVWF INTCON ^0X00; 
+				
+					CLRF PORTB ^0X00;
+
+					MOVLW 0Xff;
+					MOVWF PORTC ^0X00;
+
+					CLRF BANDERAS;
+
+					MOVLW '0';
+					MOVWF U_SEGUNDOS;
+											
+					RETURN;
+
+;== INICIALIZACION LCD ==
+
+INI_LCD				BCF PORTC,RS_LCD; 
+				
+					MOVLW 0X38;
+					MOVWF PORTB;
+					CALL PULSO_ENABLE;
+
+					MOVLW 0X0C;
+					MOVWF PORTB;
+					CALL PULSO_ENABLE;
+
+					MOVLW 0X01;
+					MOVWF PORTB;
+					CALL PULSO_ENABLE;
+
+					MOVLW 0X06;
+					MOVWF PORTB;
+					CALL PULSO_ENABLE;
+					
+					MOVLW 0X80;
+					MOVWF PORTB;
+					CALL PULSO_ENABLE;
+
+					BSF PORTC,RS_LCD; 
+					
+					RETURN;
+
+;== PULSO ENABLE ==
+
+PULSO_ENABLE		BCF PORTC,ENABLE_LCD; PONE EN BAJO ENABLE
+
+					CLRF CONT_MILIS;
+ESP_TIEMPO			MOVLW .1;
+					XORWF CONT_MILIS,W;
+					BTFSS STATUS,Z;
+					GOTO ESP_TIEMPO;
+
+					BSF PORTC,ENABLE_LCD; PONE EN ALTO ENABLE 
+					
+					CLRF CONT_MILIS;
+ESP_TIEMPO1			MOVLW .40;
+					XORWF CONT_MILIS,W;
+					BTFSS STATUS,Z;
+					GOTO ESP_TIEMPO1;
+
+					RETURN;
+
+;== PROGRAMA PRINCIPAL ==
+
+PROG_PRIN           CALL PROG_INI;
+					CALL INI_LCD;
+
+					CALL COMANDO_8F;
+
+REINICIA			MOVLW '0';
+					MOVWF U_SEGUNDOS;
+					MOVWF PORTB;
+					CALL PULSO_ENABLE;
+	
+ESP_INT				BTFSS BANDERAS,BAN_INT;
+					GOTO ESP_INT;
+					BCF BANDERAS,BAN_INT;
+
+					
+
+					INCF U_SEGUNDOS,F;
+					
+					MOVLW 0X3A;
+					XORWF U_SEGUNDOS,W;
+					BTFSC STATUS,Z;
+					GOTO REINICIA;
+
+					CALL COMANDO_8F;
+					
+					MOVF U_SEGUNDOS,W;
+					MOVWF PORTB;
+					CALL PULSO_ENABLE;
+					GOTO ESP_INT;
+
+;== COMANDOS PARA LCD ==
+				
+COMANDO_8F			BCF PORTC,RS_LCD;
+					MOVLW 0X8F;
+					MOVWF PORTB;
+					CALL PULSO_ENABLE;
+					BSF PORTC,RS_LCD;
+					RETURN;
+
+	
+					END;
 
