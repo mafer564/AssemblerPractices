@@ -20,11 +20,6 @@
 
   __CONFIG _XT_OSC & _WDT_OFF & _PWRTE_ON & _BODEN_OFF & _LVP_OFF & _CP_OFF;
 
-;FOSC=4MHZ
-;CICLO DE TRABAJO DEL PIC=(1/FOSC)*4=1US.
-;T INT= (256-R)*(P)*(1/4000000)*4)= 1MS ;//TIEMPO DE INTERRUPCION.
-;R=131    P=8.
-;FREC INT = 1/T INT= 1 KHZ.
 
 ;REGISTROS DE PROPOSITO GENERAL BANCO  0 DE MEMORIA RAM.
 
@@ -33,57 +28,6 @@ Var_tecopri	EQU 0x21;
 Contador1	EQU 0x22;
 Contador2	EQU 0x23;
 Contador3	EQU 0x24;
-;VARIABLES.
-;Act_Ren1    EQU	    0x06; Actuva el renglón 1
-;Act_Ren2    EQU	    0x0D ;
-;Act_Ren3    EQU	    0x0B;
-;Act_Ren4    EQU	    0x	;
-;No_hay_tecla	EQU 0xF0;
-
-//Renglon 1
-
-;Tec_0	EQU 0xE0;
-;Tec_1	EQU 0xD0;
-;Tec_2	EQU 0xB0;
-;Tec_3	EQU 0x70;
-//Renglon 2
-
-;Tec_4	EQU 0xE0;
-;Tec_5	EQU 0xD0;
-;Tec_6	EQU 0xB0;
-;Tec_7	EQU 0x70;
-//Renglon 3
-
-;Tec_8	EQU 0xE0;
-;Tec_9	EQU 0xD0;
-;Tec_A	EQU 0xB0;
-;Tec_B	EQU 0x70;
-//Renglon 4
-
-;Tec_C	EQU 0xE0;
-;Tec_D	EQU 0xD0;
-;Tec_E	EQU 0xB0;
-;Tec_F	EQU 0x70;
-	
-	
-
-;;W_TEMP		EQU 0X20;
-;;STATUS_TEMP	EQU 0X21;
-;;PCLATH_TEMP	EQU 0X22;
-;;FSR_TEMP	EQU 0X23;
-
-;;PRESC_1		EQU 0X24;
-;;PRESC_2		EQU 0X25;
-;;BANDERAS	EQU 0X26;
-
-;;D_HORAS		EQU 0X27;
-;;U_HORAS		EQU 0X28;
-;;D_MINUTOS	EQU 0X29;
-;;U_MINUTOS	EQU 0X30;
-;;D_SEGUNDOS	EQU	0X31;
-;;U_SEGUNDOS	EQU 0X32;
-
-;;CONT_MILIS	EQU 0X33;
 
 ;CONSTANTES
 M	EQU .3;
@@ -164,81 +108,25 @@ SIN_USORE2       EQU          .2; // SIN USORE2.
 
 PROGE            EQU     B'111';  //PROGRMACIÓN INICIAL DEL PUERTO E.
 
-;BANDERAS
-
-;BAN_INT			 EQU		  .0;
-;SIN_USOB1		 EQU		  .1;
-;SIN_USOB2		 EQU		  .2;
-;SIN_USOB3		 EQU		  .3;
-;SIN_USOB4		 EQU		  .4;
-;SIN_USOB5		 EQU		  .5;
-;SIN_USOB6		 EQU		  .6;
-;SIN_USOB7		 EQU		  .7;
-
-;== VECTOR RESET ==
+;======================================
+;=========== VECTOR RESET =============
+;======================================
 
 		            ORG 0X0000;
 VEC_RESET           CLRF PCLATH;
                     GOTO PROG_PRIN;
-
-;== VECTOR INTERRUPCION ==
+;======================================
+;======= VECTOR INTERRUPCION ==========
+;======================================		    
 
                     ORG 0X0004;
 VEC_INT            NOP;
-		    ;MOVWF W_TEMP;	
-		    ;MOVF STATUS,W;
-		    ;MOVWF STATUS_TEMP;	
-		    ;CLRF STATUS;
-
-		    ;MOVF PCLATH,W;
-		    ;MOVWF PCLATH_TEMP;	
-		    ;CLRF PCLATH;
-		    ;MOVF FSR,W;
-		    ;MOVWF FSR_TEMP;
-		    ;BTFSC INTCON,T0IF;
-		    ;CALL RUTINA_INT; 
-
-;SAL_INT		    MOVLW .131; 
-;		    MOVWF TMR0;
-;				
-;		    MOVF FSR_TEMP,W;
-;		    MOVWF FSR;
-;					
-;		    MOVF PCLATH_TEMP,W;
-;		    MOVWF PCLATH;
-
-;		    MOVF STATUS_TEMP,W;
-;		    MOVWF STATUS;
-		    RETFIE;
-
-;== INTERRUPCION ==
-
-;RUTINA_INT			INCF CONT_MILIS,F;
-;					INCF PRESC_1,F;
-		
-;					MOVLW .100; 
-;					XORWF PRESC_1,W; 
-;					BTFSC STATUS,Z; 
-;					GOTO SIG_INT; 
-;					GOTO SAL_RUTINT; 
-					
-;SIG_INT				CLRF PRESC_1;
-;,,					INCF PRESC_2,F;
-;					MOVLW .10;
-;					XORWF PRESC_2,W;
-;					BTFSS STATUS,Z;
-;					GOTO SAL_RUTINT;
-;					CLRF PRESC_1;
-;					CLRF PRESC_2;
-		
-;SAL_RUTEXT			BSF BANDERAS,BAN_INT;
-
-;SAL_RUTINT			BCF INTCON,T0IF; 
-					
-;					RETURN;
-					
-;==SUBRUTINA DE INICIO ==      
-
+		   RETFIE;
+;======================================
+;======================================		   
+;=======SUBRUTINA DE INICIO ===========      
+;======================================
+;======================================
 PROG_INI			BSF STATUS,RP0; 
 				
 					MOVLW 0X02; 
@@ -263,13 +151,12 @@ PROG_INI			BSF STATUS,RP0;
 		;HASTA AQUI ESTA BIEN!			
 	;	    MOVWF ADCON1 ^0X80;
 
-	;				BCF STATUS,RP0; 
+	;	    BCF STATUS,RP0; 
 	
-	;				MOVLW .131; 
-	;				MOVWF TMR0 ^0X00;
-
-	;				MOVLW 0XA0;
-	;				MOVWF INTCON ^0X00; 
+;	    		MOVLW .131; 
+	; 		MOVWF TMR0 ^0X00;
+;			MOVLW 0XA0;
+	;		MOVWF INTCON ^0X00; 
 				
 					CLRF PORTC;
 
@@ -282,57 +169,11 @@ PROG_INI			BSF STATUS,RP0;
 					MOVWF PORTB;
 											
 					RETURN;
-
-;== INICIALIZACION LCD ==
-
-;INI_LCD				BCF PORTC,RS_LCD; 
-				
-;					MOVLW 0X38;
-;					MOVWF PORTB;
-;					CALL PULSO_ENABLE;
-
-;					MOVLW 0X0C;
-;					MOVWF PORTB;
-;					CALL PULSO_ENABLE;
-
-;					MOVLW 0X01;
-;					MOVWF PORTB;
-;					CALL PULSO_ENABLE;
-
-;					MOVLW 0X06;
-;					MOVWF PORTB;
-;					CALL PULSO_ENABLE;
-					
-;					MOVLW 0X80;
-;					MOVWF PORTB;
-;					CALL PULSO_ENABLE;
-
-;					BSF PORTC,RS_LCD; 
-					
-;					RETURN;
-
-;== PULSO ENABLE ==
-
-;PULSO_ENABLE		BCF PORTC,ENABLE_LCD; PONE EN BAJO ENABLE
-
-;,					CLRF CONT_MILIS;
-;ESP_TIEMPO			MOVLW .1;
-;					XORWF CONT_MILIS,W;
-;					BTFSS STATUS,Z;
-;					GOTO ESP_TIEMPO;
-
-;					BSF PORTC,ENABLE_LCD; PONE EN ALTO ENABLE 
-					
-;					CLRF CONT_MILIS;
-;ESP_TIEMPO1			MOVLW .40;
-;					XORWF CONT_MILIS,W;
-;					BTFSS STATUS,Z;
-;					GOTO ESP_TIEMPO1;
-
-;					RETURN;
-
-;== PROGRAMA PRINCIPAL ==
-
+;======================================
+;======================================
+;======= PROGRAMA PRINCIPAL ===========
+;======================================
+;======================================
 PROG_PRIN           CALL PROG_INI;
 		    CALL INI_LCD;
 		   
@@ -340,44 +181,11 @@ LOOP_PRIN	    CALL BARRE_TECLADO;
 		    CALL MUESTRA_TECLA;
 		    
 		    GOTO LOOP_PRIN;
-		    ;CALL COMANDO_8F;
-
-;REINICIA			MOVLW '0';
-;					MOVWF U_SEGUNDOS;
-;					MOVWF PORTB;
-;					CALL PULSO_ENABLE;
-	
-;ESP_INT				BTFSS BANDERAS,BAN_INT;
-;					GOTO ESP_INT;
-;					BCF BANDERAS,BAN_INT;
-
-					
-
-;					INCF U_SEGUNDOS,F;
-					
-;					MOVLW 0X3A;
-;					XORWF U_SEGUNDOS,W;
-;					BTFSC STATUS,Z;
-;					GOTO REINICIA;
-
-;					CALL COMANDO_8F;
-					
-;					MOVF U_SEGUNDOS,W;
-;					MOVWF PORTB;
-;					CALL PULSO_ENABLE;
-;					GOTO ESP_INT;
-
-;== COMANDOS PARA LCD ==
-				
-;COMANDO_8F			BCF PORTC,RS_LCD;
-;					MOVLW 0X8F;
-;					MOVWF PORTB;
-;					CALL PULSO_ENABLE;
-;					BSF PORTC,RS_LCD;
-;					RETURN;
-
+;===============================================		  
+;===============================================
 ;==== SUBRUTINA DE RETARDO DE MEDIO SEGUNDO=====
-
+;===============================================
+;===============================================
 BARRE_TECLADO	BSF PORTB,Act_Ren4;
 		NOP;
 		BCF PORTB,Act_Ren1;
@@ -480,8 +288,11 @@ Fue_TecE    MOVLW 'E';
 Fue_TecF    MOVLW 'F';
 	    MOVWF Var_tecopri;
 	    GOTO SAL_BARRETEC;
-		
+;======================================		
+;======================================		
 ;======SUBRUTINA DE MEDIO SEGUNDO======
+;======================================
+;======================================
 Muestra_tecla	MOVLW 'C';
 		XORWF Var_tecopri,w;
 		BTFSS STATUS,Z;
