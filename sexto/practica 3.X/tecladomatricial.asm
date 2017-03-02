@@ -107,9 +107,28 @@ SIN_USORE1       EQU          .1; // SIN USORE1.
 SIN_USORE2       EQU          .2; // SIN USORE2.
 
 PROGE            EQU     B'111';  //PROGRMACIÓN INICIAL DEL PUERTO E.
-	    
-;== INICIALIZACION LCD ==
 
+
+;======================================
+;=========== VECTOR RESET =============
+;======================================
+
+		            ORG 0X0000;
+VEC_RESET           CLRF PCLATH;
+                    GOTO PROG_PRIN;
+;======================================
+;======= VECTOR INTERRUPCION ==========
+;======================================		    
+
+                    ORG 0X0004;
+VEC_INT            NOP;
+		   RETFIE;
+		   
+;======================================
+;======================================	    
+;======== INICIALIZACION LCD ==========
+;======================================
+;======================================
 INI_LCD				BCF PORTC,RS_LCD; 
 				
 				MOVLW 0X38;
@@ -135,7 +154,11 @@ INI_LCD				BCF PORTC,RS_LCD;
 				BSF PORTC,RS_LCD; 
 					
 				RETURN;
-;== PULSO ENABLE ==
+;======================================
+;======================================
+;========= PULSO ENABLE ===============
+;======================================
+;======================================
 
 PULSO_ENABLE		BCF PORTC,ENABLE_LCD; PONE EN BAJO ENABLE
 
@@ -155,20 +178,6 @@ ESP_TIEMPO1			MOVLW .40;
 
 					RETURN;
 
-;======================================
-;=========== VECTOR RESET =============
-;======================================
-
-		            ORG 0X0000;
-VEC_RESET           CLRF PCLATH;
-                    GOTO PROG_PRIN;
-;======================================
-;======= VECTOR INTERRUPCION ==========
-;======================================		    
-
-                    ORG 0X0004;
-VEC_INT            NOP;
-		   RETFIE;
 ;======================================
 ;======================================		   
 ;=======SUBRUTINA DE INICIO ===========      
@@ -245,10 +254,12 @@ BARRE_TECLADO	BSF PORTB,Act_Ren4;
 		XORWF Var_teclado,w;
 		BTFSC STATUS,Z;
 		GOTO sig_Ran2;
+		
 		MOVLW Tec_0;
 		XORWF Var_teclado,w;
 		BTFSC STATUS,Z;
 		GOTO Fue_Tec0;
+		
 		MOVLW Tec_1;
 		XORWF Var_teclado,w;
 		BTFSC STATUS,Z;
@@ -264,13 +275,94 @@ BARRE_TECLADO	BSF PORTB,Act_Ren4;
 		BTFSC STATUS,Z;
 		GOTO Fue_Tec3;
 ;NO SE SI LOS SIG_RAN ESTAN BIEN 
-sig_Ran2	BSF PORTB,Act_Ren1;
+sig_Ran2	BSF PORTB,Act_Ren4;
 		NOP;
+		BCF PORTB,Act_Ren1;
+		MOVF PORTB,W;
+		MOVWF Var_teclado;
+		MOVLW 0XF0;
+		ANDWF Var_teclado,f;
 		
-sig_Ran3
+		MOVLW Tec_4;
+		XORWF Var_teclado,w;
+		BTFSC STATUS,Z;
+		GOTO Fue_Tec4;
+		
+		MOVLW Tec_5;
+		XORWF Var_teclado,w;
+		BTFSC STATUS,Z;
+		GOTO Fue_Tec5;
+		
+		MOVLW Tec_6;
+		XORWF Var_teclado,w;
+		BTFSC STATUS,Z;
+		GOTO Fue_Tec6;
+	
+		MOVLW Tec_7;
+		XORWF Var_teclado,w;
+		BTFSC STATUS,Z;
+		GOTO Fue_Tec7;
+		
+		MOVLW Tec_8
+		XORWF Var_teclado,w;
+		BTFSC STATUS,Z;
+		GOTO Fue_Tec8;
+		
+sig_Ran3	BSF PORTB,Act_Ren4;
+		NOP;
+		BCF PORTB,Act_Ren1;
+		MOVF PORTB,W;
+		MOVWF Var_teclado;
+		MOVLW 0XF0;
+		ANDWF Var_teclado,f;
+		
+		MOVLW Tec_9;
+		XORWF Var_teclado,w;
+		BTFSC STATUS,Z;
+		GOTO Fue_Tec9;
+		
+		MOVLW Tec_A;
+		XORWF Var_teclado,w;
+		BTFSC STATUS,Z;
+		GOTO Fue_TecA;
+		
+		MOVLW Tec_B;
+		XORWF Var_teclado,w;
+		BTFSC STATUS,Z;
+		GOTO Fue_TecB;
+	
+		MOVLW Tec_C;
+		XORWF Var_teclado,w;
+		BTFSC STATUS,Z;
+		GOTO Fue_TecC;
+		
+		MOVLW Tec_D;
+		XORWF Var_teclado,w;
+		BTFSC STATUS,Z;
+		GOTO Fue_TecD;
 
 		
-sig_Ran4
+sig_Ran4	BSF PORTB,Act_Ren4;
+		NOP;
+		BCF PORTB,Act_Ren1;
+		MOVF PORTB,W;
+		MOVWF Var_teclado;
+		MOVLW 0XF0;
+		ANDWF Var_teclado,f;
+		
+		MOVLW Tec_E;
+		XORWF Var_teclado,w;
+		BTFSC STATUS,Z;
+		GOTO Fue_TecE;
+		
+		MOVLW Tec_F;
+		XORWF Var_teclado,w;
+		BTFSC STATUS,Z;
+		GOTO Fue_TecF;
+		GOTO BARRE_TECLADO;
+		
+		
+		
 		
 Fue_Tec0    MOVLW '0';
 	    MOVWF Var_tecopri;
