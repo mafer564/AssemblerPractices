@@ -2,13 +2,13 @@
 ;INSTITUTO POLITECNICO NACIONAL
 ;CECYT9 JUAN DE DIOS BATIZ
 ;
-;PRACTICA 2:"Prender led usando interrupciones" 
+;Ejemplo de ejercicio de examen.
 ;
 ;GRUPO: 6IM2.   EQUIPO 
 ;
 ;INTEGRANTES:
 ;
-;DESCRIPCION DE LA PRACTICA: Prender y apagar un led con una interrupcion de 1 segundo.
+;DESCRIPCION DE LA PRACTICA: Contar de 0 al 98, de 2 en 2, con un tiempo de interrupcion de 4 segundos.
 ;
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
  list p=16f877A;
@@ -81,12 +81,13 @@ progb         equ    b'00000000';Programación inicial del puerto B
 ; Sirve para mandar los pulsos de reloj a los registros
 RS_LCD        equ    .0; //Bit que controla el común del display 0
 Enable_LCD    equ    .1; //Bit que controla el común del display 1
-Luz_LCD       equ    .2; //Bit que controla el común del display 2
-clk_pto3      equ    .3; //Bit que controla el común del display 3
-clk_pto4      equ    .4; //Bit que controla el común del display 4
-clk_pto5      equ    .5; //Bit que controla el común del display 5
-clk_pto6      equ    .6; //Bit que controla el común del display 6
-clk_pto7      equ    .7; //Bit que controla el común del display 7
+Sin_usoRC2    equ    .2; //Sin uso
+Sin_usoRC2    equ    .3; //Sin uso
+Sin_usoRC2    equ    .4; //Sin uso
+Sin_usoRC2    equ    .5; //Sin uso 
+Sin_usoRC2    equ    .6; //Sin uso
+Sin_usoRC2    equ    .7; //Sin uso 
+
 
 progc         equ    b'11111111';Programación inicial del puerto C
 ;
@@ -121,19 +122,21 @@ vec_reset        clrf PCLATH; Asegurará la pagina 0 de la memoria del programa
                  goto prog_prin; Indica que vaya a la etiqueta prog_prin
 ;-----------------------------------------------------------------------------------------------------------------------------------------
                  ;== INICIALIZACION LCD ==
+;Antes de cualquier subrutina, y despues de la que inicializa el PIC,
+;			debe estar la que inicializa la lcd.
 
-muestra_cta			BCF PORTC,RS_LCD; 
+muestra_cta			BCF PORTC,RS_LCD; Pone en 0 RS_LCD del puerto C
 				
-				MOVLW 0X87;
-				MOVWF PORTB;
-				CALL PULSO_ENABLE;
-				bsf portc, RS_LCD;
+				MOVLW 0X87;Direccion del pin de la LCD donde se mostrara. 
+				MOVWF PORTB;Manda a w al puerto B.
+				CALL PULSO_ENABLE;llama a la subrutina
+				bsf portc, RS_LCD;Pone en 1 RS_LCD.
 				
-				movf cta_decenas,w;
-				movwf portb;
-				call pulso_enable;
+				movf cta_decenas,w;Carga cta_decenas a w.
+				movwf portb; Manda w al puerto B.
+				call pulso_enable; Llama subrutina.
 				
-				movf cta_unidades,w;
+				movf cta_unidades,w;Carga cta_unidades a w.
 				movwf portb;
 				call pulso_enable;
 				
@@ -162,92 +165,93 @@ muestra_cta			BCF PORTC,RS_LCD;
 		 ;=================================
 		 ;== SUBRUTINA DE INTERRUPCIONES ==
 		 ;=================================
-		 org 0x0004;
-vec_int		movwf resp_w;
-		movf status,w;
-		movwf resp_status;
-		clrf status;
-		movf pclath,w;
-		movwf res_pclath;
-		clrf pclath;
-		movf fsr,w;
-		movwf res_fsr;
+		 org 0x0004;LA SUBRUTINA DE INTERRUPCION DEL PIC ESTA EN LA DIRECCION 4.
+vec_int		movwf resp_w;Respalda w. (La carga a resp_w)
+		movf status,w;Carga el registro status a w.
+		movwf resp_status;Respalda w.
+		clrf status;Limpia el registro status.
+		movf pclath,w;Carga a w los bits del pclath.(los 3 que llena del program counter cuando hay un call o goto)
+		movwf res_pclath;respalda.
+		clrf pclath;limpia pclath.
+		movf fsr,w;Mueve el apuntador de reg. a w. (rfs utiliza el contenido del registro anterior para redireccionarlo a otro.)
+		movwf res_fsr;Respalda w.
 		
-		btfsc intcon,t0if;
-		call rutina_int;
+		btfsc intcon,t0if;Salta si el timer 0 del reg. intcon es 0.
+		call rutina_int;llama a la subrutina.
 		
-sal_int		movlw .131;
-		movwf tmr0;
+sal_int		movlw .131;Direccion del t0.
+		movwf tmr0;Carga el t0 a w.
 		
-		movf res_fsr,w;
-		movwf fsr;
-		movf res_pclath,w;
-		movwf pclath;
-		movf resp_status,w;
-		movwf status;
-		movf resp_w,w;
+		movf res_fsr,w;mueve res_fsr a w.
+		movwf fsr;respalda el contenido fsr.
+		movf res_pclath,w;Carga a w el respaldo de pclath.
+		movwf pclath;respalda.
+		movf resp_status,w;mueve a w el respaldo de status.
+		movwf status;respalda.
+		movf resp_w,w;mueve a w el respaldo de w.
 		
-		retfie;
+		retfie;	Retorna la interrupcion.
 ;-----------------------------------------------------------------------------------------------------------------------------------------
                  ;================================
                  ;== Subrutina de interrupciones==
                  ;================================
-rutina_int       incf   presc_1,f; 
+rutina_int       incf   presc_1,f;  Incrementa en 1 presc_1.
                  
-		 movlw .100; 
-                 xorwf presc_1,w;
-		 btfsc status,z;
-		 goto sig_int;
-		 goto sal_rutint;
+		 movlw .100; Direccion requerida
+                 xorwf presc_1,w;or excl. entre w y el presc_1, el resultado se guarda en w.
+		 btfsc status,z;Salta si el bit z del registro status es 0.
+		 goto sig_int;va a la direccion sig_int.
+		 goto sal_rutint;va a la direccion sal_rutint.
+		 ;Si presc_1 es 0 brincara a la rutina del presc_2, si es 1 saldra de la rutina.
 		 
-sig_int		clrf presc_1;
-		incf presc_2,f;
-		movlw .5;
-		xorwf presc_2,f;
-		btfss status,z;
-		goto sal_rutint;
-		clrf presc_1;
-		clrf presc_2;
+sig_int		clrf presc_1;limpia el presc_1.
+		incf presc_2,f;Incrementa en 1 el presc_2.
+		movlw .5;Direccion.
+		xorwf presc_2,f;Or exc. entre w y presc_2.
+		btfss status,z;Salta si el bit z del registro status es 1.
+		goto sal_rutint;Va a la rutina sal_rutint.
+		clrf presc_1;limpia el presc_1
+		clrf presc_2;Limpia el presc_2
 		
-sal_rutext	btfss porte, Led_Rojo;
-		goto sec_led;
-		bcf porte,Led_Rojo; Prende el led.
-		goto esp_int;
+sal_rutint	btfss porte, Led_Rojo;Salta si el bit Led_Rojo del Puerto E esta en 1.
+		goto sec_led;Va a la rutina sec_led.
+		bcf porte,Led_Rojo;Pone en 0 Led_Rojo. Prende el led.
 		
-sec_led		bsf porte, Led_Rojo; Apaga el led.
+		
+sec_led		bsf porte, Led_Rojo;Pone en 1 Led_Rojo Apaga el led.
 
-sig_intcta	incf cta_unidades,f;
-		incf cta_unidades,f;
-		 movlw 0x3a;
-		 xorwf cta_unidades,f;
-		 btfss status,z;
-		 goto sal_rutint;
-		 movlw '0';
-		 movwf cta_unidades;
-		 incf cta_decenas,f;
-		 movlw 0x3a;
-		 xorwf cta_decenas,w;
-		 btfss status,z;
-		 goto sal_rutint;
-		 movlw '0';
+sig_intcta	incf cta_unidades,f;Incrementa en 1 cta_unidades.
+		incf cta_unidades,f;Incrementa en 1 cta_unidades.
+		 movlw 0x3a;Direccion requerida a w.Compara su valor con 0.
+		 xorwf cta_unidades,f;Or exc. entre w y cta_unidades.
+		 btfss status,z;Salta su el bit z del reg status es 1.
+		 goto sal_rutint;Va a la rutina sal_rutint.
+		 movlw '0';Muestra 0
+		 movwf cta_unidades;Carga a w cta_unidades.
+		 incf cta_decenas,f;Incrementa en 1 cta_decenas.
+		 movlw 0x3a;Compara su valor con 0.
+		 xorwf cta_decenas,w;or exc. entre w y cta_decenas. 
+		 btfss status,z;Salta si el bit z del reg. status es 1. 
+		 goto sal_rutint;Va a la rutina sal_rutina.
+		 movlw '0';Muestra 0.
 		 ;FALTAN CINSTRUCCIONES!
 		 
                
 		 movwf adcon1 ^0x80;
-		 bcf status,RP0; ponte en el banco 0 de la 
+		 bcf status,RP0; ponte en el banco 0 del reg. status. 
 		 
-		 movlw 0xa0;
+		 movlw 0xa0;Compara su valor con el de la direccion 0xa0.
 		 movwf intcon;
 		 movlw .131;
 		 movwf tmr0;
 		 
-		 movlw '0';
-		 movwf cuenta_unidades;
-		 movwf cuenta_decenas;
+		 movlw '0'; Compara el valor con 0.
+		 movwf cuenta_unidades;Carga a w cta_unidades.
+		 movwf cuenta_decenas;Cara a w cta_decenas.
 		 
-		 clrf portb;
-		 movlw 0x03;
-		 movwf portc;
+		 clrf portb;Limpia el puerto B.
+		 movlw 0x03;Compara su valor con el de la direccion 0x03.
+		 movwf portc;Carga el puerto C a w.
 		 
 		 return;
 ;----------------------------------------------------------------------------------------------------------------------------------------
