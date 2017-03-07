@@ -43,13 +43,17 @@ cont_decenas  equ   0x28;
 M	    equ    .2;
 N	    equ    .2;
 L	    equ    .2;
-num_itera   equ    .10;
-decenas	    equ    0x35;
 ;cod. de los caracteres en 7 segmentos.
-Car_A	    equ   b'01110111';
-Car_B	    equ	  0xc7;
-Car_0	    equ   0x3f;
-Car_1	    equ   0x06;
+Car_0	    equ   0x20;
+Car_1	    equ   0x21;
+Car_2	    equ   0x22;
+Car_3	    equ   0x23;
+Car_4	    equ   0x24;
+Car_5	    equ   025;
+Car_6	    equ   0x26;
+Car_7	    equ   0x27;
+Car_8	   equ   0x28;
+Car_9	    equ   0x29;
 ;---------------------------------------------------------------------------------------------------------------------------------------------------
 
 ;ASIGNACION DE LOS BITS DE LOS PUERTOS DE I/O
@@ -142,25 +146,7 @@ muestra_cta			BCF PORTC,RS_LCD; Pone en 0 RS_LCD del puerto C
 				
 				return;
 				    
-				;,MOVLW 0X0C;
-				;;MOVWF PORTB;
-				;;CALL PULSO_ENABLE;
-
-				;;MOVLW 0X01;
-				;;MOVWF PORTB;
-				;;CALL PULSO_ENABLE;
-
-				;;MOVLW 0X06;
-				;;MOVWF PORTB;
-				;;CALL PULSO_ENABLE;
-					
-				;;MOVLW 0X80;
-				;;MOVWF PORTB;
-				;;CALL PULSO_ENABLE;
-
-				;,BSF PORTC,RS_LCD; 
-					
-				;;RETURN;
+			
 ;-----------------------------------------------------------------------------------------------------------------------------------------
 		 ;=================================
 		 ;== SUBRUTINA DE INTERRUPCIONES ==
@@ -234,9 +220,8 @@ sig_intcta	incf cta_unidades,f;Incrementa en 1 cta_unidades.
 		 btfss status,z;Salta si el bit z del reg. status es 1. 
 		 goto sal_rutint;Va a la rutina sal_rutina.
 		 movlw '0';Muestra 0.
-		 ;FALTAN CINSTRUCCIONES!
-		 
-               
+		
+		            
 		 movwf adcon1 ^0x80;
 		 bcf status,RP0; ponte en el banco 0 del reg. status. 
 		 
@@ -267,18 +252,7 @@ loop_prin		nop;
 		 call mustra_cta;
 		 goto loop_prin;
 		 
-		;;btfss banderas, band_int;
-		;;goto esp_int;
-		;;bcf banderas,band_int;
 		
-		;;btfss porte, Led_Rojo;
-		;;goto sec_led;
-		;;bcf porte,Led_Rojo; Prende el led.
-		;;goto esp_int;
-		
-;;sec_led	bsf porte, Led_Rojo; Apaga el led.
-		;;goto esp_int;
-		 
 ;-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 		end;
