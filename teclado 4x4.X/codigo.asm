@@ -7,7 +7,8 @@
 ;GRUPO: 6IM2  EQUIPO:
 ;
 ;INTEGRANTES:
-;
+;VARGAS ESPINO CARLOS HASSAN
+;PEREZ JIMENEZ MADELIN FERNANDA    
 ;COMENTARIO DE LO QUE EL PROGRAMA EJECUTARA: 
 ;El programa inicializara un reloj tipo militar de 24 hrs.
 ;
@@ -31,44 +32,44 @@ i5ms	    EQU	    d'34'
 j5ms	    EQU	    d'49'
 
 ; Constantes para antirebote
-ianti	    EQU	    d'33'
-janti	    EQU	    d'97'
-kanti	    EQU	    d'30'
+i_anti	    EQU	    d'33'
+j_anti	    EQU	    d'97'
+k_anti	    EQU	    d'30'
 	    
 ; Constantes para 1seg
 ; Se pueden cambiar para aumentar velocidad del reloj y checar los cambios
-i1seg	    EQU	    d'33'	    ;original d'33'
-j1seg	    EQU	    d'97'	    ;original d'97'
-k1seg	    EQU	    d'98'	    ;original d'98'
+i_1seg	    EQU	    d'33'	    ;original d'33'
+j_1seg	    EQU	    d'97'	    ;original d'97'
+k_1seg	    EQU	    d'98'	    ;original d'98'
 
 ; Direcciones que se usan como variables para bucles
-Cont1	    EQU	    h'20'
-Cont2	    EQU	    h'21'
-Cont3	    EQU	    h'22'
+Contador1	    EQU	    h'20'
+Contador2	    EQU	    h'21'
+Contador3	    EQU	    h'22'
 
 ; Direcciones que se usan como variables para conteo del reloj    
-uSeg	    EQU	    h'23'	    ; Unidades de segundo
-dSeg	    EQU	    h'24'	    ; Decenas de segundo
-uMin	    EQU	    h'25'	    ; Unidades de minuto
-dMin	    EQU	    h'26'	    ; Decenas de minuto
-uHrs	    EQU	    h'27'	    ; Unidades de hora
-dHrs	    EQU	    h'28'	    ; Decenas de hora
+uni_Seg	    EQU	    h'23'	    ; Unidades de segundo
+de_Seg	    EQU	    h'24'	    ; Decenas de segundo
+uni_Min	    EQU	    h'25'	    ; Unidades de minuto
+de_Min	    EQU	    h'26'	    ; Decenas de minuto
+uni_Hrs	    EQU	    h'27'	    ; Unidades de hora
+de_Hrs	    EQU	    h'28'	    ; Decenas de hora
 
 ; Direccion que se usa como variable para saber posicion y valor a cambiar
 posicion    EQU	    h'29'
 valor	    EQU	    h'2A'
 
 ; Bytes de posicion del LCD
-PosUniSeg   EQU	    b'10001011'	    ; Posicion h'0B' en el LCD
-PosDecSeg   EQU	    b'10001010'	    ; Posicion h'0A' en el LCD
-PosUniMin   EQU	    b'10001000'	    ; Posicion h'08' en el LCD
-PosDecMin   EQU	    b'10000111'	    ; Posicion h'07' en el LCD
-PosUniHrs   EQU	    b'10000101'	    ; Posicion h'05' en el LCD
-PosDecHrs   EQU	    b'10000100'	    ; Posicion h'04' en el LCD
-Pos2ptos1   EQU	    b'10000110'	    ; Posicion h'06' en el LCD
-Pos2ptos2   EQU	    b'10001001'	    ; Posicion h'09' en el LCD
-PosLimRight EQU	    b'10001100'	    ; Posicion extrema derecha h'0C'
-PosLimLeft  EQU	    b'10000011'	    ; Posicion extrema izquierda h'03'
+PosUni_Seg   EQU	    b'10001011'	    ; Posicion h'0B' en el LCD
+PosDec_Seg EQU	    b'10001010'	    ; Posicion h'0A' en el LCD
+PosUni_Min   EQU	    b'10001000'	    ; Posicion h'08' en el LCD
+PosDec_Min   EQU	    b'10000111'	    ; Posicion h'07' en el LCD
+PosUni_Hrs   EQU	    b'10000101'	    ; Posicion h'05' en el LCD
+PosDec_Hrs   EQU	    b'10000100'	    ; Posicion h'04' en el LCD
+Pos2_ptos1   EQU	    b'10000110'	    ; Posicion h'06' en el LCD
+Pos2_ptos2   EQU	    b'10001001'	    ; Posicion h'09' en el LCD
+Pos_Lim_Dere EQU	    b'10001100'	    ; Posicion extrema derecha h'0C'
+Pos_Lim_Izq  EQU	    b'10000011'	    ; Posicion extrema izquierda h'03'
 
 ; Valor usado para restablecer un contador a 0
 cero	    EQU	    h'30'	; Valor ASCII para 0
@@ -83,17 +84,17 @@ ocho	    EQU	    h'38'	; Valor ASCII para 8
 nueve	    EQU	    h'39'	; Valor ASCII para 9
 	    
 ; Valores limites que se usan para comparar contra el conteo del reloj	    
-limiteUni   EQU	    h'3A'	; Valor ASCII ';' 1 despues del '9' (unidades)
-limiteDec   EQU	    h'36'	; Valor ASCII '6' (decenas)
-limiteUniH  EQU	    h'34'	; Valor ASCII '4' (unidades de hora)
-limiteDecH  EQU	    h'33'	; Valor ASCII '3' (decenas de hora)
+limite_Uni   EQU	    h'3A'	; Valor ASCII ';' 1 despues del '9' (unidades)
+limite_Dec   EQU	    h'36'	; Valor ASCII '6' (decenas)
+limiteUni_Hrs  EQU	    h'34'	; Valor ASCII '4' (unidades de hora)
+limiteDec_Hrs  EQU	    h'33'	; Valor ASCII '3' (decenas de hora)
 
   ;PUERTO A: control de la lcd
 ; Establecer bits de configuracion de cada puerto	    
-enON	    EQU	    b'000001'	    ; Pin A0
-enOFF	    EQU	    b'000000'
-rsON	    EQU	    b'000010'	    ; Pin A1
-rsOFF	    EQU	    b'000000'	    	    	    
+en_ON	    EQU	    b'000001'	    ; Pin A0
+en_OFF	    EQU	    b'000000'
+rs_ON	    EQU	    b'000010'	    ; Pin A1
+rs_OFF	    EQU	    b'000000'	    	    	    
 
     ;PUERTO B  : conrol del teclado
 ; Bytes de posicion del Teclado
@@ -165,34 +166,34 @@ main	    call    pausa1seg;
 ;==============INCREMENTO DE UNIDADES DE SEGUNDO===================
 ;==================================================================
 
-uSegundos  incf    uSeg,1	    ; Incrementa las unidades de segundo
-	    movf    uSeg,0	    ; Copia uSeg a W
-	    sublw   limiteUni	    ; Calcula (limite - W) = (h'3A' - W)
+uni_Segundos  incf    uni_Seg,1	    ; Incrementa las unidades de segundo
+	    movf    uni_Seg,0	    ; Copia uni_Seg a W
+	    sublw   limite_Uni	    ; Calcula (limite - W) = (h'3A' - W)
 	    btfss   STATUS,Z	    ; Si Z=1 se alcanzo el limite y salta
 	    goto    muestraUS	    ; Si Z no es 1 muestra el valor actual
 	    
 	    movlw   cero	    ; Copia el valor de '0' a W
-	    movwf   uSeg	    ; Reset del contador unidades de segundo
-	    movlw   PosUniSeg	    ; Ubicacion donde escribir en el LCD (0x0B)
+	    movwf   uni_Seg	    ; Reset del contador unidades de segundo
+	    movlw   PosUni_Seg	    ; Ubicacion donde escribir en el LCD (0x0B)
 	    movwf   LCD
 	    call    comando
     
-	    movf    uSeg,0	    ; Muestra el cero en el LCD
+	    movf    uni_Seg,0	    ; Muestra el cero en el LCD
 	    movwf   LCD
 	    call    dato
 				    ; Como se llego a las 10 unidades
-	    goto    dSegundos	    ; cambiar las decenas de segundo 
+	    goto    de_Segundos	    ; cambiar las decenas de segundo 
 	    
-muestraUS  movlw   PosUniSeg	    ; Ubicacion donde escribir en el LCD (0x0B)
+muestraUS  movlw   PosUni_Seg	    ; Ubicacion donde escribir en el LCD (0x0B)
 	    movwf   LCD;
 	    call    comando;
 	    
-	    movf    uSeg,0	    ; Muestra el valor unidades de segundo
+	    movf    uni_Seg,0	    ; Muestra el valor unidades de segundo
 	    movwf   LCD;
 	    call    dato;
 	    
 	    call    pausa1seg;
-	    goto    uSegundos	    ; Una vez hecho el cambio seguir con el
+	    goto    uni_Segundos	    ; Una vez hecho el cambio seguir con el
 				    ; conteo de los segundos
 
 ;==================================================================
@@ -200,35 +201,35 @@ muestraUS  movlw   PosUniSeg	    ; Ubicacion donde escribir en el LCD (0x0B)
 ;===========INCREMENTO DE DECENAS DE SEGUNDO=======================
 ;==================================================================
 
-dSegundos  incf    dSeg,1	    ; Incrementa las decenas de segundo
-	    movf    dSeg,0	    ; Copia dSeg a W
+de_Segundos  incf    de_Seg,1	    ; Incrementa las decenas de segundo
+	    movf    de_Seg,0	    ; Copia de_Seg a W
 	    sublw   limiteDec	    ; Calcula (limite - W) = (h'36' - W)
 	    btfss   STATUS,Z	    ; Si Z=1 se alcanzo el limite y salta
 	    goto    muestraDS	    ; Si Z no es 1 muestra el valor actual
 	    
 	    movlw   cero	    ; Copia el valor de '0' a W
-	    movwf   dSeg	    ; Reset del contador decenas de segundo
+	    movwf   de_Seg	    ; Reset del contador decenas de segundo
 	    movlw   PosDecSeg	    ; Ubicacion donde escribir en el LCD (0x0A)
 	    movwf   LCD;
 	    call    comando;
 	    
-	    movf    dSeg,0	    ; Muestra el cero en el LCD
+	    movf    de_Seg,0	    ; Muestra el cero en el LCD
 	    movwf   LCD;
 	    call    dato;
 				    ; Como se llego a las 6 unidades
-	    goto    uMinutos	    ; cambiar las unidades de minuto
+	    goto    uni_Minutos	    ; cambiar las unidades de minuto
 
 muestraDS  movlw   PosDecSeg	    ; Ubicacion donde escribir en el LCD (0x0A)
 	    movwf   LCD;
 	    call    comando;
 	    
-	    movf    dSeg,0	    ; Muestra el valor decenas de segundo
+	    movf    de_Seg,0	    ; Muestra el valor decenas de segundo
 	    movwf   LCD;
 	    call    dato;
 	    
 	    call    pausa1seg;
 	    
-	    goto    uSegundos	    ; Una vez hecho el cambio seguir con el
+	    goto    uni_Segundos	    ; Una vez hecho el cambio seguir con el
 				    ; conteo de los segundos
 
 ;==================================================================
@@ -236,70 +237,70 @@ muestraDS  movlw   PosDecSeg	    ; Ubicacion donde escribir en el LCD (0x0A)
 ;================INCREMENTO DE UNIDADES DE MINUTOS=================
 ;==================================================================
 
-uMinutos   incf    uMin,1	    ; Incrementa las unidades de minuto
-	    movf    uMin,0	    ; Copia uMin a W
-	    sublw   limiteUni	    ; Calcula (limite - W) = (h'3A' - W)
+uni_Minutos   incf    uni_Min,1	    ; Incrementa las unidades de minuto
+	    movf    uni_Min,0	    ; Copia uni_Min a W
+	    sublw   limite_Uni	    ; Calcula (limite - W) = (h'3A' - W)
 	    btfss   STATUS,Z	    ; Si Z=1 se alcanzo el limite y salta
 	    goto    muestraUM	    ; Si Z no es 1 muestra el valor actual
 	    
 	    movlw   cero	    ; Copia el valor de '0' a W
-	    movwf   uMin	    ; Reset del contador unidades de minuto
-	    movlw   PosUniMin	    ; Ubicacion donde escribir en el LCD (0x08)
+	    movwf   uni_Min	    ; Reset del contador unidades de minuto
+	    movlw   PosUni_Min	    ; Ubicacion donde escribir en el LCD (0x08)
 	    movwf   LCD;
 	    call    comando;
 	    
-	    movf    uMin,0	    ; Muestra el cero en el LCD
+	    movf    uni_Min,0	    ; Muestra el cero en el LCD
 	    movwf   LCD;
 	    call    dato;
 				    ; Como se llego a las 10 unidades
-	    goto    dMinutos	    ; cambiar las decenas de minuto 
+	    goto    de_Minutos	    ; cambiar las decenas de minuto 
 
-muestraUM  movlw   PosUniMin	    ; Ubicacion donde escribir en el LCD (0x08)
+muestraUM  movlw   PosUni_Min	    ; Ubicacion donde escribir en el LCD (0x08)
 	    movwf   LCD;
 	    call    comando;
 	    
-	    movf    uMin,0	    ; Muestra el valor unidades de minuto
+	    movf    uni_Min,0	    ; Muestra el valor unidades de minuto
 	    movwf   LCD;
 	    call    dato;
 	    
 	    call    pausa1seg;
 	    
-	    goto    uSegundos	    ; Una vez hecho el cambio seguir con el
+	    goto    uni_Segundos	    ; Una vez hecho el cambio seguir con el
 				    ; conteo de los segundos	    
 
 ;==================================================================
 ;==================================================================
 ;==============INCREMENTO DE DECENAS DE MINUTOS====================
 ;==================================================================
-dMinutos   incf    dMin,1	    ; Incrementa las decenas de minuto
-	    movf    dMin,0	    ; Copia dMin a W
+de_Minutos   incf    de_Min,1	    ; Incrementa las decenas de minuto
+	    movf    de_Min,0	    ; Copia de_Min a W
 	    sublw   limiteDec	    ; Calcula (limite - W) = (h'36' - W)
 	    btfss   STATUS,Z	    ; Si Z=1 se alcanzo el limite y salta
 	    goto    muestraDM	    ; Si Z no es 1 muestra el valor actual
 	    
 	    movlw   cero	    ; Copia el valor de '0' a W
-	    movwf   dMin	    ; Reset del contador decenas de minuto
-	    movlw   PosDecMin	    ; Ubicacion donde escribir en el LCD (0x07)
+	    movwf   de_Min	    ; Reset del contador decenas de minuto
+	    movlw   PosDec_Min	    ; Ubicacion donde escribir en el LCD (0x07)
 	    movwf   LCD;
 	    call    comando;
 	    
-	    movf    dMin,0	    ; Muestra el cero en el LCD
+	    movf    de_Min,0	    ; Muestra el cero en el LCD
 	    movwf   LCD;
 	    call    dato;
 				    ; Como se llego a las 6 unidades
 	    goto    uHoras	    ; cambiar las unidades de hora
 
-muestraDM  movlw   PosDecMin	    ; Ubicacion donde escribir en el LCD (0x08)
+muestraDM  movlw   PosDec_Min	    ; Ubicacion donde escribir en el LCD (0x08)
 	    movwf   LCD;
 	    call    comando;
 	    
-	    movf    dMin,0	    ; Muestra el valor decenas de minuto
+	    movf    de_Min,0	    ; Muestra el valor decenas de minuto
 	    movwf   LCD;
 	    call    dato;
 	    
 	    call    pausa1seg;
 	    
-	    goto    uSegundos	    ; Una vez hecho el cambio seguir con el
+	    goto    uni_Segundos	    ; Una vez hecho el cambio seguir con el
 				    ; conteo de los segundos	    
 	    
 ;==================================================================
@@ -307,58 +308,58 @@ muestraDM  movlw   PosDecMin	    ; Ubicacion donde escribir en el LCD (0x08)
 ;================INCREMENTO DE UNIDADES DE HORA====================
 ;==================================================================
 
-uHoras	    incf    uHrs,1	    ; Incrementa las unidades de hora
-	    movf    dHrs,0	    ; Copia del valor de dHrs a W 
-	    sublw   limiteDecH-1    ; Calcula ((limite - 1) - W) = (h'32' - W)
-	    btfss   STATUS,Z	    ; Si Z=1 -> dHrs='2' -> limite de uHrs = '4'
-	    goto    HrsLong	    ; Si Z no es 1 uHrs debe contar hasta 10
+uHoras	    incf    uni_Hrs,1	    ; Incrementa las unidades de hora
+	    movf    de_Hrs,0	    ; Copia del valor de de_Hrs a W 
+	    sublw   limiteDec_Hrs-1    ; Calcula ((limite - 1) - W) = (h'32' - W)
+	    btfss   STATUS,Z	    ; Si Z=1 -> de_Hrs='2' -> limite de uni_Hrs = '4'
+	    goto    HrsLong	    ; Si Z no es 1 uni_Hrs debe contar hasta 10
 
-	    movf    uHrs,0	    ; Copia uHrs a W 
-	    sublw   limiteUniH	    ; Calcula (limite - W) = (h'34' - W)
+	    movf    uni_Hrs,0	    ; Copia uni_Hrs a W 
+	    sublw   limiteUni_Hrs	    ; Calcula (limite - W) = (h'34' - W)
 	    btfss   STATUS,Z	    ; Si Z=1 se alcanzo el limite y salta
 	    goto    muestraUH	    ; Si Z no es 1 muestra el valor actual
 	    
 	    movlw   cero	    ; Copia el valor de '0' a W
-	    movwf   uHrs	    ; Reset del contador unidades de hora
-	    movlw   PosUniHrs	    ; Ubicacion donde escribir en el LCD (0x05)
+	    movwf   uni_Hrs	    ; Reset del contador unidades de hora
+	    movlw   PosUni_Hrs	    ; Ubicacion donde escribir en el LCD (0x05)
 	    movwf   LCD;
 	    call    comando;
 	    
-	    movf    uHrs,0	    ; Muestra el cero en el LCD
+	    movf    uni_Hrs,0	    ; Muestra el cero en el LCD
 	    movwf   LCD;
 	    call    dato;
 				    ; Como se llego a las 4 unidades
 	    goto    dHoras	    ; cambiar las decenas de hora
 	    
-HrsLong    movf    uHrs,0	    ; Copia uHrs a W 
-	    sublw   limiteUni	    ; Calcula (limite - W) = (h'3A' - W)
+HrsLong    movf    uni_Hrs,0	    ; Copia uni_Hrs a W 
+	    sublw   limite_Uni	    ; Calcula (limite - W) = (h'3A' - W)
 	    btfss   STATUS,Z	    ; Si Z=1 se alcanzo el limite y salta
 	    goto    muestraUH	    ; Si Z no es 1 muestra el valor actual
 	    
 	    movlw   cero	    ; Copia el valor de '0' a W
-	    movwf   uHrs	    ; Reset del contador unidades de hora
-	    movlw   PosUniHrs	    ; Ubicacion donde escribir en el LCD (0x05)
+	    movwf   uni_Hrs	    ; Reset del contador unidades de hora
+	    movlw   PosUni_Hrs	    ; Ubicacion donde escribir en el LCD (0x05)
 	    movwf   LCD;
 	    call    comando;
 	    
-	    movf    uHrs,0	    ; Muestra el cero en el LCD
+	    movf    uni_Hrs,0	    ; Muestra el cero en el LCD
 	    movwf   LCD;
 	    call    dato;
 				    ; Como se llego a las 10 unidades
 	    goto    dHoras	    ; cambiar las decenas de hora
    
 
-muestraUH  movlw   PosUniHrs	    ; Ubicacion donde escribir en el LCD (0x05)
+muestraUH  movlw   PosUni_Hrs	    ; Ubicacion donde escribir en el LCD (0x05)
 	    movwf   LCD;
 	    call    comando;
 	    
-	    movf    uHrs,0	    ; Muestra el valor unidades de hora	    
+	    movf    uni_Hrs,0	    ; Muestra el valor unidades de hora	    
 	    movwf   LCD;
 	    call    dato;
 	    
 	    call    pausa1seg;
 	    
-	    goto    uSegundos	    ; Una vez hecho el cambio seguir con el
+	    goto    uni_Segundos	    ; Una vez hecho el cambio seguir con el
 				    ; conteo de los segundos
 	    
 ;==================================================================
@@ -366,35 +367,35 @@ muestraUH  movlw   PosUniHrs	    ; Ubicacion donde escribir en el LCD (0x05)
 ;=================INCREMENTO DE DECENAS DE HORA====================
 ;==================================================================
 
-dHoras	    incf    dHrs,1	    ; Incrementa las decenas de hora
-	    movf    dHrs,0	    ; Copia dHrs a W
-	    sublw   limiteDecH	    ; Calcula (limite - W) = (h'33' - W)
+dHoras	    incf    de_Hrs,1	    ; Incrementa las decenas de hora
+	    movf    de_Hrs,0	    ; Copia de_Hrs a W
+	    sublw   limiteDec_Hrs	    ; Calcula (limite - W) = (h'33' - W)
 	    btfss   STATUS,Z	    ; Si Z=1 se alcanzo el limite y salta
 	    goto    muestraDH	    ; Si Z no es 1 muestra el valor actual
 	    
 	    movlw   cero	    ; Copia el valor de '0' a W
-	    movwf   dHrs	    ; Reset del contador decenas de hora
-	    movlw   PosDecHrs	    ; Ubicacion donde escribir en el LCD (0x04)
+	    movwf   de_Hrs	    ; Reset del contador decenas de hora
+	    movlw   PosDec_Hrs	    ; Ubicacion donde escribir en el LCD (0x04)
 	    movwf   LCD;
 	    call    comando;
 	    
-	    movf    dHrs,0	    ; Muestra el cero en el LCD
+	    movf    de_Hrs,0	    ; Muestra el cero en el LCD
 	    movwf   LCD;
 	    call    dato;
 				    ; Como llego a las 3 unidades
 	    goto    main	    ; regresa al inicio del programa
 
-muestraDH  movlw   PosDecHrs	    ; Ubicacion donde escribir en el LCD (0x04)
+muestraDH  movlw   PosDec_Hrs	    ; Ubicacion donde escribir en el LCD (0x04)
 	    movwf   LCD;
 	    call    comando;
 	    
-	    movf    dHrs,0	    ; Muestra el valor decenas de hora
+	    movf    de_Hrs,0	    ; Muestra el valor decenas de hora
 	    movwf   LCD;
 	    call    dato;
 	    
 	    call    pausa1seg;
 	    
-	    goto    uSegundos	    ; Una vez hecho el cambio seguir con el
+	    goto    uni_Segundos	    ; Una vez hecho el cambio seguir con el
 				    ; conteo de los segundos	    
 
 
@@ -405,12 +406,12 @@ muestraDH  movlw   PosDecHrs	    ; Ubicacion donde escribir en el LCD (0x04)
 
 ; Pone a '0' los valores de los contadores
 ResetCont  movlw   cero;
-	    movwf   uSeg;
-	    movwf   dSeg;
-	    movwf   uMin;
-	    movwf   dMin;
-	    movwf   uHrs;
-	    movwf   dHrs;
+	    movwf   uni_Seg;
+	    movwf   de_Seg;
+	    movwf   uni_Min;
+	    movwf   de_Min;
+	    movwf   uni_Hrs;
+	    movwf   de_Hrs;
 
 	    movlw   '0';
 	    movwf   LCD;
@@ -441,12 +442,12 @@ ResetCont  movlw   cero;
 ;==============Manda la orden de comando al LCD==================== 
 ;=============con RS=0 mas un pulso de 5ms en E====================
 ;==================================================================
-comando    movlw   enON;
-	    iorlw   rsOFF;
+comando    movlw   en_ON;
+	    iorlw   rs_OFF;
 	    movwf   PORTA;
 	    call    pausa5ms;
-	    movlw   enOFF;
-	    iorlw   rsOFF;
+	    movlw   en_OFF;
+	    iorlw   rs_OFF;
 	    movwf   PORTA;
 	    call    pausa5ms;
 	    
@@ -456,12 +457,12 @@ comando    movlw   enON;
 ;========== Manda la orden de envio de datos a la LCD============== 
 ;=============con RS=1 mas un pulso de 5ms en E	===================
 ;==================================================================
-dato	    movlw   enON;
-	    iorlw   rsON;
+dato	    movlw   en_ON;
+	    iorlw   rs_ON;
 	    movwf   PORTA;
 	    call    pausa5ms;
-	    movlw   enOFF;
-	    iorlw   rsON;
+	    movlw   en_OFF;
+	    iorlw   rs_ON;
 	    movwf   PORTA;
 	    call    pausa5ms;
 	    
@@ -471,12 +472,12 @@ dato	    movlw   enON;
 ; ============Rutina de retardo de 5ms============
 ;=================================================
 pausa5ms   movlw	j5ms		; Rutina de retraso de 5ms
-	    movwf	Cont2;
+	    movwf	Contador2;
 loop2	    movlw	i5ms;
-	    movwf	Cont1;
-loop1	    decfsz	Cont1,1;
+	    movwf	Contador1;
+loop1	    decfsz	Contador1,1;
 	    goto	loop1;
-	    decfsz	Cont2,1;
+	    decfsz	Contador2,1;
 	    goto	loop2;
 	    
 	    return;
@@ -484,17 +485,17 @@ loop1	    decfsz	Cont1,1;
 ;========================================================
 ;======Rutina de retardo antirebote de push button=======
 ;========================================================
-antirebote  movlw	kanti		; Rutina de retraso de 500 ms
-	    movwf	Cont3;
-loop5	    movlw	janti;
-	    movwf	Cont2;
-loop4	    movlw	ianti;
-	    movwf	Cont1;
-loop3	    decfsz	Cont1,1;
+antirebote  movlw	k_anti		; Rutina de retraso de 500 ms
+	    movwf	Contador3;
+loop5	    movlw	j_anti;
+	    movwf	Contador2;
+loop4	    movlw	i_anti;
+	    movwf	Contador1;
+loop3	    decfsz	Contador1,1;
 	    goto	loop3;
-	    decfsz	Cont2,1;
+	    decfsz	Contador2,1;
 	    goto	loop4;
-	    decfsz	Cont3,1;
+	    decfsz	Contador3,1;
 	    goto	loop5;
 	    
 	    return;
@@ -502,19 +503,19 @@ loop3	    decfsz	Cont1,1;
 ;==========================================================	    
 ;==== Rutina de retardo de 1seg + Deteccion de boton '*'===
 ;==========================================================
-pausa1seg  movlw	k1seg		; Rutina de retraso de 1 segundo
-	    movwf	Cont3;
-loop8	    movlw	j1seg;
-	    movwf	Cont2;
-loop7	    movlw	i1seg;
-	    movwf	Cont1;
+pausa1seg  movlw	k_1seg		; Rutina de retraso de 1 segundo
+	    movwf	Contador3;
+loop8	    movlw	j_1seg;
+	    movwf	Contador2;
+loop7	    movlw	i_1seg;
+	    movwf	Contador1;
 	    btfss	teclado,columna1	; Busca si '*' fue presionado
 	    goto	TimeSet		; Si '*'=1 va a rutina de cambio de hora
-loop6	    decfsz	Cont1,1;
+loop6	    decfsz	Contador1,1;
 	    goto	loop6;
-	    decfsz	Cont2,1;
+	    decfsz	Contador2,1;
 	    goto	loop7;
-	    decfsz	Cont3,1;
+	    decfsz	Contador3,1;
 	    goto	loop8;
 	    
 	    return;
@@ -540,7 +541,7 @@ LCDini	    call    pausa5ms;
 	    movwf   LCD;
 	    call    comando;
 	    
-	    movlw   PosDecHrs;
+	    movlw   PosDec_Hrs;
 	    movwf   LCD;
 	    call    comando;
 
@@ -550,7 +551,7 @@ LCDini	    call    pausa5ms;
 ;===Inicializacion de LCD en modo de edicion de hora=====
 ;========================================================
 TimeSet    call    antirebote;
-	    movlw   PosDecHrs;		
+	    movlw   PosDec_Hrs;		
 	    movwf   posicion		; Guarda posicion actual en la variable
 	    movwf   LCD;
 	    call    comando		; Se posiciona en decenas de hora
@@ -828,11 +829,11 @@ CambiaDato movf    posicion,0; Copia la variable a W
 ;========= que usa el contador del reloj ================	    
 ;========================================================
 CompUniSeg movf    posicion,0;		
-	    sublw   PosUniSeg		; Calcula (PosUniSeg - W) = (h'0B' - W)
+	    sublw   PosUni_Seg		; Calcula (PosUni_Seg - W) = (h'0B' - W)
 	    BTFSS  STATUS,Z		; Si Z=1 actualiza la variable del reloj
 	    goto    CompDecSeg		; Si Z=0 compara siguiente posicion
 	    movf    valor,0;
-	    movwf   uSeg;
+	    movwf   uni_Seg;
 	    goto    FinCambia;
 
 CompDecSeg movf    posicion,0;		
@@ -840,40 +841,40 @@ CompDecSeg movf    posicion,0;
 	    BTFSS   STATUS,Z		; Si Z=1 actualiza la variable del reloj
 	    goto    CompUniMin		; Si Z=0 compara siguiente posicion
 	    movf    valor,0;
-	    movwf   dSeg;
+	    movwf   de_Seg;
 	    goto    FinCambia	   ;
 	    
 CompUniMin movf    posicion,0	;	
-	    sublw   PosUniMin		; Calcula (PosUniMin - W) = (h'08' - W)
+	    sublw   PosUni_Min		; Calcula (PosUni_Min - W) = (h'08' - W)
 	    btfss   STATUS,Z		; Si Z=1 actualiza la variable del reloj
 	    goto    CompDecMin		; Si Z=0 compara siguiente posicion
 	    movf    valor,0;
-	    movwf   uMin;
+	    movwf   uni_Min;
 	    goto    FinCambia	   ;
 
 CompDecMin movf    posicion,0;		
-	    sublw   PosDecMin		; Calcula (PosDecMin - W) = (h'07' - W)
+	    sublw   PosDec_Min		; Calcula (PosDec_Min - W) = (h'07' - W)
 	    btfss   STATUS,Z		; Si Z=1 actualiza la variable del reloj
 	    goto    CompUniHrs		; Si Z=0 compara siguiente posicion
 	    movf    valor,0;
-	    movwf   dMin;
+	    movwf   de_Min;
 	    goto    FinCambia	   ;
 
 CompUniHrs movf    posicion,0	;	
-	    sublw   PosUniHrs		; Calcula (PosUniHrs - W) = (h'05' - W)
+	    sublw   PosUni_Hrs		; Calcula (PosUni_Hrs - W) = (h'05' - W)
 	    btfss   STATUS,Z		; Si Z=1 actualiza la variable del reloj
 	    goto    CompDecHrs		; Si Z=0 compara siguiente posicion
 	    movf    valor,0;
-	    movwf   uHrs;
+	    movwf   uni_Hrs;
 	    goto    FinCambia	   ;
 
 CompDecHrs movf    posicion,0;
-	    sublw   PosDecHrs;
+	    sublw   PosDec_Hrs;
 	    btfss   STATUS,Z		; Si Z=1 actualiza la variable del reloj
 	    goto    FinCambia;
 	    
 	    movf    valor,0		; Si no es ninguna lo guarda en la
-	    movwf   dHrs		; variable de las decenas de hrs
+	    movwf   de_Hrs		; variable de las decenas de hrs
 	    sublw   dos			; Compara si el valor escrito es '2'
 	    btfss   STATUS,Z;		
 	    goto    FinCambia		; Si Z=0 finaliza CambiaDato
@@ -883,7 +884,7 @@ CompDecHrs movf    posicion,0;
 	    call    comando;
 	    
 	    movlw   cero		; Si Z=1 pone a '0' unidades de hora
-	    movwf   uHrs;
+	    movwf   uni_Hrs;
 	    movwf   LCD;
 	    call    dato;
 
@@ -900,7 +901,7 @@ FinCambia  incf    posicion,1;
 ;========================================================
 BuscaPtos1 movf    posicion,0		; Copia la variable de posicion a W
 					; para saber si saltar o no los ':'
-	    sublw   Pos2ptos1		; Calcula (PosPuntos1 - W) = (h'06' - W)
+	    sublw   Pos2_ptos1		; Calcula (PosPuntos1 - W) = (h'06' - W)
 	    btfss   STATUS,Z		; Si Z=1 saltar una posicion mas
 	    goto    OtrosPtos1		; Si Z=0 comprueba segundos puntos
 	    incf    posicion,1		; Incremento extra de posicion
@@ -910,7 +911,7 @@ BuscaPtos1 movf    posicion,0		; Copia la variable de posicion a W
 	    return	;		
 	    
 OtrosPtos1 movf    posicion,0;
-	    sublw   Pos2ptos2		; Calcula (PosPuntos2 - W) = (h'09' - W)
+	    sublw   Pos2_ptos2		; Calcula (PosPuntos2 - W) = (h'09' - W)
 	    btfss   STATUS,Z		; Si Z=1 saltar una posicion mas
 	    return;
 	    incf    posicion,1		; Incremento extra de posicion
@@ -924,7 +925,7 @@ OtrosPtos1 movf    posicion,0;
 ;========================================================
 BuscaPtos2 movf    posicion,0		; Copia la variable de posicion a W
 					; para saber si saltar o no los ':'
-	    sublw   Pos2ptos1		; Calcula (PosPuntos1 - W) = (h'06' - W)
+	    sublw   Pos2_ptos1		; Calcula (PosPuntos1 - W) = (h'06' - W)
 	    btfss   STATUS,Z		; Si Z=1 saltar una posicion mas
 	    goto    OtrosPtos2		; Si Z=0 comprueba segundos puntos
 	    decf    posicion,1		; Decremento extra de posicion
@@ -934,7 +935,7 @@ BuscaPtos2 movf    posicion,0		; Copia la variable de posicion a W
 	    return	;		
 	    
 OtrosPtos2 movf    posicion,0;
-	    sublw   Pos2ptos2		; Calcula (PosPuntos2 - W) = (h'09' - W)
+	    sublw   Pos2_ptos2		; Calcula (PosPuntos2 - W) = (h'09' - W)
 	    btfss   STATUS,Z		; Si Z=1 saltar una posicion mas
 	    return;
 	    decf    posicion,1		; Decremento extra de posicion
@@ -944,25 +945,25 @@ OtrosPtos2 movf    posicion,0;
 	    return;
 ;========================================================	    
 ;===== Si la nueva posicion esta fuera del limite =======
-;============ derecho lo manda a PosDecHrs ==============
+;============ derecho lo manda a PosDec_Hrs ==============
 ;========================================================
 LimRight  movf    posicion,0		; Copia la variable de posicion a W
-	    sublw   PosLimRight		; Calcula (LimDer - W) = (h'0C' - W)
-	    btfss   STATUS,Z		; Si Z=1 mandar a PosDecHrs
+	    sublw   Pos_Lim_Dere		; Calcula (LimDer - W) = (h'0C' - W)
+	    btfss   STATUS,Z		; Si Z=1 mandar a PosDec_Hrs
 	    return;
-	    movlw   PosDecHrs;
+	    movlw   PosDec_Hrs;
 	    movwf   posicion;
 	    movwf   LCD;
 	    call    comando;
 	    goto    ScanKeys;
 ;========================================================	    
 ;======= Si la nueva posicion esta fuera del limite =====
-;============= izquiero lo manda a PosUniSeg ============	    
+;============= izquiero lo manda a PosUni_Seg ============	    
 LimLeft    movf    posicion,0		; Copia la variable de posicion a W
-	    sublw   PosLimLeft		; Calcula (LimIzq - W) = (h'03' - W)
-	    btfss   STATUS,Z		; Si Z=1 mandar a PosUniSeg
+	    sublw   Pos_Lim_Izq		; Calcula (LimIzq - W) = (h'03' - W)
+	    btfss   STATUS,Z		; Si Z=1 mandar a PosUni_Seg
 	    return;
-	    movlw   PosUniSeg;
+	    movlw   PosUni_Seg;
 	    movwf   posicion		; Guarda la nueva posicion
 	    movwf   LCD;
 	    call    comando;
@@ -978,7 +979,7 @@ Valido	    movf    valor,0		; Copia la variable de valor a W
 	    goto    CompTecl4		; Si Z=0 pregunta si es un '4'
 
 CompTecl3  movf    posicion,0		; Copia la variable de posicion a W
-	    sublw   PosDecHrs		; Calcula (PosDecHrs - W) = (h'04' - W)
+	    sublw   PosDec_Hrs		; Calcula (PosDec_Hrs - W) = (h'04' - W)
 	    btfss   STATUS,Z;		
 	    return			; Si Z=0 es valido
 	    goto    ScanKeys		; Si Z=1 ignora la tecla
@@ -989,16 +990,16 @@ CompTecl4  movf    valor,0		; Copia la variable de valor a W
 	    goto    CompTecl5		; Si Z=0 pregunta si es un '5'
 	    
 	    movf    posicion,0		; Copia la variable de posicion a W
-	    sublw   PosDecHrs		; Calcula (PosDecHrs - W) = (h'04' - W)
+	    sublw   PosDec_Hrs		; Calcula (PosDec_Hrs - W) = (h'04' - W)
 	    btfsc   STATUS,Z;		
 	    goto    ScanKeys		; Si Z=1 ignora la tecla
-					; Si Z=0 pregunta por PosUniHrs
+					; Si Z=0 pregunta por PosUni_Hrs
 	    movf    posicion,0;		
-	    sublw   PosUniHrs		; Calcula (PosUniHrs - W) = (h'05' - W)
+	    sublw   PosUni_Hrs		; Calcula (PosUni_Hrs - W) = (h'05' - W)
 	    btfss   STATUS,Z	;	
 	    return		;	; Si Z=0 es valido
-					; Si Z=1 pregunta por valor de dHrs
-	    movf    dHrs,0		; Carga el valor de dHrs
+					; Si Z=1 pregunta por valor de de_Hrs
+	    movf    de_Hrs,0		; Carga el valor de de_Hrs
 	    sublw   dos			; Revisa si es '2'
 	    btfss   STATUS,Z	;	
 	    return			; Si Z=0 es valido
@@ -1010,16 +1011,16 @@ CompTecl5  movf    valor,0		; Copia la variable de valor a W
 	    goto    CompTecl6		; Si Z=0 pregunta si es un '6'
 	    
 	    movf    posicion,0		; Copia la variable de posicion a W
-	    sublw   PosDecHrs		; Calcula (PosDecHrs - W) = (h'04' - W)
+	    sublw   PosDec_Hrs		; Calcula (PosDec_Hrs - W) = (h'04' - W)
 	    btfsc   STATUS,Z		
 	    goto    ScanKeys		; Si Z=1 ignora la tecla
 	    
-	    movf    posicion,0		; Copia la variable de dHrs a W
-	    sublw   PosUniHrs		; Calcula (PosUniHrs - W) = (h'05' - W)
+	    movf    posicion,0		; Copia la variable de de_Hrs a W
+	    sublw   PosUni_Hrs		; Calcula (PosUni_Hrs - W) = (h'05' - W)
 	    btfss   STATUS,Z	;	
 	    return			; Si Z=0 es valido
 
-	    movf    dHrs,0		; Carga el valor de dHrs
+	    movf    de_Hrs,0		; Carga el valor de de_Hrs
 	    sublw   dos			; Revisa si es '2'
 	    btfss   STATUS,Z	;	
 	    return			; Si Z=0 es valido
@@ -1031,27 +1032,27 @@ CompTecl6  movf    valor,0		; Copia la variable de valor a W
 	    goto    CompTecl7		; Si Z=0 pregunta si es un '7'
 	    
 	    movf    posicion,0		; Copia la variable de posicion a W
-	    sublw   PosDecHrs		; Calcula (PosDecHrs - W) = (h'04' - W)
+	    sublw   PosDec_Hrs		; Calcula (PosDec_Hrs - W) = (h'04' - W)
 	    btfsc   STATUS,Z	;	
 	    goto    ScanKeys		; Si Z=1 ignora la tecla
-					; Si Z=0 pregunta por PosUniHrs
+					; Si Z=0 pregunta por PosUni_Hrs
 	    movf    posicion,0	;	
-	    sublw   PosUniHrs		; Calcula (PosUniHrs - W) = (h'05' - W)
+	    sublw   PosUni_Hrs		; Calcula (PosUni_Hrs - W) = (h'05' - W)
 	    btfss   STATUS,Z	;	
 	    goto    NextComp1;
 	    
-	    movf    dHrs,0		; Carga el valor de dHrs
+	    movf    de_Hrs,0		; Carga el valor de de_Hrs
 	    sublw   dos			; Revisa si es '2'
 	    btfss   STATUS,Z;		
 	    return			; Si Z=0 es valido
 	    goto    ScanKeys		; Si Z=1 ignora tecla
 	    
-NextComp1  movf    posicion,0		; Copia la variable de dHrs a W
-	    sublw   PosDecMin		; Calcula (PosDecMin - W) = (h'07' - W)
+NextComp1  movf    posicion,0		; Copia la variable de de_Hrs a W
+	    sublw   PosDec_Min		; Calcula (PosDec_Min - W) = (h'07' - W)
 	    btfsc   STATUS,Z;
 	    goto    ScanKeys;
 	    
-	    movf    posicion,0		; Copia la variable de dHrs a W
+	    movf    posicion,0		; Copia la variable de de_Hrs a W
 	    sublw   PosDecSeg		; Calcula (PosDecSeg - W) = (h'0A' - W)
 	    btfss   STATUS,Z;
 	    return			; Si Z=0 es valido
@@ -1063,28 +1064,28 @@ CompTecl7  movf    valor,0		; Copia la variable de valor a W
 	    goto    CompTecl8		; Si Z=0 pregunta si es un '8'
 	    
 	    movf    posicion,0		; Copia la variable de posicion a W
-	    sublw   PosDecHrs		; Calcula (PosDecHrs - W) = (h'04' - W)
+	    sublw   PosDec_Hrs		; Calcula (PosDec_Hrs - W) = (h'04' - W)
 	    btfsc   STATUS,Z;		
 	    goto    ScanKeys		; Si Z=1 ignora la tecla
-					; Si Z=0 pregunta por PosUniHrs
+					; Si Z=0 pregunta por PosUni_Hrs
 	    movf    posicion,0		;
-	    sublw   PosUniHrs		; Calcula (PosUniHrs - W) = (h'05' - W)
+	    sublw   PosUni_Hrs		; Calcula (PosUni_Hrs - W) = (h'05' - W)
 	    btfss   STATUS,Z		;
 	    goto    NextComp2;
 	    
-	    movf    dHrs,0		; Carga el valor de dHrs
+	    movf    de_Hrs,0		; Carga el valor de de_Hrs
 	    sublw   dos			; Revisa si es '2'
 	    btfss   STATUS,Z;		
 	    return			; Si Z=0 es valido
 	    goto    ScanKeys		; Si Z=1 ignora tecla
 	    
-NextComp2  movf    posicion,0		; Copia la variable de dHrs a W
-	    sublw   PosDecMin		; Calcula (PosDecMin - W) = (h'07' - W)
+NextComp2  movf    posicion,0		; Copia la variable de de_Hrs a W
+	    sublw   PosDec_Min		; Calcula (PosDec_Min - W) = (h'07' - W)
 	    btfsc   STATUS,Z;
 	    goto    ScanKeys;
 	    
-	    movf    posicion,0		; Copia la variable de dHrs a W
-	    sublw   PosDecSeg		; Calcula (PosDecMin - W) = (h'07' - W)
+	    movf    posicion,0		; Copia la variable de de_Hrs a W
+	    sublw   PosDecSeg		; Calcula (PosDec_Min - W) = (h'07' - W)
 	    btfss   STATUS,Z;
 	    return			; Si Z=0 es valido
 	    goto    ScanKeys		; Si Z=1 ignora tecla	    
@@ -1095,28 +1096,28 @@ CompTecl8  movf    valor,0		; Copia la variable de valor a W
 	    goto    CompTecl9		; Si Z=0 pregunta si es un '9'
 	    
 	    movf    posicion,0		; Copia la variable de posicion a W
-	    sublw   PosDecHrs		; Calcula (PosDecHrs - W) = (h'04' - W)
+	    sublw   PosDec_Hrs		; Calcula (PosDec_Hrs - W) = (h'04' - W)
 	    btfsc   STATUS,Z;		
 	    goto    ScanKeys		; Si Z=1 ignora la tecla
-					; Si Z=0 pregunta por PosUniHrs
+					; Si Z=0 pregunta por PosUni_Hrs
 	    movf    posicion,0	;	
-	    sublw   PosUniHrs		; Calcula (PosUniHrs - W) = (h'05' - W)
+	    sublw   PosUni_Hrs		; Calcula (PosUni_Hrs - W) = (h'05' - W)
 	    btfss   STATUS,Z	;	
 	    goto    NextComp3;
 	    
-	    movf    dHrs,0		; Carga el valor de dHrs
+	    movf    de_Hrs,0		; Carga el valor de de_Hrs
 	    sublw   dos			; Revisa si es '2'
 	    btfss   STATUS,Z;		
 	    return			; Si Z=0 es valido
 	    goto    ScanKeys		; Si Z=1 ignora tecla
 	    
-NextComp3  movf    posicion,0		; Copia la variable de dHrs a W
-	    sublw   PosDecMin		; Calcula (PosDecMin - W) = (h'07' - W)
+NextComp3  movf    posicion,0		; Copia la variable de de_Hrs a W
+	    sublw   PosDec_Min		; Calcula (PosDec_Min - W) = (h'07' - W)
 	    btfsc   STATUS,Z;
 	    goto    ScanKeys;
 	    
-	    movf    posicion,0		; Copia la variable de dHrs a W
-	    sublw   PosDecSeg		; Calcula (PosDecMin - W) = (h'07' - W)
+	    movf    posicion,0		; Copia la variable de de_Hrs a W
+	    sublw   PosDecSeg		; Calcula (PosDec_Min - W) = (h'07' - W)
 	    btfss   STATUS,Z;
 	    return		;	; Si Z=0 es valido
 	    goto    ScanKeys		; Si Z=1 ignora tecla	    
@@ -1127,28 +1128,28 @@ CompTecl9  movf    valor,0		; Copia la variable de valor a W
 	    goto    ScanKeys		; Si Z=0 sigue escaneando
 	    
 	    movf    posicion,0		; Copia la variable de posicion a W
-	    sublw   PosDecHrs		; Calcula (PosDecHrs - W) = (h'04' - W)
+	    sublw   PosDec_Hrs		; Calcula (PosDec_Hrs - W) = (h'04' - W)
 	    btfsc   STATUS,Z	;	
 	    goto    ScanKeys		; Si Z=1 ignora la tecla
-					; Si Z=0 pregunta por PosUniHrs
+					; Si Z=0 pregunta por PosUni_Hrs
 	    movf    posicion,0	;	
-	    sublw   PosUniHrs		; Calcula (PosUniHrs - W) = (h'05' - W)
+	    sublw   PosUni_Hrs		; Calcula (PosUni_Hrs - W) = (h'05' - W)
 	    btfss   STATUS,Z	;	
 	    goto    NextComp4;
 	    
-	    movf    dHrs,0		; Carga el valor de dHrs
+	    movf    de_Hrs,0		; Carga el valor de de_Hrs
 	    sublw   dos			; Revisa si es '2'
 	    btfss   STATUS,Z;		
 	    return			; Si Z=0 es valido
 	    goto    ScanKeys		; Si Z=1 ignora tecla
 	    
-NextComp4  movf    posicion,0		; Copia la variable de dHrs a W
-	    sublw   PosDecMin		; Calcula (PosDecMin - W) = (h'07' - W)
+NextComp4  movf    posicion,0		; Copia la variable de de_Hrs a W
+	    sublw   PosDec_Min		; Calcula (PosDec_Min - W) = (h'07' - W)
 	    btfsc   STATUS,Z;
 	    goto    ScanKeys;
 	    
-	    movf    posicion,0		; Copia la variable de dHrs a W
-	    sublw   PosDecSeg		; Calcula (PosDecMin - W) = (h'07' - W)
+	    movf    posicion,0		; Copia la variable de de_Hrs a W
+	    sublw   PosDecSeg		; Calcula (PosDec_Min - W) = (h'07' - W)
 	    btfss   STATUS,Z;
 	    return			; Si Z=0 es valido
 	    goto    ScanKeys		; Si Z=1 ignora tecla	    
