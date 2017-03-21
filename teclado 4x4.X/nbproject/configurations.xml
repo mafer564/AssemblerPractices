@@ -19,6 +19,7 @@
       <itemPath>Makefile</itemPath>
     </logicalFolder>
     <itemPath>codigo.asm</itemPath>
+    <itemPath>codigo bueno.asm</itemPath>
   </logicalFolder>
   <projectmakefile>Makefile</projectmakefile>
   <confs>

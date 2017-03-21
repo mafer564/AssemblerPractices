@@ -51,17 +51,17 @@ OBJECTDIR=build/${CND_CONF}/${IMAGE_TYPE}
 DISTDIR=dist/${CND_CONF}/${IMAGE_TYPE}
 
 # Source Files Quoted if spaced
-SOURCEFILES_QUOTED_IF_SPACED=codigo.asm
+SOURCEFILES_QUOTED_IF_SPACED=codigo.asm "codigo bueno.asm"
 
 # Object Files Quoted if spaced
-OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/codigo.o
-POSSIBLE_DEPFILES=${OBJECTDIR}/codigo.o.d
+OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/codigo.o "${OBJECTDIR}/codigo bueno.o"
+POSSIBLE_DEPFILES=${OBJECTDIR}/codigo.o.d "${OBJECTDIR}/codigo bueno.o.d"
 
 # Object Files
-OBJECTFILES=${OBJECTDIR}/codigo.o
+OBJECTFILES=${OBJECTDIR}/codigo.o ${OBJECTDIR}/codigo\ bueno.o
 
 # Source Files
-SOURCEFILES=codigo.asm
+SOURCEFILES=codigo.asm codigo bueno.asm
 
 
 CFLAGS=
@@ -96,6 +96,14 @@ ${OBJECTDIR}/codigo.o: codigo.asm  nbproject/Makefile-${CND_CONF}.mk
 	@${DEP_GEN} -d "${OBJECTDIR}/codigo.o"
 	@${FIXDEPS} "${OBJECTDIR}/codigo.o.d" $(SILENT) -rsi ${MP_AS_DIR} -c18 
 	
+${OBJECTDIR}/codigo\ bueno.o: codigo\ bueno.asm  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} "${OBJECTDIR}/codigo bueno.o".d 
+	@${RM} "${OBJECTDIR}/codigo bueno.o" 
+	@${FIXDEPS} dummy.d -e "${OBJECTDIR}/codigo bueno.err" $(SILENT) -c ${MP_AS} $(MP_EXTRA_AS_PRE) -d__DEBUG -d__MPLAB_DEBUGGER_PICKIT2=1 -q -p$(MP_PROCESSOR_OPTION) -u  -l\\\"${OBJECTDIR}/codigo bueno.lst\\\" -e\\\"${OBJECTDIR}/codigo bueno.err\\\" $(ASM_OPTIONS)    -o\\\"${OBJECTDIR}/codigo bueno.o\\\" \\\"codigo bueno.asm\\\" 
+	@${DEP_GEN} -d "${OBJECTDIR}/codigo bueno.o"
+	@${FIXDEPS} "${OBJECTDIR}/codigo bueno.o.d" $(SILENT) -rsi ${MP_AS_DIR} -c18 
+	
 else
 ${OBJECTDIR}/codigo.o: codigo.asm  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} "${OBJECTDIR}" 
@@ -104,6 +112,14 @@ ${OBJECTDIR}/codigo.o: codigo.asm  nbproject/Makefile-${CND_CONF}.mk
 	@${FIXDEPS} dummy.d -e "${OBJECTDIR}/codigo.err" $(SILENT) -c ${MP_AS} $(MP_EXTRA_AS_PRE) -q -p$(MP_PROCESSOR_OPTION) -u  -l\\\"${OBJECTDIR}/codigo.lst\\\" -e\\\"${OBJECTDIR}/codigo.err\\\" $(ASM_OPTIONS)    -o\\\"${OBJECTDIR}/codigo.o\\\" \\\"codigo.asm\\\" 
 	@${DEP_GEN} -d "${OBJECTDIR}/codigo.o"
 	@${FIXDEPS} "${OBJECTDIR}/codigo.o.d" $(SILENT) -rsi ${MP_AS_DIR} -c18 
+	
+${OBJECTDIR}/codigo\ bueno.o: codigo\ bueno.asm  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} "${OBJECTDIR}/codigo bueno.o".d 
+	@${RM} "${OBJECTDIR}/codigo bueno.o" 
+	@${FIXDEPS} dummy.d -e "${OBJECTDIR}/codigo bueno.err" $(SILENT) -c ${MP_AS} $(MP_EXTRA_AS_PRE) -q -p$(MP_PROCESSOR_OPTION) -u  -l\\\"${OBJECTDIR}/codigo bueno.lst\\\" -e\\\"${OBJECTDIR}/codigo bueno.err\\\" $(ASM_OPTIONS)    -o\\\"${OBJECTDIR}/codigo bueno.o\\\" \\\"codigo bueno.asm\\\" 
+	@${DEP_GEN} -d "${OBJECTDIR}/codigo bueno.o"
+	@${FIXDEPS} "${OBJECTDIR}/codigo bueno.o.d" $(SILENT) -rsi ${MP_AS_DIR} -c18 
 	
 endif
 
