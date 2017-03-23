@@ -1,53 +1,38 @@
-;_ _;INSTITUTO POLITECNICO NACIONAL
+;INSTITUTO POLITECNICO NACIONAL
 ;CECYT 9 "JUAN DE DIOS BATIZ"
-;
 ;PRACTICA 2
 ;INGRESO DE DATOS AL SISTEMA CON TECLADO MATRICIAL 4X4. 
-;
-;GRUPO: 6IM2  EQUIPO:
-;
+;GRUPO:   EQUIPO:
 ;INTEGRANTES:
-;VARGAS ESPINO CARLOS HASSAN
-;PEREZ JIMENEZ MADELIN FERNANDA    
+;
 ;COMENTARIO DE LO QUE EL PROGRAMA EJECUTARA: 
-;El programa inicializara un reloj tipo militar de 24 hrs.
 ;
-; Usa cristal de 4 MHz _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
- ;
- list p=16f877A;
-
- #include "C:\Program Files (x86)\Microchip\MPASM Suite\p16f877a.inc";
+;
+list p=16f877A;
+#include "C:\Program Files (x86)\Microchip\MPASM Suite\p16f877a.inc";
 ;Bits de configuración.
-
- __config _XT_OSC & _WDT_OFF & _PWRTE_ON & _BODEN_OFF & _LVP_OFF & _CP_OFF; All
- 
-;_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
-;
-;fosc = 4.00 Mhz.
-;Ciclo de trabajo del pic = (1/fosc)*4= 1 us. 
+ __config _XT_OSC & _WDT_OFF & _PWRTE_ON & _BODEN_OFF & _LVP_OFF & _CP_OFF; 
 ;_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _INDF
-;
 ; Registros de proposito general banco 0 de memoria RAM.
-;
 ; Registros propios de estructura del programa
 ; Variables 0
-res_w    					equ		0x20; //
-res_status   				equ		0x21; //
-res_pclath 					equ		0x22; //
-res_fsr                     equ		0x23; //
-presc_1                     equ		0x24; //
-presc_2                     equ		0x25; //
-cont_milis                  equ     0x26; //
-banderas                    equ		0x27; //
-us                          equ		0x28; //
-ds							equ     0x29; //
-um							equ     0x2a; //
-dm							equ     0x2b; //
-uh							equ     0x2c; //
-dh							equ		0x2d; //
-var_teclado					equ		0x2e; //
-var_tecopri					equ		0x2f; //
-var_tecla					equ		0x30; //
+res_w				equ		0x20; //
+res_status 			equ		0x21; //
+res_pclath 			equ		0x22; //
+res_fsr		                 equ		0x23; //
+presc_1	                        equ		0x24; //
+presc_2		                equ		0x25; //
+cont_milis	                equ	         0x26; //
+banderas		        equ		0x27; //
+us			        equ		0x28; //
+ds				equ	         0x29; //
+um				equ		0x2a; //
+dm				equ		 0x2b; //
+uh				equ		0x2c; //
+dh				equ		0x2d; //
+var_teclado			equ		0x2e; //
+var_tecopri			equ		0x2f; //
+var_tecla			equ		0x30; //
 
 ;-----------------------------------------------------------------------
 ;Constantes 
@@ -83,8 +68,8 @@ sin_ubd7                    equ     .7;
   ;PUERTO A.	
 ENABLE_LCD					equ			.0;//activa el modo de sincronizacion de tiempo se activa en modo bajo (0)
 RS_LCD   					equ			.1;//selecciona el digito buscado
-sin_usoRA2    				equ			.2;//se utiliza para aumentar el digito requerido 
-Sin_usoRA3     				equ			.3;//se utiliza como bit de regresion en el demultiplexeo del 74139
+sin_usoRA2					equ			.2;//se utiliza para aumentar el digito requerido 
+Sin_usoRA3					equ			.3;//se utiliza como bit de regresion en el demultiplexeo del 74139
 Sin_UsoRA4					equ			.4;//se utiliza para elegir entre utilizar 8 o 4 matrices (si 0=4matrices o 1=8matrices) 
 Sin_UsoRA5					equ			.5;//Sin Uso RA5
 	
