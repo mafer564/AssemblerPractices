@@ -4,10 +4,7 @@
 ;INGRESO DE DATOS AL SISTEMA CON TECLADO MATRICIAL 4X4. 
 ;GRUPO:   EQUIPO:
 ;INTEGRANTES:
-;
 ;COMENTARIO DE LO QUE EL PROGRAMA EJECUTARA: 
-;
-;
 list p=16f877A;
 #include "C:\Program Files (x86)\Microchip\MPASM Suite\p16f877a.inc";
 ;Bits de configuración.
@@ -33,7 +30,6 @@ dh				equ		0x2d; //
 var_teclado			equ		0x2e; //
 var_tecopri			equ		0x2f; //
 var_tecla			equ		0x30; //
-
 ;-----------------------------------------------------------------------
 ;Constantes 
 No_hay_tecla				equ		0xF0;
@@ -96,7 +92,6 @@ d4_lcd						equ		.4; // Segmento 5 del bus de caracteres.
 d5_lcd						equ		.5; // Segmento 6 del bus de caracteres.
 d6_lcd						equ		.6; // Segmento 7 del bus de caracteres.
 d7_lcd						equ		.7; // Segmento 8 del bus de caracteres.
-
 
 progc						equ b'00000000'; // Programación Inicial del puerto C. Habilitadas como salidas.
 

@@ -12,7 +12,7 @@
 
 ;#INCLUDE "C:\ARCHIVOS DE PROGRAMA\MICROCHIP\MPASM SUITE\P16F877A.INC";
 #INCLUDE "C:\PROGRAM FILES (X86)\MICROCHIP\MPASM SUITE\P16F877A.INC";
-
+    
 ;BITS DE CPONFIGURACIÓN
   __CONFIG _XT_OSC & _WDT_OFF & _PWRTE_ON & _BODEN_OFF & _LVP_OFF & _CP_OFF;
 
@@ -74,24 +74,24 @@ CarE_col3	EQU B'10010010';
 CarE_col4	EQU B'10010010';
 CarE_col5	EQU B'10000010';
 	
-	
-Imagen1_col1	EQU 
-Imagen1_col2	EQU
-Imagen1_col3	EQU
-Imagen1_col4	EQU
-Imagen1_col5	EQU
+	 
+Imagen1_col1	EQU   0XEF;
+Imagen1_col2	EQU	0X95;
+Imagen1_col3	EQU	0XE2;
+Imagen1_col4	EQU	0X95;
+Imagen1_col5	EQU	0XEF;
 
-Imagen2_col1	EQU
-Imagen2_col2	EQU
-Imagen2_col3	EQU
-Imagen2_col4	EQU
-Imagen2_col5	EQU
+Imagen2_col1	EQU	0XFB;
+Imagen2_col2	EQU	0X95;
+Imagen2_col3	EQU	0XE2;
+Imagen2_col4	EQU	0X95;
+Imagen2_col5	EQU	0XFB;
 	
-Imagen3_col1	EQU
-Imagen3_col2	EQU
-Imagen3_col3	EQU
-Imagen3_col4	EQU
-Imagen3_col5	EQU
+Imagen3_col1	EQU	0XF7;
+Imagen3_col2	EQU	0X97;
+Imagen3_col3	EQU	0XEB;
+Imagen3_col4	EQU	0X97;
+Imagen3_col5	EQU	0XF7;
 	
 
 
@@ -709,7 +709,7 @@ CAR_E			CLRF PORTB;
 
 Imagen_1			CLRF PORTB;
 
-			MOVLW 0XEF;
+			MOVLW Imagen1_col1;
 			MOVWF PORTC;
 			MOVLW act_col1;
 			MOVWF PORTB;
@@ -717,7 +717,7 @@ Imagen_1			CLRF PORTB;
 			CALL retardo;
 			CLRF PORTB;
 
-			MOVLW 0X95;
+			MOVLW Imagen1_col2;
 			MOVWF PORTC;			
 			MOVLW act_col2;
 			MOVWF PORTB;
@@ -725,7 +725,7 @@ Imagen_1			CLRF PORTB;
 			CALL retardo;
 			CLRF PORTB;
 
-			MOVLW 0XE2;
+			MOVLW Imagen1_col3;
 			MOVWF PORTC;		
 			MOVLW act_col3;
 			MOVWF PORTB;
@@ -733,7 +733,7 @@ Imagen_1			CLRF PORTB;
 			CALL retardo;
 			CLRF PORTB;
 
-			MOVLW 0X95;
+			MOVLW Imagen1_col4;
 			MOVWF PORTC;			
 			MOVLW act_col4;
 			MOVWF PORTB;
@@ -741,7 +741,7 @@ Imagen_1			CLRF PORTB;
 			CALL retardo;
 			CLRF PORTB;
 
-			MOVLW 0XEF;
+			MOVLW Imagen1_col5;
 			MOVWF PORTC;			
 			MOVLW act_col5;
 			MOVWF PORTB;
@@ -751,7 +751,7 @@ Imagen_1			CLRF PORTB;
 
 Imagen_2		CLRF PORTB;
 
-			MOVLW 0XFB;
+			MOVLW Imagen2_col1;
 			MOVWF PORTC;
 			MOVLW act_col1;
 			MOVWF PORTB;
@@ -759,7 +759,7 @@ Imagen_2		CLRF PORTB;
 			CALL retardo;
 			CLRF PORTB;
 
-			MOVLW 0X95;
+			MOVLW Imagen2_col2;
 			MOVWF PORTC;			
 			MOVLW act_col2;
 			MOVWF PORTB;
@@ -767,7 +767,7 @@ Imagen_2		CLRF PORTB;
 			CALL retardo;
 			CLRF PORTB;
 
-			MOVLW 0XE2;
+			MOVLW Imagen2_col3;
 			MOVWF PORTC;		
 			MOVLW act_col3;
 			MOVWF PORTB;
@@ -775,7 +775,7 @@ Imagen_2		CLRF PORTB;
 			CALL retardo;
 			CLRF PORTB;
 
-			MOVLW 0X95;
+			MOVLW Imagen2_col4;
 			MOVWF PORTC;			
 			MOVLW act_col4;
 			MOVWF PORTB;
@@ -783,7 +783,7 @@ Imagen_2		CLRF PORTB;
 			CALL retardo;
 			CLRF PORTB;
 
-			MOVLW 0XFB;
+			MOVLW Imagen2_col5;
 			MOVWF PORTC;			
 			MOVLW act_col5;
 			MOVWF PORTB;
@@ -793,7 +793,7 @@ Imagen_2		CLRF PORTB;
 
 Imagen_3		CLRF PORTB;
 
-			MOVLW 0XF7;
+			MOVLW Imagen3_col1;
 			MOVWF PORTC;
 			MOVLW act_col1;
 			MOVWF PORTB;
@@ -801,7 +801,7 @@ Imagen_3		CLRF PORTB;
 			CALL retardo;
 			CLRF PORTB;
 
-			MOVLW 0X97;
+			MOVLW Imagen3_col2;
 			MOVWF PORTC;			
 			MOVLW act_col2;
 			MOVWF PORTB;
@@ -809,7 +809,7 @@ Imagen_3		CLRF PORTB;
 			CALL retardo;
 			CLRF PORTB;
 
-			MOVLW 0XEB;
+			MOVLW Imagen3_col3;
 			MOVWF PORTC;		
 			MOVLW act_col3;
 			MOVWF PORTB;
@@ -817,7 +817,7 @@ Imagen_3		CLRF PORTB;
 			CALL retardo;
 			CLRF PORTB;
 
-			MOVLW 0X97;
+			MOVLW Imagen3_col4;
 			MOVWF PORTC;			
 			MOVLW act_col4;
 			MOVWF PORTB;
@@ -825,7 +825,7 @@ Imagen_3		CLRF PORTB;
 			CALL retardo;
 			CLRF PORTB;
 
-			MOVLW 0XF7;
+			MOVLW Imagen3_col5;
 			MOVWF PORTC;			
 			MOVLW act_col5;
 			MOVWF PORTB;
