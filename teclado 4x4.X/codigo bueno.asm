@@ -384,17 +384,17 @@ barre_teclado			   	bsf portb, Act_ren4;
 							movlw Tec_1;
 							xorwf Var_teclado,w;
 							btfsc status,z;
-							goto Fue_tec1;
+							goto tec1;
 							
 							movlw Tec_2;
 							xorwf Var_teclado,w;
 							btfsc status,z;
-							goto Fue_tec2;
+							goto tec2;
 							
 							movlw Tec_3;
 							xorwf Var_teclado,w;
 							btfsc status,z;
-							goto Fue_tec3;
+							goto tec3;
 							
 							movlw Tec_A;
 							xorwf Var_teclado,w;
@@ -419,17 +419,17 @@ Sig_ran2					bsf portb, Act_ren1;
 							movlw Tec_4;
 							xorwf Var_teclado,w;
 							btfsc status,z;
-							goto Fue_tec4;
+							goto tec4;
 							
 							movlw Tec_5;
 							xorwf Var_teclado,w;
 							btfsc status,z;
-							goto Fue_tec5;
+							goto tec5;
 							
 							movlw Tec_6;
 							xorwf Var_teclado,w;
 							btfsc status,z;
-							goto Fue_tec6;
+							goto tec6;
 							
 							movlw Tec_B;
 							xorwf Var_teclado,w;
@@ -454,17 +454,17 @@ Sig_ran3					bsf portb, Act_ren2;
 							movlw Tec_7;
 							xorwf Var_teclado,w;
 							btfsc status,z;
-							goto Fue_tec7;
+							goto tec7;
 							
 							movlw Tec_8;
 							xorwf Var_teclado,w;
 							btfsc status,z;
-							goto Fue_tec8;
+							goto tec8;
 							
 							movlw Tec_9;
 							xorwf Var_teclado,w;
 							btfsc status,z;
-							goto Fue_tec9;
+							goto tec9;
 							
 							movlw Tec_C;
 							xorwf Var_teclado,w;
@@ -494,7 +494,7 @@ Sig_ran4					bsf portb, Act_ren3;
 							movlw Tec_0;
 							xorwf Var_teclado,w;
 							btfsc status,z;
-							goto Fue_tec0;
+							goto tec0;
 							
 							movlw Tec_F;
 							xorwf Var_teclado,w;
@@ -508,43 +508,43 @@ Sig_ran4					bsf portb, Act_ren3;
 							
 							nop
 							
-Fue_tec0					movlw '0'
+tec0					movlw '0'
 							movwf var_tecla
 							goto Sal_barreteo;
 							
-Fue_tec1					movlw '1';
+tec1					movlw '1';
 							movwf var_tecla
 							goto Sal_barreteo;
 							
-Fue_tec2					movlw '2';
+tec2					movlw '2';
 							movwf var_tecla
 							goto Sal_barreteo;
 							
-Fue_tec3					movlw '3';
+tec3					movlw '3';
 							movwf var_tecla
 							goto Sal_barreteo;
 							
-Fue_tec4					movlw '4';
+tec4					movlw '4';
 							movwf var_tecla
 							goto Sal_barreteo;
 							
-Fue_tec5					movlw '5';
+tec5					movlw '5';
 							movwf var_tecla
 							goto Sal_barreteo;
 							
-Fue_tec6					movlw '6';
+tec6					movlw '6';
 							movwf var_tecla
 							goto Sal_barreteo;
 							
-Fue_tec7					movlw '7';
+tec7					movlw '7';
 							movwf var_tecla
 							goto Sal_barreteo;
 							
-Fue_tec8					movlw '8';
+tec8					movlw '8';
 							movwf var_tecla
 							goto Sal_barreteo;
 							
-Fue_tec9					movlw '9';
+tec9					movlw '9';
 							movwf var_tecla
 							goto Sal_barreteo;
 							
