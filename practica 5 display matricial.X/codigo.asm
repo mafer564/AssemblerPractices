@@ -31,7 +31,7 @@ L		EQU 0X22;
 presc_1	        EQU 0x23; //
 presc_2		EQU 0x24; //
 cont_milis	EQU 0x25; /
-	
+veces		EQU 0x26;	
 act_col1         EQU 0X01;
 act_col2         EQU 0X02;
 act_col3         EQU 0X04;
@@ -40,39 +40,39 @@ act_col5         EQU 0X10;
 des_columnas	 EQU 0X00;
 
 ;CONSTANTES	   
-CarA_col1	EQU 0X03;
-CarA_col2	EQU 0X6d;
-CarA_col3	EQU 0X6e;
-CarA_col4	EQU 0X6d;
-CarA_col5	EQU 0X03;
+CarA_col1	EQU B'11111100';
+CarA_col2	EQU B'00010010';
+CarA_col3	EQU B'00010010';
+CarA_col4	EQU B'00010010';
+CarA_col5	EQU B'11111100';
 
 ;corregir direcciones	   
-CarB_col1	EQU 0X03;
-CarB_col2	EQU 0X6d;
-CarB_col3	EQU 0X6e;
-CarB_col4	EQU 0X6d;
-CarB_col5	EQU 0X03;
+CarB_col1	EQU B'11111110';
+CarB_col2	EQU B'10010010';
+CarB_col3	EQU B'10010010';
+CarB_col4	EQU B'10010010';
+CarB_col5	EQU B'01101100';
 	
 	   
-CarC_col1	EQU 0X03;
-CarC_col2	EQU 0X6d;
-CarC_col3	EQU 0X6e;
-CarC_col4	EQU 0X6d;
-CarC_col5	EQU 0X03;
+CarC_col1	EQU B'01111100';
+CarC_col2	EQU B'10000010';
+CarC_col3	EQU B'10000010';
+CarC_col4	EQU B'10000010';
+CarC_col5	EQU B'01000100';
 	
 	   
-CarD_col1	EQU 0X03;
-CarD_col2	EQU 0X6d;
-CarD_col3	EQU 0X6e;
-CarD_col4	EQU 0X6d;
-CarD_col5	EQU 0X03;
+CarD_col1	EQU B'11111110';
+CarD_col2	EQU B'10000010';
+CarD_col3	EQU B'10000010';
+CarD_col4	EQU B'10000010';
+CarD_col5	EQU B'01111100';
 
 	   
-CarE_col1	EQU 0X03;
-CarE_col2	EQU 0X6d;
-CarE_col3	EQU 0X6e;
-CarE_col4	EQU 0X6d;
-CarE_col5	EQU 0X03;
+CarE_col1	EQU B'11111110';
+CarE_col2	EQU B'10010010';
+CarE_col3	EQU B'10010010';
+CarE_col4	EQU B'10010010';
+CarE_col5	EQU B'10000010';
 	
 	
 Imagen1_col1	EQU 
@@ -112,7 +112,7 @@ Act_col1          EQU           .0;//Activacion de columna 1.
 Act_col2          EQU           .1;//Activacion de columna 2.
 Act_col3          EQU           .2;//Activacion de columna 3.
 Act_col4          EQU           .3;//Activacion de columna 4.
-Act_col4          EQU           .4;//Activacion de columna 5.
+Act_col5          EQU           .4;//Activacion de columna 5.
 
 PROGB            EQU   B'11111000'; //PROGRAMACIÓN INICIAL DEL PUERTO B.
 
@@ -121,9 +121,9 @@ Act_Ren1        EQU          .0; ; //CaracterA col1.
 Act_Ren2	EQU          .1;  // CaracterA col2
 Act_Ren3        EQU          .2; //  CaracterA col3.
 Act_Ren4        EQU          .3; //  CaracterA col4.
-Act_Ren5        EQU          .4; // SIN USORC4.
-SIN_USORC5       EQU          .5; // SIN USORC5.
-SIN_USORC6       EQU          .6; // SIN USORC6.
+Act_Ren5        EQU          .4; // SIN USORact_col5.
+Act_Ren6	EQU          .5; // SIN USORC5.
+Act_Ren7       EQU          .6; // SIN USORC6.
 SIN_USORC7       EQU          .7; // SIN USORC7.
 
 PROGC            EQU    B'11111000'; //PROGRAMACIÓN INICIAL DEL PUERTO C.
@@ -206,7 +206,8 @@ SIG_INT				CLRF PRESC_1;
 					GOTO SAL_RUTINT;
 					CLRF PRESC_1;
 					CLRF PRESC_2;
-		
+					 INCF CONT_SEG,F;
+					 
 SAL_RUTEXT			BSF BANDERAS,BAN_INT;
 
 SAL_RUTINT			BCF INTCON,T0IF; 
@@ -251,335 +252,676 @@ PROG_INI			BSF STATUS,RP0;
 					MOVLW 0Xff;
 					MOVWF PORTC ^0X00;
 
-					CLRF BANDERAS;
-
-					MOVLW 0XFF; '0' IMPORTANTE
-					MOVWF U_SEGUNDOS;
-					MOVWF D_SEGUNDOS;
-					MOVWF U_MINUTOS;
-					MOVWF D_MINUTOS;
-					MOVWF U_HORAS;
-					MOVWF D_HORAS;
-											
+									
 					RETURN;
 
 ;== PROGRAMA PRINCIPAL ==
 
-loopP	    nop;
-	    clrf cont_seg;
-	    clrf apuntador;
-	    
-	   movf apuntador;
-	   movwf portc;
-	   movlw Act_col1;
-	   movwf portb;
-	   call retardo;
-	   movwf des_columnas 
-	   movwf portb;
-	   call retardo;
+
+PROG_PRIN 	CALL PROG_INI;					
+loopP	 nop;
+	CALL CARACTERES;
+	CALL POS12;
+	CALL POS13;
+	GOTO LOOP_PRIN;
+	
+caracter	clrf cont_seg;
+TA		call Car_A
+		MOVLW .5;
+		XORWF CONT_SEG,W;
+		BTFSS STATUS,Z;
+		GOTO TA;
+		CLRF CONT_SEG;
+
+TB		CALL CAR_B;
+		MOVLW .5;
+		XORWF CONT_SEG,W;
+		BTFSS STATUS,Z;
+		GOTO TB;
+
+TC		CALL CAR_C;
+		MOVLW .5;
+		XORWF CONT_SEG,W;
+		BTFSS STATUS,Z;
+		GOTO TC;	    
+
+TD		CALL CAR_D;
+		MOVLW .5;
+		XORWF CONT_SEG,W;
+		BTFSS STATUS,Z;
+		GOTO TD;
+
+TE		CALL CAR_E;
+		MOVLW .5;
+		XORWF CONT_SEG,W;
+		BTFSS STATUS,Z;
+		GOTO TE;
+	
+CAR_A		CLRF PORTB;
+
+		MOVLW CarA_col1;
+		MOVWF PORTC;
+		MOVLW act_col1;
+		MOVWF PORTB;
+
+		CALL retardo;
+		CLRF PORTB;
+
+		MOVLW CarA_col2;
+		MOVWF PORTC;			
+		MOVLW act_col2;
+		MOVWF PORTB;
+
+		CALL retardo;
+		CLRF PORTB;
+		MOVLW CarA_col3;
+		MOVWF PORTC;		
+		MOVLW act_col3;
+		MOVWF PORTB;
+
+		CALL retardo;
+		CLRF PORTB;
+
+		MOVLW CarA_col4;
+		MOVWF PORTC;			
+		MOVLW act_col4;
+		MOVWF PORTB;
+
+		CALL retardo;
+		CLRF PORTB;
+
+		MOVLW CarA_col5;
+		MOVWF PORTC;			
+		MOVLW act_col5;
+		MOVWF PORTB;
+
+		CALL retardo;
+		RETURN;
+		
+	; movf apuntador;
+	   ;movwf portc;
+	   ;movlw Act_col1;
+	   ;movwf portb;
+	;   call retardo;
+	 ;  movwf des_columnas 
+	  ; movwf portb;
+	   ;call retardo;
 	   
-	   movlw CarA_col2;
-	   movwf portc;
-	   movlw Act_col2;
-	   movwf portb;
-	   call retardo;
-	   movlw des_columnas
+	   ;movlw CarA_col2;
+	   ;movwf portc;
+	   ;movlw Act_col2;
+	   ;movwf portb;
+	   ;call retardo;
+	   ;movlw des_columnas
 	   
-	   movlw CarA_col3;
-	   movwf portc;
-	   movlw Act_col3;
-	   movwf portb;
-	   call retardo;
+	   ;movlw CarA_col3;
+	   ;movwf portc;
+	   ;movlw Act_col3;
+	   ;movwf portb;
+	   ;call retardo;
 	   
-	   movlw CarA_col4;
-	   movwf portc;
-	   movlw Act_col4;
-	   movwf portb;
-	   call retardo;
+	  ; movlw CarA_col4;
+	   ;movwf portc;
+	   ;movlw Act_col4;
+	   ;movwf portb;
+	   ;call retardo;
 	   
-	   movlw CarA_col5;
-	   movwf portc;
-	   movlw Act_col5;
-	   movwf portb;
-	   call retardo;
-	   movlw des_columnas;
+	   ;movlw CarA_col5;
+	   ;movwf portc;
+	   ;movlw Act_col5;
+	   ;movwf portb;
+	   ;call retardo;
+	   ;movlw des_columnas;
 	   
 	   ;CARACTER B
-	   clrf cont_seg;
-	    clrf apuntador;
+CAR_B			CLRF PORTB;
+
+			MOVLW CarB_col1;
+			MOVWF PORTC;
+			MOVLW act_col1;
+			MOVWF PORTB;
+
+			CALL retardo;
+			CLRF PORTB;
+
+			MOVLW CarB_col2;
+			MOVWF PORTC;			
+			MOVLW act_col2;
+			MOVWF PORTB;
+
+			CALL retardo;
+			CLRF PORTB;
+
+			MOVLW CarB_col3;
+			MOVWF PORTC;		
+			MOVLW act_col3;
+			MOVWF PORTB;
+
+			CALL retardo;
+			CLRF PORTB;
+
+			MOVLW CarB_col4;
+			MOVWF PORTC;			
+			MOVLW act_col4;
+			MOVWF PORTB;
+
+			CALL retardo;
+			CLRF PORTB;
+
+			MOVLW CarB_col5;
+			MOVWF PORTC;			
+			MOVLW act_col5;
+			MOVWF PORTB;
+
+			CALL retardo;
+			RETURN;
+
+	   ;clrf cont_seg;
+	    ;clrf apuntador;
 	    
-	   movf apuntador;
-	   movwf portc;
-	   movlw Act_col1;
-	   movwf portb;
-	   call retardo;
-	   movwf des_columnas 
-	   movwf portb;
-	   call retardo;
+	   ;movf apuntador;
+	   ;movwf portc;
 	   
-	   movlw CarB_col2;
-	   movwf portc;
-	   movlw Act_col2;
-	   movwf portb;
-	   call retardo;
-	   movlw des_columnas
+	   ;movlw Act_col1;
+	   ;movwf portb;
+	   ;call retardo;
+	   ;movwf des_columnas 
 	   
-	   movlw CarB_col3;
-	   movwf portc;
-	   movlw Act_col3;
-	   movwf portb;
-	   call retardo;
+	   ;movwf portb;
+	   ;call retardo;
 	   
-	   movlw CarB_col4;
-	   movwf portc;
-	   movlw Act_col4;
-	   movwf portb;
-	   call retardo;
+	   ;movlw CarB_col2;
+	   ;movwf portc;
+	   ;movlw Act_col2;
 	   
-	   movlw CarB_col5;
-	   movwf portc;
-	   movlw Act_col5;
-	   movwf portb;
-	   call retardo;
-	   movlw des_columnas;
+	   ;movwf portb;
+	   ;call retardo;
+	   ;movlw des_columnas
+	   
+	   ;movlw CarB_col3;
+	   ;movwf portc;
+	   ;movlw Act_col3;
+	   ;movwf portb;
+	   ;call retardo;
+	   
+	   ;movlw CarB_col4;
+	   ;movwf portc;
+	   ;movlw Act_col4;
+	   ;movwf portb;
+	   ;call retardo;
+	   
+	   ;movlw CarB_col5;
+	   ;movwf portc;
+	   ;movlw Act_col5;
+	   ;movwf portb;
+	   ;call retardo;
+	   ;movlw des_columnas;
 
 	;CARACTER C 
-	    clrf cont_seg;
-	    clrf apuntador;
 	    
-	   movf apuntador;
-	   movwf portc;
-	   movlw Act_col1;
-	   movwf portb;
-	   call retardo;
-	   movwf des_columnas 
-	   movwf portb;
-	   call retardo;
+CAR_C			CLRF PORTB;
+
+			MOVLW CarC_col1;
+			MOVWF PORTC;
+			MOVLW act_col1;
+			MOVWF PORTB;
+
+			CALL retardo;
+			CLRF PORTB;
+
+			MOVLW CarC_col2;
+			MOVWF PORTC;			
+			MOVLW act_col2;
+			MOVWF PORTB;
+
+			CALL retardo;
+			CLRF PORTB;
+
+			MOVLW CarC_col3;
+			MOVWF PORTC;		
+			MOVLW act_col3;
+			MOVWF PORTB;
+
+			CALL retardo;
+			CLRF PORTB;
+
+			MOVLW CarC_col4;
+			MOVWF PORTC;			
+			MOVLW act_col4;
+			MOVWF PORTB;
+
+			CALL retardo;
+			CLRF PORTB;
+
+			MOVLW CarC_col5;
+			MOVWF PORTC;			
+			MOVLW act_col5;
+			MOVWF PORTB;
+
+			CALL retardo;
+			RETURN;
+
+	;clrf cont_seg;
+	;clrf apuntador;
+	    
+	;  movf apuntador;
+	;   movwf portc;
+	;   movlw Act_col1;
+	;   movwf portb;
+	 ;  call retardo;
+	  ; movwf des_columnas 
+	   ;movwf portb;
+	   ;call retardo;
 	   
-	   movlw CarC_col2;
-	   movwf portc;
-	   movlw Act_col2;
-	   movwf portb;
-	   call retardo;
-	   movlw des_columnas
+	   ;movlw CarC_col2;
+	   ;movwf portc;
+	   ;movlw Act_col2;
+	   ;movwf portb;
+	   ;call retardo;
+	   ;movlw des_columnas
 	   
-	   movlw CarC_col3;
-	   movwf portc;
-	   movlw Act_col3;
-	   movwf portb;
-	   call retardo;
+	   ;movlw CarC_col3;
+	   ;movwf portc;
+	   ;movlw Act_col3;
+	   ;movwf portb;
+	   ;call retardo;
 	   
-	   movlw CarC_col4;
-	   movwf portc;
-	   movlw Act_col4;
-	   movwf portb;
-	   call retardo;
+	   ;movlw CarC_col4;
+	   ;movwf portc;
+	   ;movlw Act_col4;
+	   ;movwf portb;
+	   ;call retardo;
 	   
-	   movlw CarC_col5;
-	   movwf portc;
-	   movlw Act_col5;
-	   movwf portb;
-	   call retardo;
-	   movlw des_columnas;
+	   ;movlw CarC_col5;
+	   ;movwf portc;
+	   ;movlw Act_col5;
+	   ;movwf portb;
+	   ;call retardo;
+	   ;movlw des_columnas;
 
 	   ;CARACTER D
-	   clrf cont_seg;
-	    clrf apuntador;
+	   
+CAR_D			CLRF PORTB;
+
+			MOVLW CarD_col1;
+			MOVWF PORTC;
+			MOVLW act_col1;
+			MOVWF PORTB;
+
+			CALL retardo;
+			CLRF PORTB;
+
+			MOVLW CarD_col2;
+			MOVWF PORTC;			
+			MOVLW act_col2;
+			MOVWF PORTB;
+
+			CALL retardo;
+			CLRF PORTB;
+
+			MOVLW CarD_col3;
+			MOVWF PORTC;		
+			MOVLW act_col3;
+			MOVWF PORTB;
+
+			CALL retardo;
+			CLRF PORTB;
+
+			MOVLW CarD_col4;
+			MOVWF PORTC;			
+			MOVLW act_col4;
+			MOVWF PORTB;
+
+			CALL retardo;
+			CLRF PORTB;
+
+			MOVLW CarD_col5;
+			MOVWF PORTC;			
+			MOVLW act_col5;
+			MOVWF PORTB;
+
+			CALL retardo;
+			RETURN;
+
+	   ;clrf cont_seg;
+	    ;clrf apuntador;
 	    
-	   movf apuntador;
-	   movwf portc;
-	   movlw Act_col1;
-	   movwf portb;
-	   call retardo;
-	   movwf des_columnas 
-	   movwf portb;
-	   call retardo;
+	   ;movf apuntador;
+	   ;movwf portc;
+	   ;movlw Act_col1;
+	   ;movwf portb;
+	   ;call retardo;
+	   ;movwf des_columnas 
+	   ;movwf portb;
+	   ;call retardo;
 	   
-	   movlw CarD_col2;
-	   movwf portc;
-	   movlw Act_col2;
-	   movwf portb;
-	   call retardo;
-	   movlw des_columnas
+	   ;movlw CarD_col2;
+	   ;movwf portc;
+	   ;movlw Act_col2;
+	   ;movwf portb;
+	   ;call retardo;
+	   ;movlw des_columnas
 	   
-	   movlw CarD_col3;
-	   movwf portc;
-	   movlw Act_col3;
-	   movwf portb;
-	   call retardo;
+	  ; movlw CarD_col3;
+	   ;movwf portc;
+	   ;movlw Act_col3;
+	   ;movwf portb;
+	   ;call retardo;
 	   
-	   movlw CarD_col4;
-	   movwf portc;
-	   movlw Act_col4;
-	   movwf portb;
-	   call retardo;
+	  ; movlw CarD_col4;
+	  ; movwf portc;
+	  ; movlw Act_col4;
+	  ; movwf portb;
+	  ; call retardo;
 	   
-	   movlw CarD_col5;
-	   movwf portc;
-	   movlw Act_col5;
-	   movwf portb;
-	   call retardo;
-	   movlw des_columnas;
+	  ; movlw CarD_col5;
+	  ; movwf portc;
+	  ; movlw Act_col5;
+	   ;movwf portb;
+	   ;call retardo;
+	   ;movlw des_columnas;
 	   
 	   ;CARACTER E
 	   
-	  clrf cont_seg;
-	  clrf apuntador;
+CAR_E			CLRF PORTB;
+
+			MOVLW CarE_col1;
+			MOVWF PORTC;
+			MOVLW act_col1;
+			MOVWF PORTB;
+
+			CALL retardo;
+			CLRF PORTB;
+
+			MOVLW CarE_col2;
+			MOVWF PORTC;			
+			MOVLW act_col2;
+			MOVWF PORTB;
+
+			CALL retardo;
+			CLRF PORTB;
+
+			MOVLW CarE_col3;
+			MOVWF PORTC;		
+			MOVLW act_col3;
+			MOVWF PORTB;
+
+			CALL retardo;
+			CLRF PORTB;
+
+			MOVLW CarE_col4;
+			MOVWF PORTC;			
+			MOVLW act_col4;
+			MOVWF PORTB;
+
+			CALL retardo;
+			CLRF PORTB;
+
+			MOVLW CarE_col5;
+			MOVWF PORTC;			
+			MOVLW act_col5;
+			MOVWF PORTB;
+
+			CALL retardo;
+			RETURN;
+
+	   ;clrf cont_seg;
+	  ;clrf apuntador;
 	    
-	   movf apuntador;
-	   movwf portc;
-	   movlw Act_col1;
-	   movwf portb;
-	   call retardo;
-	   movwf des_columnas 
-	   movwf portb;
-	   call retardo;
+	  ; movf apuntador;
+	   ;movwf portc;
+	   ;movlw Act_col1;
+	   ;movwf portb;
+	   ;call retardo;
+	   ;movwf des_columnas 
+	   ;movwf portb;
+	   ;call retardo;
 	   
-	   movlw CarE_col2;
-	   movwf portc;
-	   movlw Act_col2;
-	   movwf portb;
-	   call retardo;
-	   movlw des_columnas
+	   ;movlw CarE_col2;
+	   ;movwf portc;
+	   ;movlw Act_col2;
+	   ;movwf portb;
+	   ;call retardo;
+	   ;movlw des_columnas
 	   
-	   movlw CarE_col3;
-	   movwf portc;
-	   movlw Act_col3;
-	   movwf portb;
-	   call retardo;
+	   ;movlw CarE_col3;
+	   ;movwf portc;
+	   ;movlw Act_col3;
+	   ;movwf portb;
+	  ; call retardo;
 	   
-	   movlw CarE_col4;
-	   movwf portc;
-	   movlw Act_col4;
-	   movwf portb;
-	   call retardo;
+	   ;movlw CarE_col4;
+	   ;movwf portc;
+	   ;movlw Act_col4;
+	   ;movwf portb;
+	   ;call retardo;
 	   
-	   movlw CarE_col5;
-	   movwf portc;
-	   movlw Act_col5;
-	   movwf portb;
-	   call retardo;
-	   movlw des_columnas;
+	  ; movlw CarE_col5;
+	  ; movwf portc;
+	  ; movlw Act_col5;
+	  ; movwf portb;
+	  ; call retardo;
+	  ; movlw des_columnas;
 	   
 	   ;Definir ciclos en las imagenes
 	   ;IMAGEN 1
-LOOPI1     clrf cont_seg;
-	   clrf apuntador;
-	    
-	   movf apuntador;
-	   movwf portc;
-	   movlw Act_col1;
-	   movwf portb;
-	   call retardo;
-	   movwf des_columnas 
-	   movwf portb;
-	   call retardo;
-	   
-	   movlw Imagen1_col2;
-	   movwf portc;
-	   movlw Act_col2;
-	   movwf portb;
-	   call retardo;
-	   movlw des_columnas
-	   
-	   movlw Imagen1_col3;
-	   movwf portc;
-	   movlw Act_col3;
-	   movwf portb;
-	   call retardo;
-	   
-	   movlw Imagen1_col4;
-	   movwf portc;
-	   movlw Act_col4;
-	   movwf portb;
-	   call retardo;
-	   
-	   movlw Imagen1_col5;
-	   movwf portc;
-	   movlw Act_col5;
-	   movwf portb;
-	   call retardo;
-	   movlw des_columnas;
-	   
-	   ;IMAGEN2
-LOOPI2	    clrf cont_seg;
-	    clrf apuntador;
-	    
-	   movf apuntador;
-	   movwf portc;
-	   movlw Act_col1;
-	   movwf portb;
-	   call retardo;
-	   movwf des_columnas 
-	   movwf portb;
-	   call retardo;
-	   
-	   movlw Imagen2_col2;
-	   movwf portc;
-	   movlw Act_col2;
-	   movwf portb;
-	   call retardo;
-	   movlw des_columnas
-	   
-	   movlw Imagen2_col3;
-	   movwf portc;
-	   movlw Act_col3;
-	   movwf portb;
-	   call retardo;
-	   
-	   movlw Imagen2_col4;
-	   movwf portc;
-	   movlw Act_col4;
-	   movwf portb;
-	   call retardo;
-	   
-	   movlw Imagen2_col5;
-	   movwf portc;
-	   movlw Act_col5;
-	   movwf portb;
-	   call retardo;
-	   movlw des_columnas;
 
-	   ;IMAGEN 3
-LOOPI3	clrf cont_seg;
-	    clrf apuntador;
-	    
-	   movf apuntador;
-	   movwf portc;
-	   movlw Act_col1;
-	   movwf portb;
-	   call retardo;
-	   movwf des_columnas 
-	   movwf portb;
-	   call retardo;
-	   
-	   movlw Imagen3_col2;
-	   movwf portc;
-	   movlw Act_col2;
-	   movwf portb;
-	   call retardo;
-	   movlw des_columnas
-	   
-	   movlw Imagen3_col3;
-	   movwf portc;
-	   movlw Act_col3;
-	   movwf portb;
-	   call retardo;
-	   
-	   movlw Imagen3_col4;
-	   movwf portc;
-	   movlw Act_col4;
-	   movwf portb;
-	   call retardo;
-	   
-	   movlw Imagen3_col5;
-	   movwf portc;
-	   movlw Act_col5;
-	   movwf portb;
-	   call retardo;
-	   movlw des_columnas;
 
-	   return;
+Imagen_1			CLRF PORTB;
+
+			MOVLW 0XEF;
+			MOVWF PORTC;
+			MOVLW act_col1;
+			MOVWF PORTB;
+
+			CALL retardo;
+			CLRF PORTB;
+
+			MOVLW 0X95;
+			MOVWF PORTC;			
+			MOVLW act_col2;
+			MOVWF PORTB;
+
+			CALL retardo;
+			CLRF PORTB;
+
+			MOVLW 0XE2;
+			MOVWF PORTC;		
+			MOVLW act_col3;
+			MOVWF PORTB;
+
+			CALL retardo;
+			CLRF PORTB;
+
+			MOVLW 0X95;
+			MOVWF PORTC;			
+			MOVLW act_col4;
+			MOVWF PORTB;
+
+			CALL retardo;
+			CLRF PORTB;
+
+			MOVLW 0XEF;
+			MOVWF PORTC;			
+			MOVLW act_col5;
+			MOVWF PORTB;
+
+			CALL retardo;
+			RETURN;
+
+Imagen_2		CLRF PORTB;
+
+			MOVLW 0XFB;
+			MOVWF PORTC;
+			MOVLW act_col1;
+			MOVWF PORTB;
+
+			CALL retardo;
+			CLRF PORTB;
+
+			MOVLW 0X95;
+			MOVWF PORTC;			
+			MOVLW act_col2;
+			MOVWF PORTB;
+
+			CALL retardo;
+			CLRF PORTB;
+
+			MOVLW 0XE2;
+			MOVWF PORTC;		
+			MOVLW act_col3;
+			MOVWF PORTB;
+
+			CALL retardo;
+			CLRF PORTB;
+
+			MOVLW 0X95;
+			MOVWF PORTC;			
+			MOVLW act_col4;
+			MOVWF PORTB;
+
+			CALL retardo;
+			CLRF PORTB;
+
+			MOVLW 0XFB;
+			MOVWF PORTC;			
+			MOVLW act_col5;
+			MOVWF PORTB;
+
+			CALL retardo;
+			RETURN;
+
+Imagen_3		CLRF PORTB;
+
+			MOVLW 0XF7;
+			MOVWF PORTC;
+			MOVLW act_col1;
+			MOVWF PORTB;
+
+			CALL retardo;
+			CLRF PORTB;
+
+			MOVLW 0X97;
+			MOVWF PORTC;			
+			MOVLW act_col2;
+			MOVWF PORTB;
+
+			CALL retardo;
+			CLRF PORTB;
+
+			MOVLW 0XEB;
+			MOVWF PORTC;		
+			MOVLW act_col3;
+			MOVWF PORTB;
+
+			CALL retardo;
+			CLRF PORTB;
+
+			MOVLW 0X97;
+			MOVWF PORTC;			
+			MOVLW act_col4;
+			MOVWF PORTB;
+
+			CALL retardo;
+			CLRF PORTB;
+
+			MOVLW 0XF7;
+			MOVWF PORTC;			
+			MOVLW act_col5;
+			MOVWF PORTB;
+
+			CALL retardo;
+			RETURN;	   
+
+LOOP_PRIN		NOP;
+			CALL CARACTER;
+			CALL POS12;
+			CALL POS13;
+			GOTO LOOP_PRIN;
+	
+POS12			CLRF veces;
+T8			CALL POSI12;
+			MOVLW .5;
+			XORWF veces,W;
+			BTFSS STATUS,Z;
+			GOTO T8;
+			RETURN;			
+POSI12			CLRF CONT_SEG;
+T6			CALL Imagen_1;
+			MOVLW .1;
+			XORWF CONT_SEG,W;
+			BTFSS STATUS,Z;
+			GOTO T6;
+			CLRF CONT_SEG;
+T7			CALL Imagen_2;
+			MOVLW .1;
+			XORWF CONT_SEG,W;
+			BTFSS STATUS,Z;
+			GOTO T7
+			INCF veces,F;
+			RETURN;
+
+POS13			CLRF veces;
+T9			CALL POSI13;
+			MOVLW .5;
+			XORWF veces,W;
+			BTFSS STATUS,Z;
+			GOTO T9;
+			RETURN;			
+POSI13			CLRF CONT_SEG;
+T10			CALL Imagen_1;
+			MOVLW .1;
+			XORWF CONT_SEG,W;
+			BTFSS STATUS,Z;
+			GOTO T10;
+			CLRF CONT_SEG;
+T11			CALL Imagen_3;
+			MOVLW .1;
+			XORWF CONT_SEG,W;
+			BTFSS STATUS,Z;
+			GOTO T11;
+			INCF veces,F;
+			RETURN;
+			
+;LOOPI1     clrf cont_seg;
+;	   clrf apuntador;
+	    
+	  ; movf apuntador;
+	  ; movwf portc;
+	  ; movlw Act_col1;
+	  ; movwf portb;
+	  ; call retardo;
+	  ; movwf des_columnas 
+	  ; movwf portb;
+	  ; call retardo;
+	   
+	  ; movlw Imagen1_col2;
+	  ; movwf portc;
+	  ; movlw Act_col2;
+	   ;movwf portb;
+	  ; call retardo;
+	  ; movlw des_columnas
+	   
+	  ; movlw Imagen1_col3;
+	  ; movwf portc;
+	  ; movlw Act_col3;
+	  ; movwf portb;
+	  ; call retardo;
+	   
+	  ; movlw Imagen1_col4;
+	  ; movwf portc;
+	  ; movlw Act_col4;
+	  ; movwf portb;
+	  ; call retardo;
+	   
+	  ; movlw Imagen1_col5;
+	  ; movwf portc;
+	  ; movlw Act_col5;
+	  ; movwf portb;
+	  ; call retardo;
+	 ;  movlw des_columnas;
+	   
+	   
 
 ;==  SUBRUTINA DE RETARDO  ==
 retardo		    clrf cont_milis;
