@@ -1,0 +1,112 @@
+MPLINK 4.49, Linker
+Linker Map File - Created Sun May 28 18:46:33 2017
+
+                                 Section Info
+                  Section       Type    Address   Location Size(Bytes)
+                ---------  ---------  ---------  ---------  ---------
+                   .org_0       code   0x000000    program   0x000000
+                   .org_1       code   0x000000    program   0x000004
+                   .org_2       code   0x000004    program   0x00002c
+                   .org_5       code   0x00001a    program   0x0000ce
+                   .org_3       code   0x000100    program   0x000034
+                   .org_6       code   0x00011a    program   0x000160
+                   .org_4       code   0x0007c0    program   0x000082
+.config_2007_PRACTICA 5.O       code   0x002007    program   0x000002
+
+
+
+                              Program Memory Usage 
+                               Start         End      
+                           ---------   ---------      
+                            0x000000    0x000001      
+                            0x000004    0x000080      
+                            0x000100    0x0001c9      
+                            0x0007c0    0x000800      
+                            0x002007    0x002007      
+            395 out of 8454 program addresses used, program memory utilization is 4%
+
+
+
+                              Symbols - Sorted by Name
+                     Name    Address   Location    Storage File                     
+                ---------  ---------  ---------  --------- ---------                
+          CAPTURA_NUMEROS   0x000145    program     static C:\Users\crisr\Desktop\Micro\6to semestre alv\Practica 6 - copia\Practica 5.asm
+       CHECA_LA_DIRECCION   0x000169    program     static C:\Users\crisr\Desktop\Micro\6to semestre alv\Practica 6 - copia\Practica 5.asm
+           COMPRUEBA_DATO   0x000161    program     static C:\Users\crisr\Desktop\Micro\6to semestre alv\Practica 6 - copia\Practica 5.asm
+          CONVIERTE_DATOS   0x000156    program     static C:\Users\crisr\Desktop\Micro\6to semestre alv\Practica 6 - copia\Practica 5.asm
+               ESPERA_1MS   0x0001ab    program     static C:\Users\crisr\Desktop\Micro\6to semestre alv\Practica 6 - copia\Practica 5.asm
+                ESPERA_3S   0x0001b2    program     static C:\Users\crisr\Desktop\Micro\6to semestre alv\Practica 6 - copia\Practica 5.asm
+              ESPERA_5SEG   0x0001bf    program     static C:\Users\crisr\Desktop\Micro\6to semestre alv\Practica 6 - copia\Practica 5.asm
+                 ESP_TIME   0x0007d4    program     static C:\Users\crisr\Desktop\Micro\6to semestre alv\Practica 6 - copia\LCD.INC
+                ESP_TIME2   0x0007da    program     static C:\Users\crisr\Desktop\Micro\6to semestre alv\Practica 6 - copia\LCD.INC
+          ESTE_ES_EL_DATO   0x00006d    program     static C:\Users\crisr\Desktop\Micro\6to semestre alv\Practica 6 - copia\TABLA.INC
+          GRABA_DATOS_RAM   0x00012f    program     static C:\Users\crisr\Desktop\Micro\6to semestre alv\Practica 6 - copia\Practica 5.asm
+          INICIA_DE_NUEVO   0x00011f    program     static C:\Users\crisr\Desktop\Micro\6to semestre alv\Practica 6 - copia\Practica 5.asm
+                  INI_LCD   0x0007c0    program     static C:\Users\crisr\Desktop\Micro\6to semestre alv\Practica 6 - copia\LCD.INC
+          LOOP_DE_CAPTURA   0x000120    program     static C:\Users\crisr\Desktop\Micro\6to semestre alv\Practica 6 - copia\Practica 5.asm
+           LOOP_DIRECCION   0x00016c    program     static C:\Users\crisr\Desktop\Micro\6to semestre alv\Practica 6 - copia\Practica 5.asm
+             LOOP_LCD_INF   0x0007f6    program     static C:\Users\crisr\Desktop\Micro\6to semestre alv\Practica 6 - copia\LCD.INC
+             LOOP_LCD_SUP   0x0007e5    program     static C:\Users\crisr\Desktop\Micro\6to semestre alv\Practica 6 - copia\LCD.INC
+                LOOP_PRIN   0x00011c    program     static C:\Users\crisr\Desktop\Micro\6to semestre alv\Practica 6 - copia\Practica 5.asm
+              MANDA_A_LCD   0x000174    program     static C:\Users\crisr\Desktop\Micro\6to semestre alv\Practica 6 - copia\Practica 5.asm
+          MANDA_DIRECCION   0x00018c    program     static C:\Users\crisr\Desktop\Micro\6to semestre alv\Practica 6 - copia\Practica 5.asm
+      MENSAJE_DE_MUESTREO   0x0001a3    program     static C:\Users\crisr\Desktop\Micro\6to semestre alv\Practica 6 - copia\Practica 5.asm
+         MENSAJE_INFERIOR   0x0007f0    program     static C:\Users\crisr\Desktop\Micro\6to semestre alv\Practica 6 - copia\LCD.INC
+          MENSAJE_INICIAL   0x00019c    program     static C:\Users\crisr\Desktop\Micro\6to semestre alv\Practica 6 - copia\Practica 5.asm
+         MENSAJE_SUPERIOR   0x0007df    program     static C:\Users\crisr\Desktop\Micro\6to semestre alv\Practica 6 - copia\LCD.INC
+              NIBBLE_ALTO   0x00015b    program     static C:\Users\crisr\Desktop\Micro\6to semestre alv\Practica 6 - copia\Practica 5.asm
+                 PROG_INI   0x000100    program     static C:\Users\crisr\Desktop\Micro\6to semestre alv\Practica 6 - copia\INI_PIC.INC
+                PROG_PRIN   0x00011a    program     static C:\Users\crisr\Desktop\Micro\6to semestre alv\Practica 6 - copia\Practica 5.asm
+             PULSO_ENABLE   0x0007d2    program     static C:\Users\crisr\Desktop\Micro\6to semestre alv\Practica 6 - copia\LCD.INC
+              RETARDO_1MS   0x0001aa    program     static C:\Users\crisr\Desktop\Micro\6to semestre alv\Practica 6 - copia\Practica 5.asm
+             RETARDO_3SEG   0x0001b0    program     static C:\Users\crisr\Desktop\Micro\6to semestre alv\Practica 6 - copia\Practica 5.asm
+             RETARDO_5SEG   0x0001bd    program     static C:\Users\crisr\Desktop\Micro\6to semestre alv\Practica 6 - copia\Practica 5.asm
+                  SAL_INT   0x000010    program     static C:\Users\crisr\Desktop\Micro\6to semestre alv\Practica 6 - copia\INI_PIC.INC
+                    TABLA   0x00001a    program     static C:\Users\crisr\Desktop\Micro\6to semestre alv\Practica 6 - copia\TABLA.INC
+                  VEC_INT   0x000004    program     static C:\Users\crisr\Desktop\Micro\6to semestre alv\Practica 6 - copia\INI_PIC.INC
+                VEC_RESET   0x000000    program     static C:\Users\crisr\Desktop\Micro\6to semestre alv\Practica 6 - copia\INI_PIC.INC
+          VUELVE_A_GRABAR   0x000133    program     static C:\Users\crisr\Desktop\Micro\6to semestre alv\Practica 6 - copia\Practica 5.asm
+
+
+
+                              Symbols - Sorted by Address
+                     Name    Address   Location    Storage File                     
+                ---------  ---------  ---------  --------- ---------                
+                VEC_RESET   0x000000    program     static C:\Users\crisr\Desktop\Micro\6to semestre alv\Practica 6 - copia\INI_PIC.INC
+                  VEC_INT   0x000004    program     static C:\Users\crisr\Desktop\Micro\6to semestre alv\Practica 6 - copia\INI_PIC.INC
+                  SAL_INT   0x000010    program     static C:\Users\crisr\Desktop\Micro\6to semestre alv\Practica 6 - copia\INI_PIC.INC
+                    TABLA   0x00001a    program     static C:\Users\crisr\Desktop\Micro\6to semestre alv\Practica 6 - copia\TABLA.INC
+          ESTE_ES_EL_DATO   0x00006d    program     static C:\Users\crisr\Desktop\Micro\6to semestre alv\Practica 6 - copia\TABLA.INC
+                 PROG_INI   0x000100    program     static C:\Users\crisr\Desktop\Micro\6to semestre alv\Practica 6 - copia\INI_PIC.INC
+                PROG_PRIN   0x00011a    program     static C:\Users\crisr\Desktop\Micro\6to semestre alv\Practica 6 - copia\Practica 5.asm
+                LOOP_PRIN   0x00011c    program     static C:\Users\crisr\Desktop\Micro\6to semestre alv\Practica 6 - copia\Practica 5.asm
+          INICIA_DE_NUEVO   0x00011f    program     static C:\Users\crisr\Desktop\Micro\6to semestre alv\Practica 6 - copia\Practica 5.asm
+          LOOP_DE_CAPTURA   0x000120    program     static C:\Users\crisr\Desktop\Micro\6to semestre alv\Practica 6 - copia\Practica 5.asm
+          GRABA_DATOS_RAM   0x00012f    program     static C:\Users\crisr\Desktop\Micro\6to semestre alv\Practica 6 - copia\Practica 5.asm
+          VUELVE_A_GRABAR   0x000133    program     static C:\Users\crisr\Desktop\Micro\6to semestre alv\Practica 6 - copia\Practica 5.asm
+          CAPTURA_NUMEROS   0x000145    program     static C:\Users\crisr\Desktop\Micro\6to semestre alv\Practica 6 - copia\Practica 5.asm
+          CONVIERTE_DATOS   0x000156    program     static C:\Users\crisr\Desktop\Micro\6to semestre alv\Practica 6 - copia\Practica 5.asm
+              NIBBLE_ALTO   0x00015b    program     static C:\Users\crisr\Desktop\Micro\6to semestre alv\Practica 6 - copia\Practica 5.asm
+           COMPRUEBA_DATO   0x000161    program     static C:\Users\crisr\Desktop\Micro\6to semestre alv\Practica 6 - copia\Practica 5.asm
+       CHECA_LA_DIRECCION   0x000169    program     static C:\Users\crisr\Desktop\Micro\6to semestre alv\Practica 6 - copia\Practica 5.asm
+           LOOP_DIRECCION   0x00016c    program     static C:\Users\crisr\Desktop\Micro\6to semestre alv\Practica 6 - copia\Practica 5.asm
+              MANDA_A_LCD   0x000174    program     static C:\Users\crisr\Desktop\Micro\6to semestre alv\Practica 6 - copia\Practica 5.asm
+          MANDA_DIRECCION   0x00018c    program     static C:\Users\crisr\Desktop\Micro\6to semestre alv\Practica 6 - copia\Practica 5.asm
+          MENSAJE_INICIAL   0x00019c    program     static C:\Users\crisr\Desktop\Micro\6to semestre alv\Practica 6 - copia\Practica 5.asm
+      MENSAJE_DE_MUESTREO   0x0001a3    program     static C:\Users\crisr\Desktop\Micro\6to semestre alv\Practica 6 - copia\Practica 5.asm
+              RETARDO_1MS   0x0001aa    program     static C:\Users\crisr\Desktop\Micro\6to semestre alv\Practica 6 - copia\Practica 5.asm
+               ESPERA_1MS   0x0001ab    program     static C:\Users\crisr\Desktop\Micro\6to semestre alv\Practica 6 - copia\Practica 5.asm
+             RETARDO_3SEG   0x0001b0    program     static C:\Users\crisr\Desktop\Micro\6to semestre alv\Practica 6 - copia\Practica 5.asm
+                ESPERA_3S   0x0001b2    program     static C:\Users\crisr\Desktop\Micro\6to semestre alv\Practica 6 - copia\Practica 5.asm
+             RETARDO_5SEG   0x0001bd    program     static C:\Users\crisr\Desktop\Micro\6to semestre alv\Practica 6 - copia\Practica 5.asm
+              ESPERA_5SEG   0x0001bf    program     static C:\Users\crisr\Desktop\Micro\6to semestre alv\Practica 6 - copia\Practica 5.asm
+                  INI_LCD   0x0007c0    program     static C:\Users\crisr\Desktop\Micro\6to semestre alv\Practica 6 - copia\LCD.INC
+             PULSO_ENABLE   0x0007d2    program     static C:\Users\crisr\Desktop\Micro\6to semestre alv\Practica 6 - copia\LCD.INC
+                 ESP_TIME   0x0007d4    program     static C:\Users\crisr\Desktop\Micro\6to semestre alv\Practica 6 - copia\LCD.INC
+                ESP_TIME2   0x0007da    program     static C:\Users\crisr\Desktop\Micro\6to semestre alv\Practica 6 - copia\LCD.INC
+         MENSAJE_SUPERIOR   0x0007df    program     static C:\Users\crisr\Desktop\Micro\6to semestre alv\Practica 6 - copia\LCD.INC
+             LOOP_LCD_SUP   0x0007e5    program     static C:\Users\crisr\Desktop\Micro\6to semestre alv\Practica 6 - copia\LCD.INC
+         MENSAJE_INFERIOR   0x0007f0    program     static C:\Users\crisr\Desktop\Micro\6to semestre alv\Practica 6 - copia\LCD.INC
+             LOOP_LCD_INF   0x0007f6    program     static C:\Users\crisr\Desktop\Micro\6to semestre alv\Practica 6 - copia\LCD.INC
+
+

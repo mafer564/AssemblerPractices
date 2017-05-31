@@ -1,0 +1,1569 @@
+MPASM  5.51                    PRACTICA 5.ASM   5-28-2017  18:46:30         PAGE  1
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00001 ;_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+                             _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+                      00002  LIST P=16F877A;
+                      00003 
+                      00004  #INCLUDE <P16F877A.INC>;;
+                      00001         LIST
+                      00002 
+                      00003 ;==========================================================================
+                      00004 ;  MPASM PIC16F877A processor include
+                      00005 ; 
+                      00006 ;  (c) Copyright 1999-2013 Microchip Technology, All rights reserved
+                      00007 ;==========================================================================
+                      00008 
+                      00566         LIST
+                      00005  #INCLUDE <INI_PIC.INC>
+                      00001 ;_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+                             _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+                      00002                                                         ;=====================================
+                      00003                                                         ;==========   Vector Reset   =========
+                      00004                                                         ;=====================================
+0000                  00005                                                         ORG 0X0000;             Organiza el programa des
+                            de el inicio de todo
+0000   018A           00006 VEC_RESET                                       CLRF PCLATH;            Asegura la pagina cero de la mem
+                            oria de prog.
+0001   291A           00007                                                         GOTO PROG_PRIN;         Dirige al programa princ
+                            ipal
+                      00008 ;_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+                             _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+                      00009                                                         ;=====================================
+                      00010                                                         ;===== Vector de interrupcion   ======
+                      00011                                                         ;=====================================
+                      00012 ;Cuando se usan las interrupciones el programa incrementa el tmr0 en 1 cada P(valor del preescalador) in
+                            strucciones y cuando 
+                      00013 ;el tmr0 se desborda se activa la bandera T0if la cual directamente manda el programa a 0x0004 donde se 
+                            encuentra el vector de interrupcion xD
+                      00014 ;las instrucciones que saltan de un lado a otro en la memoria de programa[como retlw,retfie,return,goto,
+                            call,btfss y btfsc(solo cuando saltan), 
+                      00015 ;decfsc(solo cuando salta)] toman 2 ciclos de maquina, las demas toman 1 ciclo de maquina
+                      00016 
+0004                  00017                                                         ORG 0X0004;             Organiza el programa en 
+                            la direccion 0x04 que es donde se llega cada que se interrumpe el codigo :3
+0004   00A0           00018 VEC_INT                                         MOVWF RES_W;            Respalda W para la interrupcion
+0005   0803           00019                                                         MOVF STATUS,W; 
+0006   00A1           00020                                                         MOVWF RES_STATUS;       Respalda status para la 
+                            interrupcion
+0007   0183           00021                                                     CLRF STATUS;                Limpia status para la in
+                            terrupcion (la interrupcion esta en la pagina 1 de memoria)
+0008   080A           00022                                                     MOVF PCLATH,W; 
+0009   00A2           00023                                                     MOVWF RES_PCLATH;   Respalda pclath para la interrup
+                            cion
+000A   018A           00024                                                     CLRF PCLATH;                Limpia pclath para la in
+                            terrupcion
+000B   0804           00025                                                     MOVF FSR,W;
+MPASM  5.51                    PRACTICA 5.ASM   5-28-2017  18:46:30         PAGE  2
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+000C   00A3           00026                                                     MOVWF RES_FSR;              Respalda FSR para la int
+                            errupcion
+                      00027                                                     
+000D   190B           00028                                                     BTFSC INTCON, T0IF; Prueba si la bandera t0if se des
+                            borda(solo se desborda cuando tmr0 sobre pasa .255)
+000E   0AA4           00029                                                     INCF CONT_MILIS,F;  Incrementa el registro cont_mili
+                            s que sirve para contar el tiempo que estara en el loop del retardo 
+000F   110B           00030                                                         BCF INTCON,T0IF;        Limpia la bandera t0if p
+                            ara volver a hacer interrupcion :V
+                      00031                                                     
+0010   3083           00032 SAL_INT                     MOVLW .131;                 Inicializa tmr0 con .131 para que la interrupcio
+                            n se tarde lo estimado
+0011   0081           00033                                                     MOVWF TMR0;
+                      00034                                                     
+0012   0823           00035                                                     MOVF RES_FSR,W;
+0013   0084           00036                                                     MOVWF FSR;                  Regresa FSR a su estado 
+                            antes de la interrupcion
+0014   0822           00037                                                     MOVF RES_PCLATH,W;
+0015   008A           00038                                                     MOVWF PCLATH;               Regresa pclath a su esta
+                            do para volver a la pagina de memoria en que estaba
+0016   0821           00039                                                     MOVF RES_STATUS,W;
+0017   0083           00040                                                     MOVWF STATUS;               Regresa status a su esta
+                            do para volver al programa :V
+0018   0820           00041                                                     MOVF RES_W,W;               Regresa w a su lugar :V
+                      00042 
+0019   0009           00043                                                         RETFIE; Retorno de una interrupcion de donde se 
+                            detuvo el programa :v
+                      00044 
+                      00045 ;_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+                             _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+                      00046                                                         ;=====================================
+                      00047                                                         ;===  Subrutina de Inicio      =======
+                      00048                                                         ;=====================================
+0100                  00049                                                         ORG 0X0100
+                      00050 
+0100   30FF           00051 PROG_INI                                   MOVLW 0XFF;                  Pon el puerto A todo en 1 en est
+                            e caso para evitar      
+0101   0085           00052                                                    MOVWF PORTA;                 la memoria ram de datos 
+                            que no queremos :v
+                      00053 
+0102   1683           00054                                                    BSF STATUS,RP0;              selecciona el banco 1 de
+                             ram.
+0103   3082           00055                                                    MOVLW 0X82;                  Esta configuracion apaga
+                             RPU y define el preescalador a 8 para el Tmr0 :'v
+0104   0081           00056                                                    MOVWF OPTION_REG ^0X80; Registro que se usa para defi
+                            nir los preescaladores y las RPU en puerto B como entrada
+0105   3010           00057                                                    MOVLW PROGA;                 Mueve lo que hay en prog
+                            a hacia Trisa para definirlo como entradas o salidas :v
+0106   0085           00058                                                    MOVWF TRISA ^0X80;   (Los gorritos son para indicarle
+                             al programa a partir de que registro buscar el Tris)
+0107   3000           00059                                                    MOVLW PROGB_OUT;     Programacion como salidas alv, s
+                            e define en variables y constantes
+0108   0086           00060                                                    MOVWF TRISB ^0X80; 
+MPASM  5.51                    PRACTICA 5.ASM   5-28-2017  18:46:30         PAGE  3
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+0109   3000           00061                                                    MOVLW PROGC;                 Lo de escribir con prog 
+                            solo es por mera comodidad xD
+010A   0087           00062                                                    MOVWF TRISC ^0X80;
+010B   30F8           00063                                                    MOVLW PROGD;                 Para definirlos junto co
+                            n los puertos
+010C   0088           00064                                                    MOVWF TRISD ^0X80;
+010D   3003           00065                                                    MOVLW PROGE;                 y luego solo moverlos a 
+                            los tris por medio de esta subrutina
+010E   0089           00066                                                    MOVWF TRISE ^0X80;
+010F   3006           00067                                                    MOVLW 0X06;                  Esta configuracion defin
+                            e todas las entradas como digitales :3
+0110   009F           00068                                                    MOVWF ADCON1 ^0X80;  Registro para control del conver
+                            sor analogico/digital
+0111   1283           00069                                                    BCF STATUS,RP0;              Regresa al banco 0 de Ra
+                            m (donde se definen las variables que usamos siempre :3)
+                      00070 
+0112   3083           00071                                                    MOVLW .131;                  valor calculado con la f
+                            ormula de interrupciones xD
+0113   0081           00072                                                    MOVWF TMR0;                  se carga al tmr0
+0114   30A0           00073                                                    MOVLW 0XA0;                  Esta configuracion habil
+                            ita las interrupciones globales y por tmr0
+0115   008B           00074                                                    MOVWF INTCON;                Registro para control de
+                             interrupciones :v
+                      00075 
+0116   0186           00076                                                    CLRF PORTB; Limpia el puerto B 
+0117   0187           00077                                                    CLRF PORTC; Limpia el puerto C
+0118   0188           00078                                                    CLRF PORTD; Limpia el puerto D
+                      00079 
+0119   0008           00080                                                    RETURN;
+                      00006  #INCLUDE <VAR_Y_CONST.INC>
+                      00001 ;_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+                             _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _INDF
+                      00002 ;
+                      00003 ; Registros de proposito general banco 0 de memoria RAM.
+                      00004 ;
+                      00005 ; Registros propios de estructura del programa
+                      00006 ; Variables 0
+  00000020            00007 RES_W                                           EQU             0X20; // Variable para respaldar w
+  00000021            00008 RES_STATUS                              EQU             0X21; // Variable para respaldar status
+  00000022            00009 RES_PCLATH                                      EQU             0X22; // Variable para respaldar pclath
+  00000023            00010 RES_FSR                     EQU         0X23; // Variable para respaldar fsr
+  00000024            00011 CONT_MILIS                  EQU     0X24; // Variable para contar los milisegundos de la interrupcion
+  00000025            00012 CONT_CUARTO_DE_SEG                      EQU             0X25
+  00000026            00013 TEMPO1                                          EQU             0X26; // Variable para buscar el dato de
+                             la ram
+  00000027            00014 TEMPO2                                          EQU             0X27; // Variable para buscar el dato de
+                             la ram
+  00000028            00015 VAR_TABLA                                       EQU             0X28; // Se usa para entrar a la tabla
+  00000029            00016 N_VECES                                         EQU             0X29; // Se usa para contar a 16 en la t
+                            abla xD
+  0000002A            00017 DATO_DIRECTO                            EQU             0X2A; // Usado para guardar el caracter que se g
+                            rabo en RAM
+                      00018 ;_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+MPASM  5.51                    PRACTICA 5.ASM   5-28-2017  18:46:30         PAGE  4
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                             _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+                      00019 ;Asignacion de los bits de los puertos entradas/salidas :3 ?.
+                      00020 
+                      00021   ;PUERTO A.    
+  00000000            00022 ENABLE_LCD                                      EQU             .0; // activa el modo de sincronizacion 
+                            de tiempo se activa en modo bajo (0)
+  00000001            00023 RS_LCD                                          EQU             .1; // Rs de la pantalla LCD
+  00000002            00024 OE_RAM                                          EQU             .2; // Con este en 0 la memoria RAM mues
+                            tra el dato que tenga en la direccion seleccionada.
+  00000003            00025 WE_RAM                                          EQU             .3; // Con este se escribe en la memoria
+                             RAM.
+  00000004            00026 SIN_USORA4                                      EQU             .4; // Sin uso RA4.
+  00000005            00027 CE_RAM                                          EQU             .5; // Activa o desactiva la memoria alv
+                            .
+                      00028         
+  00000010            00029 PROGA                                           EQU B'010000';  // Programación inicial del puerto A.
+                      00030 
+                      00031 ;PUERTOB.
+  00000000            00032 DATA_BUS_D0                                     EQU             .0; // Es el bit 0 del bus de datos entr
+                            e memoria pic y lcd.
+  00000001            00033 DATA_BUS_D1                                     EQU             .1; // Es el bit 1 del bus de datos entr
+                            e memoria pic y lcd.
+  00000002            00034 DATA_BUS_D2                                     EQU             .2; // Es el bit 2 del bus de datos entr
+                            e memoria pic y lcd.
+  00000003            00035 DATA_BUS_D3                                     EQU             .3; // Es el bit 3 del bus de datos entr
+                            e memoria pic y lcd.
+  00000004            00036 DATA_BUS_D4                                     EQU             .4; // Es el bit 4 del bus de datos entr
+                            e memoria pic y lcd.
+  00000005            00037 DATA_BUS_D5                                     EQU             .5; // Es el bit 5 del bus de datos entr
+                            e memoria pic y lcd.
+  00000006            00038 DATA_BUS_D6                                     EQU             .6; // Es el bit 6 del bus de datos entr
+                            e memoria pic y lcd.
+  00000007            00039 DATA_BUS_D7                                     EQU             .7; // Es el bit 7 del bus de datos entr
+                            e memoria pic y lcd.
+                      00040 
+  000000FF            00041 PROGB_IN                                        EQU B'11111111'; // Programación para recibir datos de l
+                            a memoria ram.
+  00000000            00042 PROGB_OUT                                       EQU B'00000000'; // Programacion para mandar datos a la 
+                            lcd.
+                      00043 
+                      00044 ;PUERTO C.
+  00000000            00045 BUS_DIR_A0                                      EQU             .0; // Bit 0 del bus de direcciones :v
+  00000001            00046 BUS_DIR_A1                                      EQU             .1; // Bit 1 del bus de direcciones :v
+  00000002            00047 BUS_DIR_A2                                      EQU             .2; // Bit 2 del bus de direcciones :v
+  00000003            00048 BUS_DIR_A3                                      EQU             .3; // Bit 3 del bus de direcciones :v
+  00000004            00049 BUS_DIR_A4                                      EQU             .4; // Bit 4 del bus de direcciones :v
+  00000005            00050 BUS_DIR_A5                                      EQU             .5; // Bit 5 del bus de direcciones :v
+  00000006            00051 BUS_DIR_A6                                      EQU             .6; // Bit 6 del bus de direcciones :v
+  00000007            00052 BUS_DIR_A7                                      EQU             .7; // Bit 7 del bus de direcciones :v
+                      00053 
+  00000000            00054 PROGC                                           EQU B'00000000'; // Programación Inicial del puerto C. 
+                      00055 
+                      00056 ;Puerto D.
+MPASM  5.51                    PRACTICA 5.ASM   5-28-2017  18:46:30         PAGE  5
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+  00000000            00057 BUS_DIR_A8                                      EQU             .0; // Bit 8 del bus de direcciones :v
+  00000001            00058 BUS_DIR_A9                                      EQU             .1; // Bit 9 del bus de direcciones :v
+  00000002            00059 BUS_DIR_A10                                     EQU             .2; // Bit 10 del bus de direcciones :v
+  00000003            00060 SIN_USORD3                                      EQU             .3; // Sin uso RD3.
+  00000004            00061 SIN_USORD4                                      EQU             .4; // Sin uso RD4.
+  00000005            00062 SIN_USORD5                                      EQU             .5; // Sin uso RD5.
+  00000006            00063 SIN_USORD6                                      EQU             .6; // Sin uso RD6.
+  00000007            00064 SIN_USORD7                                      EQU             .7; // Sin uso RD7.
+                      00065 
+  000000F8            00066 PROGD                                           EQU B'11111000'; // Programacion Inicial Puerto D. 
+                      00067 
+                      00068 ;Puerto E.      
+  00000000            00069 SIN_USORE0                                      EQU             .0; // Sin uso Re0.
+  00000001            00070 SIN_USORE1                                      EQU             .1; // Sin uso Re1.
+  00000002            00071 SIN_USORE2                                      EQU             .2; // Sin uso Re2.
+                      00072 
+  00000003            00073 PROGE                                           EQU B'011';     // Programcion inicial puerto E. 
+                      00074 
+                      00075 ;Los prog son por mera estetica :3
+                      00007  #INCLUDE <LCD.INC>
+                      00001 ;-------------------------------------------------------------------------------------------------------
+                            -----------------------
+                      00002 ;                                               ==============================================
+                      00003 ;                                               ===== Libreria principal para uso de LCD =====
+                      00004 ;                                               ==============================================
+07C0                  00005                                                    ORG 0X07C0;                  Organiza el programa en 
+                            0x07C0 que son las ultimas direcciones del banco 1
+                      00006                                                                                                         
+                                                    
+07C0   1085           00007 INI_LCD                                    BCF PORTA, RS_LCD;   Pone la LCD en modo comandos xD
+07C1   3038           00008                                                    MOVLW 0X38;                  Selecciona una interfaz 
+                            de 8 bits, modo de dos lineas y formato 5x7
+07C2   0086           00009                                                    MOVWF PORTB;                 comandos hacia la LCD
+07C3   27D2           00010                                                    CALL PULSO_ENABLE;
+07C4   300C           00011                                                    MOVLW 0X0C;                  Selecciona el display en
+                            cendido y formato de cursores xD
+07C5   0086           00012                                                    MOVWF PORTB;                 Coamndos a LCD
+07C6   27D2           00013                                                    CALL PULSO_ENABLE;
+07C7   3001           00014                                                    MOVLW 0X01;                  Limpia el display
+07C8   0086           00015                                                    MOVWF PORTB;                 Comandos a LCD
+07C9   27D2           00016                                                    CALL PULSO_ENABLE;
+07CA   3006           00017                                                    MOVLW 0X06;                  Selecciona el modo de en
+                            trada de caracteres
+07CB   0086           00018                                                    MOVWF PORTB;                 Comandos a LCD
+07CC   27D2           00019                                                    CALL PULSO_ENABLE;
+07CD   3080           00020                                                    MOVLW 0X80;                  Selecciona escritura en 
+                            primer renglon :3
+07CE   0086           00021                                                    MOVWF PORTB;                 Comando a LCD
+07CF   27D2           00022                                                    CALL PULSO_ENABLE;   Porque no se pinches pueden agre
+                            gar imagenes aqui? :'v
+07D0   1405           00023                                                    BSF PORTA, ENABLE_LCD; Para mas informacion revisar i
+                            magen en carpeta "Micros"
+                      00024 
+MPASM  5.51                    PRACTICA 5.ASM   5-28-2017  18:46:30         PAGE  6
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+07D1   0008           00025                                                    RETURN; Regresa
+                      00026 ;-------------------------------------------------------------------------------------------------------
+                            -----------------------
+                      00027                         ;====================
+                      00028                                         ;=== pulso enable ===
+                      00029                                                 ;====================
+                      00030 ;Son simples retardos para esperar el tiempo de eneable establecido por la LCD
+                      00031 ;Checar el apartado de retardos en "Practica 5.asm"--> Retardo_5seg
+                      00032 
+07D2   1005           00033 PULSO_ENABLE               BCF PORTA, ENABLE_LCD; 
+                      00034 
+07D3   01A4           00035                                                    CLRF CONT_MILIS;
+07D4   3001           00036 ESP_TIME                   MOVLW .1;
+07D5   0624           00037                                                    XORWF CONT_MILIS,W;
+07D6   1D03           00038                                                    BTFSS STATUS,Z;
+07D7   2FD4           00039                                                    GOTO ESP_TIME;
+07D8   1405           00040                                                    BSF PORTA, ENABLE_LCD;
+                      00041 
+07D9   01A4           00042                                                    CLRF CONT_MILIS;
+07DA   3014           00043 ESP_TIME2                                  MOVLW .20;
+07DB   0624           00044                                                    XORWF CONT_MILIS,W;
+07DC   1D03           00045                                                    BTFSS STATUS,Z;
+07DD   2FDA           00046                                                    GOTO ESP_TIME2;                 
+07DE   0008           00047                                                    RETURN;
+                      00048 
+                      00049 ;-------------------------------------------------------------------------------------------------------
+                            ---------------------------------------------------
+                      00050                                                     ;===========================
+                      00051                                                         ;===  Mensajes de la LCD  ==
+                      00052                                                         ;===========================
+                      00053 ;Esa es una forma chingona de escribir en la LCD por medio de tablas :3 
+                      00054 
+                      00055 
+07DF   1085           00056 MENSAJE_SUPERIOR                   BCF PORTA, RS_LCD;
+07E0   3080           00057                                                    MOVLW 0X80;
+07E1   0086           00058                                                    MOVWF PORTB;
+07E2   27D2           00059                                                    CALL PULSO_ENABLE;
+07E3   1485           00060                                                    BSF PORTA, RS_LCD;
+                      00061 
+07E4   01A9           00062                                                    CLRF N_VECES
+                      00063 
+07E5   0828           00064 LOOP_LCD_SUP                       MOVF VAR_TABLA,W
+07E6   201A           00065                                                    CALL TABLA
+07E7   0086           00066                                                    MOVWF PORTB;
+07E8   27D2           00067                                                    CALL PULSO_ENABLE;
+07E9   0AA8           00068                                                    INCF VAR_TABLA,F
+07EA   0AA9           00069                                                    INCF N_VECES,F
+07EB   3010           00070                                                    MOVLW .16
+07EC   0629           00071                                                    XORWF N_VECES,W
+07ED   1D03           00072                                                    BTFSS STATUS,Z
+07EE   2FE5           00073                                                    GOTO LOOP_LCD_SUP
+                      00074                                                    
+07EF   0008           00075                                                    RETURN       
+MPASM  5.51                    PRACTICA 5.ASM   5-28-2017  18:46:30         PAGE  7
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00076 
+07F0   1085           00077 MENSAJE_INFERIOR                   BCF PORTA, RS_LCD;
+07F1   30C0           00078                                                    MOVLW 0XC0;
+07F2   0086           00079                                                    MOVWF PORTB;
+07F3   27D2           00080                                                    CALL PULSO_ENABLE;
+07F4   1485           00081                                                    BSF PORTA, RS_LCD;
+                      00082 
+07F5   01A9           00083                                                    CLRF N_VECES
+                      00084 
+07F6   0828           00085 LOOP_LCD_INF                       MOVF VAR_TABLA,W
+07F7   201A           00086                                                    CALL TABLA
+07F8   0086           00087                                                    MOVWF PORTB;
+07F9   27D2           00088                                                    CALL PULSO_ENABLE;
+07FA   0AA8           00089                                                    INCF VAR_TABLA,F
+07FB   0AA9           00090                                                    INCF N_VECES,F
+07FC   3010           00091                                                    MOVLW .16
+07FD   0629           00092                                                    XORWF N_VECES,W
+07FE   1D03           00093                                                    BTFSS STATUS,Z
+07FF   2FF6           00094                                                    GOTO LOOP_LCD_INF
+                      00095                                                    
+0800   0008           00096                                                    RETURN       
+                      00008  #INCLUDE <TABLA.INC>
+                      00001 ;_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+                             _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+                      00002 
+                      00003                                                     ;==================================
+                      00004                                                         ;===  Tabla de las imagenes xD  ===
+                      00005                                                         ;==================================     
+                      00006 ;La instruccion RETLW sirve como return pero esta regresa de donde fue llamada con un valor establecido 
+                            en W :3                                 
+001A                  00007                                                         ORG 0X001A; Organiza en 0x001A para que la tabla
+                             ocupe el mayor numero de instrucciones posibles :v
+                      00008                                                         
+001A   0782           00009 TABLA                                           ADDWF PCL,F; PCL es el contador de programa, entonces si
+                             le sumas lo de w va a saltar w instrucciones :3
+                      00010 
+001B   344D           00011                                                         RETLW 'M'
+001C   3461           00012                                                         RETLW 'a'
+001D   346E           00013                                                         RETLW 'n'
+001E   3465           00014                                                         RETLW 'e'
+001F   346A           00015                                                         RETLW 'j'
+0020   346F           00016                                                         RETLW 'o'
+0021   3420           00017                                                         RETLW ' '
+0022   3464           00018                                                         RETLW 'd'
+0023   3465           00019                                                         RETLW 'e'
+0024   3420           00020                                                         RETLW ' '
+0025   344D           00021                                                         RETLW 'M'
+0026   342E           00022                                                         RETLW '.'
+0027   3420           00023                                                         RETLW ' '
+0028   3452           00024                                                         RETLW 'R'
+0029   3441           00025                                                         RETLW 'A'
+002A   344D           00026                                                         RETLW 'M'
+                      00027 
+MPASM  5.51                    PRACTICA 5.ASM   5-28-2017  18:46:30         PAGE  8
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+002B   3432           00028                                                         RETLW '2'
+002C   3449           00029                                                         RETLW 'I'
+002D   344D           00030                                                         RETLW 'M'
+002E   3432           00031                                                         RETLW '2'
+002F   3420           00032                                                         RETLW ' '
+0030   3445           00033                                                         RETLW 'E'
+0031   3451           00034                                                         RETLW 'Q'
+0032   3455           00035                                                         RETLW 'U'
+0033   3449           00036                                                         RETLW 'I'
+0034   3450           00037                                                         RETLW 'P'
+0035   344F           00038                                                         RETLW 'O'
+0036   3420           00039                                                         RETLW ' '
+0037   3431           00040                                                         RETLW '1'
+0038   3420           00041                                                         RETLW ' '
+0039   3420           00042                                                         RETLW ' '
+003A   3420           00043                                                         RETLW ' '
+                      00044 
+003B   3444           00045                                                         RETLW 'D'
+003C   3469           00046                                                         RETLW 'i'
+003D   3472           00047                                                         RETLW 'r'
+003E   3465           00048                                                         RETLW 'e'
+003F   3463           00049                                                         RETLW 'c'
+0040   3463           00050                                                         RETLW 'c'
+0041   3469           00051                                                         RETLW 'i'
+0042   346F           00052                                                         RETLW 'o'
+0043   346E           00053                                                         RETLW 'n'
+0044   343A           00054                                                         RETLW ':'
+0045   3420           00055                                                         RETLW ' '
+0046   3430           00056                                                         RETLW '0'
+0047   3430           00057                                                         RETLW '0'
+0048   3420           00058                                                         RETLW ' '
+0049   3420           00059                                                         RETLW ' '
+004A   3420           00060                                                         RETLW ' '
+                      00061 
+004B   3444           00062                                                         RETLW 'D'
+004C   3461           00063                                                         RETLW 'a'
+004D   3474           00064                                                         RETLW 't'
+004E   346F           00065                                                         RETLW 'o'
+004F   343A           00066                                                         RETLW ':'
+0050   3430           00067                                                         RETLW '0'
+0051   3478           00068                                                         RETLW 'x'
+0052   3420           00069                                                         RETLW ' '
+0053   3420           00070                                                         RETLW ' '
+0054   3420           00071                                                         RETLW ' '
+0055   3443           00072                                                         RETLW 'C'
+0056   3461           00073                                                         RETLW 'a'
+0057   3472           00074                                                         RETLW 'r'
+0058   342E           00075                                                         RETLW '.'
+0059   3420           00076                                                         RETLW ' '
+005A   3420           00077                                                         RETLW ' '
+                      00078 
+005B   3430           00079                                                         RETLW '0'
+005C   3431           00080                                                         RETLW '1'
+MPASM  5.51                    PRACTICA 5.ASM   5-28-2017  18:46:30         PAGE  9
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+005D   3432           00081                                                         RETLW '2'
+005E   3433           00082                                                         RETLW '3'
+005F   3434           00083                                                         RETLW '4'
+0060   3435           00084                                                         RETLW '5'
+0061   3436           00085                                                         RETLW '6'
+0062   3437           00086                                                         RETLW '7'
+0063   3438           00087                                                         RETLW '8'
+0064   3439           00088                                                         RETLW '9'
+0065   3441           00089                                                         RETLW 'A'
+0066   3442           00090                                                         RETLW 'B'
+0067   3443           00091                                                         RETLW 'C'
+0068   3444           00092                                                         RETLW 'D'
+0069   3445           00093                                                         RETLW 'E'
+006A   3446           00094                                                         RETLW 'F'
+                      00095 
+006B   3467           00096                                                         RETLW 'g'
+006C   3468           00097                                                         RETLW 'h'
+                      00098 ;-------------------------------------------------------------------------------------------------------
+                            -----------------------------
+                      00099 ;Esta tablita sirve para tomar la localidad de memoria en la que se encuentra el valor correspondiente a
+                            l caracter en pantalla
+                      00100 
+006D   0829           00101 ESTE_ES_EL_DATO                    MOVF         N_VECES,W;      N_Veces aumenta cada que la variable ant
+                            erior no es, aumenta para comparar con el dato :3
+006E   0782           00102                                                    ADDWF        PCL,F;          Suma N_Veces con PCL par
+                            a saltar W instrucciones :3
+                      00103                                                         
+006F   3400           00104                                                    RETLW        0X00
+0070   3401           00105                                                    RETLW        0X01    
+0071   3402           00106                                                    RETLW        0X02
+0072   3403           00107                                                    RETLW        0X03    
+0073   3404           00108                                                    RETLW        0X04
+0074   3405           00109                                                    RETLW        0X05    
+0075   3406           00110                                                    RETLW        0X06
+0076   3407           00111                                                    RETLW        0X07    
+0077   3408           00112                                                    RETLW        0X08
+0078   3409           00113                                                    RETLW        0X09    
+0079   340A           00114                                                    RETLW        0X0A
+007A   340B           00115                                                    RETLW        0X0B    
+007B   340C           00116                                                    RETLW        0X0C
+007C   340D           00117                                                    RETLW        0X0D    
+007D   340E           00118                                                    RETLW        0X0E
+007E   340F           00119                                                    RETLW        0X0F
+007F   3410           00120                                                    RETLW        0X10
+0080   3411           00121                                                    RETLW        0X11    
+                      00122 
+                      00009 ;Bits de configuración.
+                      00010 
+2007   3F31           00011  __CONFIG _XT_OSC & _WDT_OFF & _PWRTE_ON & _BODEN_OFF & _LVP_OFF & _CP_OFF; All
+                      00012  
+                      00013 ;_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+                             _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+                      00014 ;
+MPASM  5.51                    PRACTICA 5.ASM   5-28-2017  18:46:30         PAGE 10
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00015 ;fosc = 4.00 Mhz.
+                      00016 ;Ciclo de trabajo del pic = (1/fosc)*4= 1 us. 
+                      00017 
+                      00018 ;t int=(256-R)*P*((1/4000000)*4)=1 ms; //Tiempo de interrupción.
+                      00019 
+                      00020 ;R=131, P=8.
+                      00021 ;P=preescaler           R=variable
+                      00022 
+                      00023 ;PWM Period = (POSTCALER DEL TMR2)[(PR2) + 1] •(TMR2 Prescale Value)/ 1000000
+                      00024 ;PWM period = (16)* [64+1] (16) /1000000
+                      00025 ;PMW=16.66666 ms
+                      00026 
+                      00027 ;PWM Duty Cycle =(CCPR1L:CCP1CON<5:4>) •TOSC • (TMR2 Prescale Value)
+                      00028 ;Aumenta y disminuye :v
+                      00029 ;-------------------------------------------------------------------------------------------------------
+                            -------------------------------------------------
+                      00030 ;Para poder manejar esta practica es necesario 
+                      00031 ;1.- Para modificar los mensajes se necesita escribir el mensaje en la tabla (como en el ejemplo) 
+                      00032 ;          y cargar var_tabla con la posicion en que se encuentra la primera letra del mensaje de la tab
+                            la
+                      00033 ;2.- Llamar para escribir  en la LCD Mensaje superior y Mensaje inferior
+                      00034 ;3.- Hacer uso del banco de memoria 1 para modificar trisb para entrada y salida de datos
+                      00035 ;4.- No agregar instrucciones que no sean en esta pagina :V (Practica 5.asm) o en "Tabla.inc" a menos de
+                             que se modifique
+                      00036 ;          la organizacion del programa (Ini_pic.INC & LCD.INC) 
+                      00037 ;5.- Si se pueden agregar mas variables, constantes, modificacion en los puertos y todas esas mamadas de
+                             "var y const.inc":V
+                      00038 ;6.- Saber como se usan las memorias RAM 6116 (logica negativa)
+                      00039 ;7.- Ser chingon :3
+                      00040 ;-------------------------------------------------------------------------------------------------------
+                            -------------------------------------------------
+                      00041                                                     ;============================
+                      00042                                                         ;===  Programa Principal  ===
+                      00043                                                         ;============================
+011A                  00044                                                         ORG 0X011A
+                      00045 
+011A   2100           00046 PROG_PRIN                                  CALL         PROG_INI;                               Iniciali
+                            za el pic
+011B   27C0           00047                                                    CALL         INI_LCD;                                
+                            Inicializa la LCD
+                      00048                                                         
+011C   219C           00049 LOOP_PRIN                                  CALL         MENSAJE_INICIAL;                Llama a la subru
+                            tina que pone los mensajes iniciales en la LCD
+011D   212F           00050                                                    CALL         GRABA_DATOS_RAM;                Llama a 
+                            la subrutina que graba los datos en la memoria RAM
+011E   21A3           00051                                                    CALL         MENSAJE_DE_MUESTREO;    Llama a la subru
+                            tina que pone la direccion y dato de la memoria RAM
+011F   0187           00052 INICIA_DE_NUEVO                    CLRF         PORTC;                                  Limpia el puerto
+                             C para comenzar a capturar los datos de la RAM
+0120   2145           00053 LOOP_DE_CAPTURA                    CALL         CAPTURA_NUMEROS;                Llama a la subrutina que
+                             captura los datos y los respalda :v
+0121   2156           00054                                                    CALL         CONVIERTE_DATOS;                Llama a 
+                            la subrutina que convierte el dato a hexadecimal y caracter :3
+MPASM  5.51                    PRACTICA 5.ASM   5-28-2017  18:46:30         PAGE 11
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+0122   2174           00055                                                    CALL         MANDA_A_LCD;                    Llama a 
+                            la subrutina que manda los datos a la LCD
+0123   2169           00056                                                    CALL         CHECA_LA_DIRECCION;             Llama a 
+                            la subrutina que va a checar en que direccion de ram se encuentra
+0124   00A6           00057                                                    MOVWF        TEMPO1;                                 
+                            Guarda el dato de direccion
+0125   00A7           00058                                                    MOVWF        TEMPO2;                                 
+                            Guarda el dato de direccion
+0126   2156           00059                                                    CALL         CONVIERTE_DATOS;                Llama a 
+                            la subrutina que convierte el dato a hexadecimal y caracter :3
+0127   218C           00060                                                    CALL         MANDA_DIRECCION;                Llama a 
+                            la subrutina que manda la direccion a la LCD
+0128   21B0           00061                                                    CALL         RETARDO_3SEG;                   Llam a u
+                            n retardo de 1 segundo para visualizar los datos :3
+0129   0A87           00062                                                    INCF         PORTC,F;                                
+                            Incrementa el puerto C en 1 para cambiar de direccion :v
+012A   3012           00063                                                    MOVLW        .18;                                    
+012B   0607           00064                                                    XORWF        PORTC,W;                                
+                            Compara lo que hay en el puerto C (direccion de la RAM) con 18
+012C   1D03           00065                                                    BTFSS        STATUS,Z;                               
+                            Son iguales?
+012D   2920           00066                                                    GOTO         LOOP_DE_CAPTURA;                No, sigu
+                            e leyendo las siguientes localidades de RAM
+012E   291F           00067                                                    GOTO         INICIA_DE_NUEVO;                Si, vuel
+                            ve a leer desde el inicio :3
+                      00068 
+                      00069 ;-------------------------------------------------------------------------------------------------------
+                            -------------------------------------------------
+                      00070                                                     ;===========================================
+                      00071                                                         ;=== Subrutina que graba la memoria RAM  ===
+                      00072                                                         ;===========================================
+012F   3040           00073 GRABA_DATOS_RAM                    MOVLW        .64 ;                                   Mueve 64 a var_t
+                            abla para mostrar el mensaje correspondiente
+0130   00A8           00074                                                    MOVWF        VAR_TABLA;
+0131   01A9           00075                                                    CLRF         N_VECES;                                
+                            Limpia el registro N_veces para hacer la cuenta de veces que llama la tabla
+0132   0187           00076                                                    CLRF         PORTC;                                  
+                            Limpia el puerto C para seleccionar la direccion 0 de RAM
+                      00077 
+0133   0828           00078 VUELVE_A_GRABAR                    MOVF         VAR_TABLA,W;                    Mueve el valor que se to
+                            mara de la tabla
+0134   201A           00079                                                    CALL         TABLA;                                  
+                            Llama la tabla y regresa con el valor que se quiere grabar :V
+0135   0086           00080                                                    MOVWF        PORTB;                                  
+                            Moverla al puerto B para que este a la salida de la memoria
+0136   1285           00081                                                    BCF          PORTA,CE_RAM;                   Activa l
+                            a memoria RAM para empezar a trabajar con ella
+0137   21AA           00082                                                    CALL         RETARDO_1MS;                    Tiempo n
+                            ecesario para que la RAM trabaje bien :V
+0138   1185           00083                                                    BCF          PORTA,WE_RAM;                   Activa l
+                            a escritura de la Memoria RAM
+0139   21AA           00084                                                    CALL         RETARDO_1MS;                    Tiempo n
+                            ecesario para que la RAM trabaje bien :V
+MPASM  5.51                    PRACTICA 5.ASM   5-28-2017  18:46:30         PAGE 12
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+013A   1585           00085                                                    BSF          PORTA,WE_RAM;                   Desactiv
+                            a la escritura
+013B   21AA           00086                                                    CALL         RETARDO_1MS;                    Tiempo n
+                            ecesario para que la RAM trabaje bien :V
+013C   1685           00087                                                    BSF          PORTA,CE_RAM;                   Desactiv
+                            a la memoria :V
+013D   21AA           00088                                                    CALL         RETARDO_1MS;                    Tiempo n
+                            ecesario para que la RAM trabaje bien :V
+013E   0A87           00089                                                    INCF         PORTC,F;                                
+                            Incrementa la direccion de la RAM para que grabe en otro lugar :3
+013F   0AA8           00090                                                    INCF         VAR_TABLA,F;                    Incremen
+                            ta para tomar el siguiente dato de la tabla :3
+0140   3010           00091                                                    MOVLW        .16;                                    
+                            Es el numero de veces que tiene que ir a la tabla :v
+0141   0607           00092                                                    XORWF        PORTC,W
+0142   1D03           00093                                                    BTFSS        STATUS,Z;                               
+                            Son iguales?
+0143   2933           00094                                                    GOTO         VUELVE_A_GRABAR;                No, Repi
+                            te hasta que sean iguales
+0144   0008           00095                                                    RETURN;                                              
+                                    Si, regresa de donde fue llamada :3
+                      00096 
+                      00097 ;-------------------------------------------------------------------------------------------------------
+                            -------------------------------------------------
+                      00098                                                     ;=================================================
+                      00099                                                         ;=== Subrutina que cambia el dato y direccion  =
+                            ==
+                      00100                                                         ;===============================================
+                            ==
+                      00101 
+0145   1683           00102 CAPTURA_NUMEROS                    BSF          STATUS,RP0;                             selecciona el ba
+                            nco 1 de ram.
+0146   30FF           00103                                                    MOVLW        PROGB_IN;                               
+                            Programacion como entradas alv, se define en variables y constantes
+0147   0086           00104                                                    MOVWF        TRISB ^0X80;    
+0148   1283           00105                                                    BCF          STATUS,RP0;                             
+                            Regresa al banco 0 de memoria RAM para seguir trabajando
+                      00106 
+0149   1285           00107                                                    BCF          PORTA,CE_RAM;                   Activa l
+                            a memoria ram
+014A   21AA           00108                                                    CALL         RETARDO_1MS;                    Espera 1
+                            ms que necesita la RAM para trabajar chido :v
+014B   1105           00109                                                    BCF          PORTA,OE_RAM;                   Deja que
+                             la RAM muestre los datos de la localidad seleccionada
+014C   21AA           00110                                                    CALL         RETARDO_1MS;                    Espera 1
+                            ms que necesita la RAM para trabajar chido :v
+014D   0806           00111                                                    MOVF         PORTB,W;                                
+                            Lectura de RAM a travez del puerto B
+014E   00A6           00112                                                    MOVWF        TEMPO1;                                 
+                            Respalda el dato correspondiente a la lectura de RAM
+014F   00A7           00113                                                    MOVWF        TEMPO2;                                 
+                            Respalda el dato correspondiente a la lectura de RAM
+0150   00AA           00114                                                    MOVWF        DATO_DIRECTO;                   Respalda
+MPASM  5.51                    PRACTICA 5.ASM   5-28-2017  18:46:30         PAGE 13
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                             el dato correspondiente a la lectura de RAM
+0151   1505           00115                                                    BSF          PORTA,OE_RAM;                   La RAM d
+                            ejará de mostrar el dato correspondiente
+0152   21AA           00116                                                    CALL         RETARDO_1MS;                    Espera 1
+                            ms que necesita la RAM para trabajar chido :v
+0153   1685           00117                                                    BSF          PORTA,CE_RAM;                   La RAM s
+                            e desactiva para evitar cortos :3
+0154   21AA           00118                                                    CALL         RETARDO_1MS;                    Espera 1
+                            ms que necesita la RAM para trabajar chido :v
+                      00119 
+0155   0008           00120                                                    RETURN;                                              
+                                    Regresa de donde fue llamado :3
+                      00121 ;-------------------------------------------------------------------------------------------------------
+                            -------------------------------------------------
+                      00122                                                     ;===================================================
+                            =
+                      00123                                                         ;=== Subrutina que convierte los datos a mostrar
+                              ===
+                      00124                                                         ;===============================================
+                            =====
+                      00125 
+0156   300F           00126 CONVIERTE_DATOS                    MOVLW        0X0F;                                   
+0157   05A6           00127                                                    ANDWF        TEMPO1,F;                               
+                            Enmascara el dato para solo usar el nibble bajo :v
+0158   2161           00128                                                    CALL         COMPRUEBA_DATO;                 Llama a 
+                            la subrutina para saber si tomarlo como numero o letra :v
+0159   3037           00129                                                    MOVLW        0X37;
+015A   07A6           00130                                                    ADDWF        TEMPO1,F;                               
+                            Le suma 37h para convertir una letra a Hex :3
+                      00131 
+015B   30F0           00132 NIBBLE_ALTO                                MOVLW        0XF0;                                   
+015C   05A7           00133                                                    ANDWF        TEMPO2,F;                               
+                            Enmascara el dato para solo usar el nibble alto :v
+015D   0EA7           00134                                                    SWAPF        TEMPO2,F;                               
+                            Cambio de nibbles para trabajar con el alto como bajo
+015E   3030           00135                                                    MOVLW        0X30;                                   
+015F   07A7           00136                                                    ADDWF        TEMPO2,F;                               
+                            Le suma 30h para convertirlo a numero hex
+                      00137 
+0160   0008           00138                                                    RETURN;                                              
+                                    Regresa :3
+                      00139 ;-------------------------------------------------------------------------------------------------------
+                            -------------------------------------------------
+                      00140                                                     ;===================================================
+                            ==========
+                      00141                                                         ;=== Subrutina que comprueba el dato antes de co
+                            nvertirlo  ===
+                      00142                                                         ;===============================================
+                            ==============
+                      00143 
+0161   1003           00144 COMPRUEBA_DATO                     BCF          STATUS,C;                               Limpia el bit de
+                             acarreo de status
+0162   30F6           00145                                                    MOVLW        .246;                                   
+MPASM  5.51                    PRACTICA 5.ASM   5-28-2017  18:46:30         PAGE 14
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                            Carga 246 a w
+0163   0726           00146                                                    ADDWF        TEMPO1,W;                               
+                            Checa si es una letra(codigo ascci) por complemento
+0164   1803           00147                                                    BTFSC        STATUS,C;                               
+                            Es letra?
+0165   0008           00148                                                    RETURN;                                              
+                                    Si, regresa
+                      00149 
+0166   3007           00150                                                    MOVLW        0X07;                                   
+                            No, haz lo siguiente....
+0167   02A6           00151                                                    SUBWF        TEMPO1,F;                               
+                            Le resta 07h para que regrese, se le sumen 37h y se convierta a hex
+0168   0008           00152                                                    RETURN;                                              
+                                    Regresa de donde fue llamado
+                      00153 
+                      00154 ;-------------------------------------------------------------------------------------------------------
+                            -------------------------------------------------
+                      00155                                                     ;===================================================
+                            ==========
+                      00156                                                         ;===  Subrutina que checa en que direccion de RA
+                            M esta :3  ===
+                      00157                                                         ;===============================================
+                            ==============
+                      00158 
+0169   3040           00159 CHECA_LA_DIRECCION                 MOVLW        .64;                                    Carga W con 64
+016A   00A8           00160                                                    MOVWF        VAR_TABLA;                              
+                            Carga var_tabla con 64 para tomar el valor correspondiente
+016B   01A9           00161                                                    CLRF         N_VECES;                                
+                            Limpia N_veces (con esta se tomara el valor de localidad de RAM)
+                      00162 
+016C   0828           00163 LOOP_DIRECCION                     MOVF         VAR_TABLA,W;                    mueve el valor de var_ta
+                            bla a w
+016D   201A           00164                                                    CALL         TABLA;                                  
+                            Llama a la tabla y toma el valor cargado en var_tabla :3
+016E   062A           00165                                                    XORWF        DATO_DIRECTO,W;                 Lo compa
+                            ra con dato_directo, que es el valor que tiene en esa localidad
+016F   1903           00166                                                    BTFSC        STATUS,Z;                               
+                            Son iguales?
+0170   286D           00167                                                    GOTO         ESTE_ES_EL_DATO;                Si, Ve y
+                             toma el dato cargado en N_veces para mostrar la direccion :3
+0171   0AA8           00168                                                    INCF         VAR_TABLA,F;                    No, Incr
+                            ementa var_tabla para compararlo con el siguiente valor de la tabla
+0172   0AA9           00169                                                    INCF         N_VECES,F;                              
+                            Incrementa N_veces (valor con el que se tomara la direccion :3)
+0173   296C           00170                                                    GOTO         LOOP_DIRECCION;                 Repite e
+                            l ciclo amor :3
+                      00171                                                    
+                      00172 ;-------------------------------------------------------------------------------------------------------
+                            -------------------------------------------------
+                      00173                                                     ;==================================================
+                      00174                                                         ;=== Subrutina que muestra los datos en la LCD  
+                            ===
+                      00175                                                         ;===============================================
+MPASM  5.51                    PRACTICA 5.ASM   5-28-2017  18:46:30         PAGE 15
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                            ===
+                      00176 
+0174   1683           00177 MANDA_A_LCD                                BSF          STATUS,RP0;                             seleccio
+                            na el banco 1 de ram.
+0175   3000           00178                                                    MOVLW        PROGB_OUT;                              
+                            Programacion como salidas alv, se define en variables y constantes
+0176   0086           00179                                                    MOVWF        TRISB ^0X80;    
+0177   1283           00180                                                    BCF          STATUS,RP0;                             
+                            Regresa al banco 0 de memoria RAM para seguir trabajando 
+                      00181 
+0178   1085           00182                                                    BCF          PORTA, RS_LCD;                  Poner LC
+                            D en modo comandos
+0179   30C7           00183                                                    MOVLW        0XC7;                                   
+                            Poner en la direccion 6 del segundo renglon :3
+017A   0086           00184                                                    MOVWF        PORTB;                                  
+                            moverlo al puerto b (Donde esta conectada la LCD)
+017B   27D2           00185                                                    CALL         PULSO_ENABLE;                   Ejecuta 
+                            la instruccion :3
+017C   1485           00186                                                    BSF          PORTA, RS_LCD;                  Poner LC
+                            D en modo datos
+                      00187 
+017D   0827           00188                                                    MOVF         TEMPO2,W;                               
+                            mueve lo que hay en la variable Tempo2
+017E   0086           00189                                                    MOVWF        PORTB;                                  
+                            Muevelo a la LCD
+017F   27D2           00190                                                    CALL         PULSO_ENABLE;                   Ejecuta 
+                            la instruccion :3
+                      00191 
+0180   0826           00192                                                    MOVF         TEMPO1,W;                               
+                            mueve lo que hay en la variable Tempo1
+0181   0086           00193                                                    MOVWF        PORTB;                                  
+                            Muevelo a la LCD--> siguiente espacio :3
+0182   27D2           00194                                                    CALL         PULSO_ENABLE;                   Ejecuta 
+                            la instruccion :3
+                      00195 
+0183   1085           00196                                                    BCF          PORTA, RS_LCD;                  Poner LC
+                            D en modo comandos
+0184   30CF           00197                                                    MOVLW        0XCF;                                   
+                            Poner en la direccion 15 del segundo renglon :3
+0185   0086           00198                                                    MOVWF        PORTB;                                  
+                            moverlo al puerto b (Donde esta conectada la LCD)
+0186   27D2           00199                                                    CALL         PULSO_ENABLE;                   Ejecuta 
+                            la instruccion :3
+0187   1485           00200                                                    BSF          PORTA, RS_LCD;                  Poner LC
+                            D en modo datos
+                      00201 
+0188   082A           00202                                                    MOVF         DATO_DIRECTO,W;                 mueve lo
+                             que hay en la variable Dato_directo
+0189   0086           00203                                                    MOVWF        PORTB;                                  
+                            Muevelo a la LCD
+018A   27D2           00204                                                    CALL         PULSO_ENABLE;                   Ejecuta 
+                            la instruccion :3
+                      00205 
+MPASM  5.51                    PRACTICA 5.ASM   5-28-2017  18:46:30         PAGE 16
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+018B   0008           00206                                                    RETURN;                                              
+                                    Regresa de donde fue llamado :V
+                      00207 ;-------------------------------------------------------------------------------------------------------
+                            -------------------------
+                      00208 
+018C   1683           00209 MANDA_DIRECCION                    BSF          STATUS,RP0;                             selecciona el ba
+                            nco 1 de ram.
+018D   3000           00210                                                    MOVLW        PROGB_OUT;                              
+                            Programacion como entradas alv, se define en variables y constantes
+018E   0086           00211                                                    MOVWF        TRISB ^0X80;    
+018F   1283           00212                                                    BCF          STATUS,RP0;                             
+                            Regresa al banco 0 de memoria RAM para seguir trabajando
+                      00213 
+0190   1085           00214                                                    BCF          PORTA, RS_LCD;                  Poner LC
+                            D en modo comandos
+0191   308D           00215                                                    MOVLW        0X8D;                                   
+                            Poner en la direccion 14 del primer renglon :3
+0192   0086           00216                                                    MOVWF        PORTB;                                  
+                            moverlo al puerto b (Donde esta conectada la LCD)
+0193   27D2           00217                                                    CALL         PULSO_ENABLE;                   Ejecuta 
+                            la instruccion :3
+0194   1485           00218                                                    BSF          PORTA, RS_LCD;                  Poner LC
+                            D en modo datos 
+                      00219                                                 
+0195   0827           00220                                                    MOVF         TEMPO2,W;                               
+                            mueve lo que hay en la variable Tempo2
+0196   0086           00221                                                    MOVWF        PORTB;                                  
+                            Muevelo a la LCD
+0197   27D2           00222                                                    CALL         PULSO_ENABLE;                   Ejecuta 
+                            la instruccion :3
+                      00223 
+0198   0826           00224                                                    MOVF         TEMPO1,W;                               
+                            mueve lo que hay en la variable Tempo1
+0199   0086           00225                                                    MOVWF        PORTB;                                  
+                            Muevelo a la LCD--> siguiente espacio :3
+019A   27D2           00226                                                    CALL         PULSO_ENABLE;                   Ejecuta 
+                            la instruccion :3
+                      00227                                                         
+019B   0008           00228                                                    RETURN;                                              
+                                    Regresa de donde fue llamado :v
+                      00229                                 
+                      00230 ;-------------------------------------------------------------------------------------------------------
+                            -----------------------
+                      00231                                 ;====================
+                      00232                                         ;===   Mensajes   ===
+                      00233                                                 ;====================
+                      00234 
+019C   01A8           00235 MENSAJE_INICIAL                    CLRF         VAR_TABLA;                              mueve 0 a var ta
+                            bla para mostrar el mensaje correspondiente
+019D   27DF           00236                                                    CALL         MENSAJE_SUPERIOR;               Pon los 
+                            datos de la tabla en la parte superior de la LCD
+019E   3010           00237                                                    MOVLW        .16 ;                                   
+                            Mueve 16 a var_tabla para mostrar el mensaje correspondiente
+MPASM  5.51                    PRACTICA 5.ASM   5-28-2017  18:46:30         PAGE 17
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+019F   00A8           00238                                                    MOVWF        VAR_TABLA;
+01A0   27F0           00239                                                    CALL         MENSAJE_INFERIOR;               Pon los 
+                            datos de la tabla en la parte superior de la LCD
+01A1   21BD           00240                                                    CALL         RETARDO_5SEG;                   Llama un
+                             retardo de 5 seg por requerimientos de la practica
+01A2   0008           00241                                                    RETURN                                  
+                      00242 
+01A3   3020           00243 MENSAJE_DE_MUESTREO                MOVLW        .32 ;                                   Mueve 32 a var_t
+                            abla para mostrar el mensaje correspondiente
+01A4   00A8           00244                                                    MOVWF        VAR_TABLA;
+01A5   27DF           00245                                                    CALL         MENSAJE_SUPERIOR;               Pon los 
+                            datos de la tabla en la parte superior de la LCD
+01A6   3030           00246                                                    MOVLW        .48 ;                                   
+                            Mueve 48 a var_tabla para mostrar el mensaje correspondiente
+01A7   00A8           00247                                                    MOVWF        VAR_TABLA;
+01A8   27F0           00248                                                    CALL         MENSAJE_INFERIOR;               Pon los 
+                            datos de la tabla en la parte superior de la LCD
+01A9   0008           00249                                                    RETURN
+                      00250 
+                      00251 ;-------------------------------------------------------------------------------------------------------
+                            -----------------------
+                      00252                                 ;====================
+                      00253                                         ;=== Retardos xD  ===
+                      00254                                                 ;====================
+                      00255 
+01AA   01A4           00256 RETARDO_1MS                                CLRF         CONT_MILIS;                     Limpia la variab
+                            le que cuenta milisegundos para iniciar el conteo
+                      00257 
+01AB   3001           00258 ESPERA_1MS                                 MOVLW        .1;                                     Cont mil
+                            is incrementa cada que va a la interrupcion
+01AC   0624           00259                                                    XORWF        CONT_MILIS,W;                   Compara 
+                            lo que hay en cont_milis con 250
+01AD   1D03           00260                                                    BTFSS        STATUS,Z;                               
+                            Son iguales? 
+01AE   29AB           00261                                                    GOTO         ESPERA_1MS;                     No, regr
+                            esa a comparar hasta que sean iguales :V
+01AF   0008           00262                                                    RETURN;                                              
+                                    Si, regresar de donde fue llamada
+                      00263 ;-------------------------------------------------------------------------------------------------------
+                            ----------------------------------------
+                      00264 
+01B0   01A4           00265 RETARDO_3SEG                       CLRF         CONT_MILIS;                     Limpia la variable que c
+                            uenta milisegundos para iniciar el conteo
+01B1   01A5           00266                                                    CLRF         CONT_CUARTO_DE_SEG;     Limpia la variab
+                            le que cuenta 1/4 de segundo
+                      00267 
+01B2   30FA           00268 ESPERA_3S                                  MOVLW        .250;                                   Cont mil
+                            is incrementa cada que va a la interrupcion
+01B3   0624           00269                                                    XORWF        CONT_MILIS,W;                   Compara 
+                            lo que hay en cont_milis con 250
+01B4   1D03           00270                                                    BTFSS        STATUS,Z;                               
+                            Son iguales? 
+01B5   29B2           00271                                                    GOTO         ESPERA_3S;                              
+MPASM  5.51                    PRACTICA 5.ASM   5-28-2017  18:46:30         PAGE 18
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                            No, regresa a comparar hasta que sean iguales :V
+01B6   01A4           00272                                                    CLRF         CONT_MILIS;                     Si, limp
+                            ia cont_milis para volver a hacerlo
+01B7   0AA5           00273                                                    INCF         CONT_CUARTO_DE_SEG,F;   Incrementa cuart
+                            os_de_seg una vez cada que incrementa 250 milis
+01B8   300A           00274                                                    MOVLW        .10; 
+01B9   0625           00275                                                    XORWF        CONT_CUARTO_DE_SEG,W;   Compara lo que h
+                            ay en cont_cuarto_de_seg con 12 para 3 seg
+01BA   1D03           00276                                                    BTFSS        STATUS,Z;                               
+                            Son iguales? 
+01BB   29B2           00277                                                    GOTO         ESPERA_3S;                              
+                            No, regresa al inicio hasta que sean iguales
+01BC   0008           00278                                                    RETURN;                                              
+                                    Si, regresa de donde fue llamada :V
+                      00279 
+                      00280 ;-------------------------------------------------------------------------------------------------------
+                            ----------------------
+                      00281 
+01BD   01A4           00282 RETARDO_5SEG                       CLRF         CONT_MILIS;                     Limpia la variable que c
+                            uenta milisegundos para iniciar el conteo
+01BE   01A5           00283                                                    CLRF         CONT_CUARTO_DE_SEG;     Limpia la variab
+                            le que cuenta 1/4 de segundo
+                      00284 
+01BF   30FA           00285 ESPERA_5SEG                                MOVLW        .250;                                   Cont mil
+                            is incrementa cada que va a la interrupcion
+01C0   0624           00286                                                    XORWF        CONT_MILIS,W;                   Compara 
+                            lo que hay en cont_milis con 250
+01C1   1D03           00287                                                    BTFSS        STATUS,Z;                               
+                            Son iguales? 
+01C2   29BF           00288                                                    GOTO         ESPERA_5SEG;                    No, regr
+                            esa a comparar hasta que sean iguales :V
+01C3   01A4           00289                                                    CLRF         CONT_MILIS;                     Si, limp
+                            ia cont_milis para volver a hacerlo
+01C4   0AA5           00290                                                    INCF         CONT_CUARTO_DE_SEG,F;   Incrementa cuart
+                            os_de_seg una vez cada que incrementa 250 milis
+01C5   3014           00291                                                    MOVLW        .20; 
+01C6   0625           00292                                                    XORWF        CONT_CUARTO_DE_SEG,W;   Compara lo que h
+                            ay en cont_cuarto_de_seg con 20 para 5 seg
+01C7   1D03           00293                                                    BTFSS        STATUS,Z;                               
+                            Son iguales? 
+01C8   29BF           00294                                                    GOTO         ESPERA_5SEG;                    No, regr
+                            esa al inicio hasta que sean iguales
+01C9   0008           00295                                                    RETURN;                                              
+                                    Si, regresa de donde fue llamada :V
+                      00296 
+                      00297                                                    END;                                                 
+                                    Final del programa :3
+MPASM  5.51                    PRACTICA 5.ASM   5-28-2017  18:46:30         PAGE 19
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+ACKDT                             00000005
+ACKEN                             00000004
+ACKSTAT                           00000006
+ADCON0                            0000001F
+ADCON1                            0000009F
+ADCS0                             00000006
+ADCS1                             00000007
+ADCS2                             00000006
+ADDEN                             00000003
+ADFM                              00000007
+ADIE                              00000006
+ADIF                              00000006
+ADON                              00000000
+ADRESH                            0000001E
+ADRESL                            0000009E
+BCLIE                             00000003
+BCLIF                             00000003
+BF                                00000000
+BRGH                              00000002
+BUS_DIR_A0                        00000000
+BUS_DIR_A1                        00000001
+BUS_DIR_A10                       00000002
+BUS_DIR_A2                        00000002
+BUS_DIR_A3                        00000003
+BUS_DIR_A4                        00000004
+BUS_DIR_A5                        00000005
+BUS_DIR_A6                        00000006
+BUS_DIR_A7                        00000007
+BUS_DIR_A8                        00000000
+BUS_DIR_A9                        00000001
+C                                 00000000
+C1INV                             00000004
+C1OUT                             00000006
+C2INV                             00000005
+C2OUT                             00000007
+CAPTURA_NUMEROS                   00000145
+CCP1CON                           00000017
+CCP1IE                            00000002
+CCP1IF                            00000002
+CCP1M0                            00000000
+CCP1M1                            00000001
+CCP1M2                            00000002
+CCP1M3                            00000003
+CCP1X                             00000005
+CCP1Y                             00000004
+CCP2CON                           0000001D
+CCP2IE                            00000000
+CCP2IF                            00000000
+CCP2M0                            00000000
+CCP2M1                            00000001
+CCP2M2                            00000002
+CCP2M3                            00000003
+CCP2X                             00000005
+MPASM  5.51                    PRACTICA 5.ASM   5-28-2017  18:46:30         PAGE 20
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+CCP2Y                             00000004
+CCPR1                             00000015
+CCPR1H                            00000016
+CCPR1L                            00000015
+CCPR2                             0000001B
+CCPR2H                            0000001C
+CCPR2L                            0000001B
+CE_RAM                            00000005
+CHECA_LA_DIRECCION                00000169
+CHS0                              00000003
+CHS1                              00000004
+CHS2                              00000005
+CIS                               00000003
+CKE                               00000006
+CKP                               00000004
+CM0                               00000000
+CM1                               00000001
+CM2                               00000002
+CMCON                             0000009C
+CMIE                              00000006
+CMIF                              00000006
+COMPRUEBA_DATO                    00000161
+CONT_CUARTO_DE_SEG                00000025
+CONT_MILIS                        00000024
+CONVIERTE_DATOS                   00000156
+CREN                              00000004
+CSRC                              00000007
+CVR0                              00000000
+CVR1                              00000001
+CVR2                              00000002
+CVR3                              00000003
+CVRCON                            0000009D
+CVREN                             00000007
+CVROE                             00000006
+CVRR                              00000005
+D                                 00000005
+DATA_ADDRESS                      00000005
+DATA_BUS_D0                       00000000
+DATA_BUS_D1                       00000001
+DATA_BUS_D2                       00000002
+DATA_BUS_D3                       00000003
+DATA_BUS_D4                       00000004
+DATA_BUS_D5                       00000005
+DATA_BUS_D6                       00000006
+DATA_BUS_D7                       00000007
+DATO_DIRECTO                      0000002A
+DC                                00000001
+D_A                               00000005
+D_NOT_A                           00000005
+EEADR                             0000010D
+EEADRH                            0000010F
+EECON1                            0000018C
+EECON2                            0000018D
+MPASM  5.51                    PRACTICA 5.ASM   5-28-2017  18:46:30         PAGE 21
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+EEDATA                            0000010C
+EEDATH                            0000010E
+EEIE                              00000004
+EEIF                              00000004
+EEPGD                             00000007
+ENABLE_LCD                        00000000
+ESPERA_1MS                        000001AB
+ESPERA_3S                         000001B2
+ESPERA_5SEG                       000001BF
+ESP_TIME                          000007D4
+ESP_TIME2                         000007DA
+ESTE_ES_EL_DATO                   0000006D
+F                                 00000001
+FERR                              00000002
+FSR                               00000004
+GCEN                              00000007
+GIE                               00000007
+GO                                00000002
+GO_DONE                           00000002
+GO_NOT_DONE                       00000002
+GRABA_DATOS_RAM                   0000012F
+I2C_DATA                          00000005
+I2C_READ                          00000002
+I2C_START                         00000003
+I2C_STOP                          00000004
+IBF                               00000007
+IBOV                              00000005
+INDF                              00000000
+INICIA_DE_NUEVO                   0000011F
+INI_LCD                           000007C0
+INTCON                            0000000B
+INTE                              00000004
+INTEDG                            00000006
+INTF                              00000001
+IRP                               00000007
+LOOP_DE_CAPTURA                   00000120
+LOOP_DIRECCION                    0000016C
+LOOP_LCD_INF                      000007F6
+LOOP_LCD_SUP                      000007E5
+LOOP_PRIN                         0000011C
+MANDA_A_LCD                       00000174
+MANDA_DIRECCION                   0000018C
+MENSAJE_DE_MUESTREO               000001A3
+MENSAJE_INFERIOR                  000007F0
+MENSAJE_INICIAL                   0000019C
+MENSAJE_SUPERIOR                  000007DF
+NIBBLE_ALTO                       0000015B
+NOT_A                             00000005
+NOT_ADDRESS                       00000005
+NOT_BO                            00000000
+NOT_BOR                           00000000
+NOT_DONE                          00000002
+NOT_PD                            00000003
+MPASM  5.51                    PRACTICA 5.ASM   5-28-2017  18:46:30         PAGE 22
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+NOT_POR                           00000001
+NOT_RBPU                          00000007
+NOT_RC8                           00000006
+NOT_T1SYNC                        00000002
+NOT_TO                            00000004
+NOT_TX8                           00000006
+NOT_W                             00000002
+NOT_WRITE                         00000002
+N_VECES                           00000029
+OBF                               00000006
+OERR                              00000001
+OE_RAM                            00000002
+OPTION_REG                        00000081
+P                                 00000004
+PCFG0                             00000000
+PCFG1                             00000001
+PCFG2                             00000002
+PCFG3                             00000003
+PCL                               00000002
+PCLATH                            0000000A
+PCON                              0000008E
+PEIE                              00000006
+PEN                               00000002
+PIE1                              0000008C
+PIE2                              0000008D
+PIR1                              0000000C
+PIR2                              0000000D
+PORTA                             00000005
+PORTB                             00000006
+PORTC                             00000007
+PORTD                             00000008
+PORTE                             00000009
+PR2                               00000092
+PROGA                             00000010
+PROGB_IN                          000000FF
+PROGB_OUT                         00000000
+PROGC                             00000000
+PROGD                             000000F8
+PROGE                             00000003
+PROG_INI                          00000100
+PROG_PRIN                         0000011A
+PS0                               00000000
+PS1                               00000001
+PS2                               00000002
+PSA                               00000003
+PSPIE                             00000007
+PSPIF                             00000007
+PSPMODE                           00000004
+PULSO_ENABLE                      000007D2
+R                                 00000002
+RA0                               00000000
+RA1                               00000001
+RA2                               00000002
+MPASM  5.51                    PRACTICA 5.ASM   5-28-2017  18:46:30         PAGE 23
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+RA3                               00000003
+RA4                               00000004
+RA5                               00000005
+RB0                               00000000
+RB1                               00000001
+RB2                               00000002
+RB3                               00000003
+RB4                               00000004
+RB5                               00000005
+RB6                               00000006
+RB7                               00000007
+RBIE                              00000003
+RBIF                              00000000
+RC0                               00000000
+RC1                               00000001
+RC2                               00000002
+RC3                               00000003
+RC4                               00000004
+RC5                               00000005
+RC6                               00000006
+RC7                               00000007
+RC8_9                             00000006
+RC9                               00000006
+RCD8                              00000000
+RCEN                              00000003
+RCIE                              00000005
+RCIF                              00000005
+RCREG                             0000001A
+RCSTA                             00000018
+RD                                00000000
+RD0                               00000000
+RD1                               00000001
+RD2                               00000002
+RD3                               00000003
+RD4                               00000004
+RD5                               00000005
+RD6                               00000006
+RD7                               00000007
+RE0                               00000000
+RE1                               00000001
+RE2                               00000002
+READ_WRITE                        00000002
+RES_FSR                           00000023
+RES_PCLATH                        00000022
+RES_STATUS                        00000021
+RES_W                             00000020
+RETARDO_1MS                       000001AA
+RETARDO_3SEG                      000001B0
+RETARDO_5SEG                      000001BD
+RP0                               00000005
+RP1                               00000006
+RSEN                              00000001
+RS_LCD                            00000001
+MPASM  5.51                    PRACTICA 5.ASM   5-28-2017  18:46:30         PAGE 24
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+RX9                               00000006
+RX9D                              00000000
+R_NOT_W                           00000002
+R_W                               00000002
+S                                 00000003
+SAL_INT                           00000010
+SEN                               00000000
+SIN_USORA4                        00000004
+SIN_USORD3                        00000003
+SIN_USORD4                        00000004
+SIN_USORD5                        00000005
+SIN_USORD6                        00000006
+SIN_USORD7                        00000007
+SIN_USORE0                        00000000
+SIN_USORE1                        00000001
+SIN_USORE2                        00000002
+SMP                               00000007
+SPBRG                             00000099
+SPEN                              00000007
+SREN                              00000005
+SSPADD                            00000093
+SSPBUF                            00000013
+SSPCON                            00000014
+SSPCON2                           00000091
+SSPEN                             00000005
+SSPIE                             00000003
+SSPIF                             00000003
+SSPM0                             00000000
+SSPM1                             00000001
+SSPM2                             00000002
+SSPM3                             00000003
+SSPOV                             00000006
+SSPSTAT                           00000094
+STATUS                            00000003
+SYNC                              00000004
+T0CS                              00000005
+T0IE                              00000005
+T0IF                              00000002
+T0SE                              00000004
+T1CKPS0                           00000004
+T1CKPS1                           00000005
+T1CON                             00000010
+T1INSYNC                          00000002
+T1OSCEN                           00000003
+T1SYNC                            00000002
+T2CKPS0                           00000000
+T2CKPS1                           00000001
+T2CON                             00000012
+TABLA                             0000001A
+TEMPO1                            00000026
+TEMPO2                            00000027
+TMR0                              00000001
+TMR0IE                            00000005
+MPASM  5.51                    PRACTICA 5.ASM   5-28-2017  18:46:30         PAGE 25
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+TMR0IF                            00000002
+TMR1                              0000000E
+TMR1CS                            00000001
+TMR1H                             0000000F
+TMR1IE                            00000000
+TMR1IF                            00000000
+TMR1L                             0000000E
+TMR1ON                            00000000
+TMR2                              00000011
+TMR2IE                            00000001
+TMR2IF                            00000001
+TMR2ON                            00000002
+TOUTPS0                           00000003
+TOUTPS1                           00000004
+TOUTPS2                           00000005
+TOUTPS3                           00000006
+TRISA                             00000085
+TRISA0                            00000000
+TRISA1                            00000001
+TRISA2                            00000002
+TRISA3                            00000003
+TRISA4                            00000004
+TRISA5                            00000005
+TRISB                             00000086
+TRISB0                            00000000
+TRISB1                            00000001
+TRISB2                            00000002
+TRISB3                            00000003
+TRISB4                            00000004
+TRISB5                            00000005
+TRISB6                            00000006
+TRISB7                            00000007
+TRISC                             00000087
+TRISC0                            00000000
+TRISC1                            00000001
+TRISC2                            00000002
+TRISC3                            00000003
+TRISC4                            00000004
+TRISC5                            00000005
+TRISC6                            00000006
+TRISC7                            00000007
+TRISD                             00000088
+TRISD0                            00000000
+TRISD1                            00000001
+TRISD2                            00000002
+TRISD3                            00000003
+TRISD4                            00000004
+TRISD5                            00000005
+TRISD6                            00000006
+TRISD7                            00000007
+TRISE                             00000089
+TRISE0                            00000000
+TRISE1                            00000001
+MPASM  5.51                    PRACTICA 5.ASM   5-28-2017  18:46:30         PAGE 26
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+TRISE2                            00000002
+TRMT                              00000001
+TX8_9                             00000006
+TX9                               00000006
+TX9D                              00000000
+TXD8                              00000000
+TXEN                              00000005
+TXIE                              00000004
+TXIF                              00000004
+TXREG                             00000019
+TXSTA                             00000098
+UA                                00000001
+VAR_TABLA                         00000028
+VEC_INT                           00000004
+VEC_RESET                         00000000
+VUELVE_A_GRABAR                   00000133
+W                                 00000000
+WCOL                              00000007
+WE_RAM                            00000003
+WR                                00000001
+WREN                              00000002
+WRERR                             00000003
+Z                                 00000002
+_BODEN_OFF                        00003FBF
+_BODEN_ON                         00003FFF
+_BOREN_OFF                        00003FBF
+_BOREN_ON                         00003FFF
+_CONFIG                           00002007
+_CPD_OFF                          00003FFF
+_CPD_ON                           00003EFF
+_CP_ALL                           00001FFF
+_CP_OFF                           00003FFF
+_CP_ON                            00001FFF
+_DEBUG_OFF                        00003FFF
+_DEBUG_ON                         000037FF
+_DEVID1                           00002006
+_FOSC_EXTRC                       00003FFF
+_FOSC_HS                          00003FFE
+_FOSC_LP                          00003FFC
+_FOSC_XT                          00003FFD
+_HS_OSC                           00003FFE
+_IDLOC0                           00002000
+_IDLOC1                           00002001
+_IDLOC2                           00002002
+_IDLOC3                           00002003
+_LP_OSC                           00003FFC
+_LVP_OFF                          00003F7F
+_LVP_ON                           00003FFF
+_PWRTE_OFF                        00003FFF
+_PWRTE_ON                         00003FF7
+_RC_OSC                           00003FFF
+_WDTE_OFF                         00003FFB
+_WDTE_ON                          00003FFF
+MPASM  5.51                    PRACTICA 5.ASM   5-28-2017  18:46:30         PAGE 27
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+_WDT_OFF                          00003FFB
+_WDT_ON                           00003FFF
+_WRT_1FOURTH                      00003BFF
+_WRT_256                          00003DFF
+_WRT_HALF                         000039FF
+_WRT_OFF                          00003FFF
+_XT_OSC                           00003FFD
+__16F877A                         00000001
+__DEBUG                           1
+
+
+MEMORY USAGE MAP ('X' = Used,  '-' = Unused)
+
+0000 : XX--XXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0040 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0080 : X--------------- ---------------- ---------------- ----------------
+0100 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0140 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0180 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+01C0 : XXXXXXXXXX------ ---------------- ---------------- ----------------
+07C0 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0800 : X--------------- ---------------- ---------------- ----------------
+2000 : -------X-------- ---------------- ---------------- ----------------
+
+All other memory blocks unused.
+
+Program Memory Words Used:   394
+Program Memory Words Free:  7798
+
+
+Errors   :     0
+Warnings :     0 reported,     0 suppressed
+Messages :     0 reported,     0 suppressed
+
+
